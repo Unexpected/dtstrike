@@ -49,6 +49,8 @@ public class Engine {
 				players.add(localProcess);
 			}
 
+			game.numPlayers = players.size();
+
 			boolean[] keepPlaying = new boolean[players.size()];
 			for (int i = 0; i < players.size(); i++) {
 				keepPlaying[i] = true;
@@ -77,6 +79,9 @@ public class Engine {
 							// Player p --> crash
 							players.set(i, null);
 						}
+					} else if (!game.isAlive(id)) {
+						game.dropPlayer(id);
+						keepPlaying[i] = false;
 					}
 				}
 				StringBuilder[] playersOrders = new StringBuilder[players
@@ -158,6 +163,8 @@ public class Engine {
 			else {
 				System.err.println("Draw!");
 			}
+			// Save game Log
+			game.saveGameLogToFile(game.winner);
 			System.out.println(game.gameLog.toString());
 		} catch (Exception e) {
 			System.err.println(e.toString());

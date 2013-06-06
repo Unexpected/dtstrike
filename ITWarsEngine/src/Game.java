@@ -13,8 +13,12 @@ import java.util.TreeMap;
 
 public class Game {
 
+	public static final String GAMES_FOLDER = "D:/Perso/DTStrike/games/";
+
 	public int winner;
 	public StringBuffer gameLog = new StringBuffer();
+	public String mapName;
+	public int numPlayers;
 
 	public List<Planet> planets;
 	public List<Fleet> fleets;
@@ -24,6 +28,7 @@ public class Game {
 	public Game(File mapFile, int turnTime, int turns, String logFile)
 			throws Exception {
 		this.winner = -1;
+		this.mapName = mapFile.getName();
 		new File(logFile).delete();
 		this.logWriter = new BufferedWriter(new FileWriter(logFile, true));
 		if (parse(mapFile) > 0) {
@@ -67,6 +72,21 @@ public class Game {
 			if (f.owner == id) {
 				f.destroy();
 			}
+		}
+		checkWinner();
+	}
+
+	public void checkWinner() {
+		int livePlayers = 0;
+		int possibleWinner = -1;
+		for (int i = 0; i < numPlayers; i++) {
+			if (isAlive(i + 1)) {
+				livePlayers++;
+				possibleWinner = i + 1;
+			}
+		}
+		if (livePlayers == 1) {
+			winner = possibleWinner;
 		}
 	}
 
@@ -148,14 +168,14 @@ public class Game {
 		int[] revenue = new int[64];
 
 		for (Planet p : planets) {
-			if (p instanceof EconomicPlanet) {
+			if (p instanceof EconomicPlanet && p.owner != 0) {
 				revenue[p.owner] = revenue[p.owner]
 						+ ((EconomicPlanet) p).revenue;
 			}
 		}
 
 		for (Planet p : planets) {
-			if (p instanceof MilitaryPlanet) {
+			if (p instanceof MilitaryPlanet && p.owner != 0) {
 				p.numShips += revenue[p.owner];
 			}
 		}
@@ -174,9 +194,9 @@ public class Game {
 				gameLog.append(",");
 			gameLog.append(p.owner).append(".").append(p.numShips);
 		}
-		k = 0;
+
 		for (Fleet f : fleets) {
-			if (k > 0)
+			if (k++ > 0)
 				gameLog.append(",");
 			gameLog.append(f.owner).append(".").append(f.numShips).append(".")
 					.append(f.sourcePlanet).append(".")
@@ -202,6 +222,15 @@ public class Game {
 			} else {
 				keepFleets.add(f);
 			}
+		}
+
+		if (ships.keySet().size() == 0) {
+			// No fight
+			return;
+		} else if (ships.keySet().size() == 1) {
+			// Only one player
+			p.numShips = ships.get(p.owner);
+			return;
 		}
 
 		fleets = keepFleets;
@@ -241,6 +270,43 @@ public class Game {
 		return parse(map);
 	}
 
+	public void saveGameLogToFile(int winnerId) {
+
+		File logsFolder = new File(GAMES_FOLDER);
+		int gameId = logsFolder.listFiles().length + 1;
+		File gLog = new File(GAMES_FOLDER + gameId + ".game");
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(gLog);
+			fw.write("game_id=" + gameId + "\n");
+			fw.write("winner=" + winnerId + "\n");
+			fw.write("map_id=" + mapName + "\n");
+			fw.write("draw=" + (winnerId == 0 ? 1 : 0) + "\n");
+			fw.write("timestamp=" + System.currentTimeMillis() + "\n");
+			fw.write("players=");
+			for (int i = 1; i <= numPlayers; i++) {
+				if (i > 1) {
+					fw.write("|");
+				}
+				fw.write(i + ":player" + i);
+			}
+			fw.write("\n");
+			fw.write("playback_string=" + gameLog.toString());
+			fw.write("\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (fw != null) {
+				try {
+					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+
 	private int parse(String map) {
 		planets = new ArrayList<Planet>();
 		fleets = new ArrayList<Fleet>();
@@ -274,9 +340,9 @@ public class Game {
 						if (this.gameLog.length() > 0) {
 							gameLog.append(":");
 						}
-						gameLog.append("M").append(x).append(",").append(y)
+						gameLog.append("M,").append(x).append(",").append(y)
 								.append(",").append(owner).append(",")
-								.append(numShips);
+								.append(numShips).append(",0");
 					} else if (line[0].equals("E")) {
 						if (line.length != 6) {
 							return 1;
@@ -293,7 +359,7 @@ public class Game {
 						if (this.gameLog.length() > 0) {
 							this.gameLog.append(":");
 						}
-						this.gameLog.append("E").append(x).append(",")
+						this.gameLog.append("E,").append(x).append(",")
 								.append(y).append(",").append(owner)
 								.append(",").append(numShips).append(",")
 								.append(economicValue);
