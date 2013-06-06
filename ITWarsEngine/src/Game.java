@@ -235,15 +235,19 @@ public class Game {
 
 		fleets = keepFleets;
 
-		int maxShips = ships.get(p.owner);
-		int maxOwner = p.owner;
-		int secondShips = 0;
+		int maxShips = -1;
+		int maxOwner = -1;
+		int secondShips = -1;
 
 		for (Entry<Integer, Integer> e : ships.entrySet()) {
-			if (e.getValue() >= maxShips) {
-				secondShips = maxShips;
+			if (e.getValue() > maxShips) {
 				maxShips = e.getValue();
 				maxOwner = e.getKey();
+			}
+		}
+		for (Entry<Integer, Integer> e : ships.entrySet()) {
+			if (e.getKey().intValue() != maxOwner && e.getValue() > secondShips) {
+				secondShips = e.getValue();
 			}
 		}
 
