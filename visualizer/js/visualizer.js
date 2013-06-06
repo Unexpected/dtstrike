@@ -6,24 +6,19 @@ var Visualizer = {
     haveDrawnBackground: false,
     frameDrawStarted: null,
     frameDrawEnded: null,
-    players: [{
-	  id: "-1",
-	  name: "Player 1"
-	},{
-	  id: "-1",
-	  name: "Player 2"
-	}],
+    players: [],
     planets: [],
     moves: [],
     dirtyRegions: [],
     config : {
       planet_font: 'bold 15px Arial,Helvetica',
       fleet_font: 'normal 12px Arial,Helvetica',
-      planet_pixels: [10,13,18,21,23,29],
       showFleetText: true,
       display_margin: 50,
       turnsPerSecond: 8,
-      teamColor: ['#455','#c00','#7ac','#0c0','#00c']
+      teamColor: ['#455','#c00','#7ac','#0c0','#00c'],
+	  E_planet_size: 20,
+	  M_planet_size: 40
     },
     
     setup: function(data) {
@@ -90,34 +85,36 @@ var Visualizer = {
             disp_y = this.unitToPixel(planet.y) + this.config.display_margin;
 						
 			if (planet.type == 'E') {
+				var planetSize = this.config.E_planet_size;
+				
 				// Add shadow
 				ctx.beginPath();
-				ctx.arc(disp_x + 0.5, this.canvas.height - disp_y + 0.5, this.config.planet_pixels[planet.growthRate] + 1, 0, Math.PI*2, true);
+				ctx.arc(disp_x + 0.5, this.canvas.height - disp_y + 0.5, planetSize + 1, 0, Math.PI*2, true);
 				ctx.closePath();
 				ctx.fillStyle = "#000";
 				ctx.fill();
 				
 				// Draw circle
 				ctx.beginPath();
-				ctx.arc(disp_x, this.canvas.height - disp_y, this.config.planet_pixels[planet.growthRate], 0, Math.PI*2, true);
+				ctx.arc(disp_x, this.canvas.height - disp_y, planetSize, 0, Math.PI*2, true);
 				ctx.closePath();
 				ctx.fillStyle = this.config.teamColor[planet.owner];
 				// TODO: hightlight planet when a fleet has reached them
 				ctx.fill();
-			} else {
-				var squareSize = 40;
-				var halfSquare = parseInt(squareSize / 2);
+			} else if (planet.type == 'M') {
+				var planetSize = this.config.M_planet_size;
+				var halfSize = parseInt(planetSize / 2);
 				
 				// Add shadow
 				ctx.beginPath();
-				ctx.rect(disp_x - halfSquare - 2, this.canvas.height - disp_y - halfSquare - 2, squareSize + 4, squareSize + 4);
+				ctx.rect(disp_x - halfSize - 2, this.canvas.height - disp_y - halfSize - 2, planetSize + 4, planetSize + 4);
 				ctx.closePath();
 				ctx.fillStyle = "#000";
 				ctx.fill();
 				
 				// Draw square
 				ctx.beginPath();
-				ctx.rect(disp_x - halfSquare, this.canvas.height - disp_y - halfSquare, squareSize, squareSize);
+				ctx.rect(disp_x - halfSize, this.canvas.height - disp_y - halfSize, planetSize, planetSize);
 				ctx.closePath();
 				ctx.fillStyle = this.config.teamColor[planet.owner];
 				// TODO: hightlight planet when a fleet has reached them
@@ -190,19 +187,22 @@ var Visualizer = {
         // Total the ship counts
         var mostShips = 100;
         for(var i=0; i < this.moves.length; i++ ){
-            var turn = this.moves[i]
-            turn.shipCount=[0,0,0,0,0]
+            var turn = this.moves[i];
+            turn.shipCount = [];
+			for(var j = 0; j <= this.players.length; j++ ){
+				turn.shipCount[j] = 0;
+			}
             for(var j=0; j < turn.moving.length; j++ ){
-                var fleet = turn.moving[j]
-                turn.shipCount[fleet.owner]+=fleet.numShips
+                var fleet = turn.moving[j];
+                turn.shipCount[fleet.owner]+=fleet.numShips;
             }
             for(var j=0; j < turn.planets.length; j++ ){
-                var planet = turn.planets[j]
-                turn.shipCount[planet.owner]+=planet.numShips
+                var planet = turn.planets[j];
+                turn.shipCount[planet.owner]+=planet.numShips;
             }
                         
             for(var j=0; j < turn.shipCount.length; j++ ){
-                mostShips = Math.max(mostShips, turn.shipCount[j] )
+                mostShips = Math.max(mostShips, turn.shipCount[j] );
             }
         }
 
@@ -223,7 +223,15 @@ var Visualizer = {
             ctx.arc((j-1)*widthFactor, shipCount*heightFactor, 2, 0, Math.PI*2, true);
             ctx.fill();
         }
-        
+		
+		canvas.addEventListener('click', function(event) {
+			var x = event.pageX - canvas.offsetLeft,
+				y = event.pageY - canvas.offsetTop;
+			
+			var frame = x / widthFactor + 1;
+			gotoAction(frame);
+		}, false);
+		
     },
     
     start: function() {
@@ -428,7 +436,7 @@ var ParserUtils = {
         return false;
     }
     $('#next-frame-button').click(nextAction);
-    
+	
     $(document.documentElement).keydown(function(evt){
         if(evt.keyCode == '37'){ // Left Arrow
             prevAction();
@@ -456,3 +464,10 @@ var ParserUtils = {
     Visualizer.start();
     Visualizer.drawChart();
 })(window.jQuery);
+
+function gotoAction(frame) {
+	Visualizer.setFrame(frame);
+	Visualizer.drawFrame(frame);
+	Visualizer.stop();
+	return false;
+}
