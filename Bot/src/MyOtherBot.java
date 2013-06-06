@@ -19,10 +19,10 @@ public class MyOtherBot {
 		// if (game.getMyFleets().size() >= 1) {
 		// return;
 		// }
-		// (2) Find my strongest planet.
+		// (2) Find my strongest military planet.
 		Planet source = null;
 		int sourceShips = Integer.MIN_VALUE;
-		for (Planet p : game.getMyPlanets()) {
+		for (Planet p : game.getMyMilitaryPlanets()) {
 			int score = p.numShips;
 			if (score > sourceShips && score > 0) {
 				sourceShips = score;
@@ -47,7 +47,7 @@ public class MyOtherBot {
 		// (4) Send half the ships from my strongest planet to the weakest
 		// planet that I do not own.
 		if (source != null && dest != null) {
-			int numShips = source.numShips;
+			int numShips = source.numShips / 2;
 			game.issueOrder(source, dest, numShips);
 		}
 	}

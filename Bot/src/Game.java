@@ -124,6 +124,18 @@ public class Game {
 		return r;
 	}
 
+	// Return a list of all the planets owned by the current player. By
+	// convention, the current player is always player number 1.
+	public List<Planet> getMyMilitaryPlanets() {
+		List<Planet> r = new ArrayList<Planet>();
+		for (Planet p : planets) {
+			if (p.owner == myID && p instanceof MilitaryPlanet) {
+				r.add(p);
+			}
+		}
+		return r;
+	}
+
 	// Return a list of all neutral planets.
 	public List<Planet> getNeutralPlanets() {
 		List<Planet> r = new ArrayList<Planet>();

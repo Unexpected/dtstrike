@@ -19,10 +19,10 @@ public class MyBot {
 		if (game.getMyFleets().size() >= 1) {
 			return;
 		}
-		// (2) Find my strongest planet.
+		// (2) Find my strongest military planet.
 		Planet source = null;
 		int sourceShips = Integer.MIN_VALUE;
-		for (Planet p : game.getMyPlanets()) {
+		for (Planet p : game.getMyMilitaryPlanets()) {
 			int score = p.numShips;
 			if (score > sourceShips) {
 				sourceShips = score;
