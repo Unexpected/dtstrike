@@ -1,0 +1,209 @@
+html {
+    overflow-y: scroll;
+    height: 100%;
+}
+
+body {
+    background: #603814;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#603814', endColorstr='#300400', GradientType=0); /* for IE */
+    background: -webkit-gradient(linear, left top, 0% 100%, from(#603814), to(#300400));
+    background: -moz-linear-gradient(top,  #603814,  #300400);
+    background: -o-linear-gradient(#603814,#300400);
+    background-attachment: fixed;
+}
+
+#wrapper {
+    position: relative;
+
+    margin: 10px auto;
+    width: 960px;
+
+    background: #fff;
+
+    -moz-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.5);
+}
+
+.left {
+    display: block;
+    float: left;
+    width: 740px;
+}
+
+.right {
+    position: relative;
+    display: block;
+    float: right;
+    width: 220px;
+}
+
+.columns {
+    position: relative;
+    background: #7a0;
+}
+
+.columns:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+#header .left {
+    position: relative;
+    height: 110px;
+}
+
+#header .right {
+    height: 110px;
+    overflow: hidden;
+    background-image: url('images/ants.png');
+    background-repeat: no-repeat;
+    background-position: center 52px;
+}
+
+#header .left, #footer {
+    background: #050;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#009900', endColorstr='#005500', GradientType=1);
+    background: -webkit-gradient(linear, 0% 0%, 45% 0%, from(#090), to(#050));
+    background: -moz-linear-gradient(left, #090, #050 45%);
+    background: -o-linear-gradient(left,#090,#050 45%);
+}
+
+#header h1, #header h2, #header h3 {
+    font-weight: normal;
+    font-size: 60px;
+    padding-top: 15px;
+    text-shadow: none;
+    margin: 0px;
+}
+
+#header h1 {
+    position: relative;
+    right: 0px;
+    z-index: 1;
+    text-align: right;
+    text-shadow: 0px 0px 20px #7a0; /*Glow*/
+}
+
+#header .left h1, #header .left h3 {
+    text-align: right;
+    padding-right: 20px;
+}
+
+#header h2 {
+    text-align: center;
+    text-shadow: 0px 0px 10px #cfa;
+}
+
+#header h3 {
+    font-size: 1.5em;
+    color: #fff;
+    text-shadow: #000 1px 1px 3px;
+    text-align: right;
+    padding: 5px 20px 0px 20px;
+}
+
+#header .right img {
+    position: absolute;
+    float: right;
+    right: 0px;
+    top: 40px;
+}
+
+/* IE matrix transform and CSS transform have different behaviour, this hack should do */
+#header #triangle {
+    width: 3em;
+    height: 3em;
+    background: #050;
+    position: absolute;
+    float: left;
+    top: 20px;
+    left: -2.8em;
+    filter: progid:DXImageTransform.Microsoft.Matrix(SizingMethod='auto expand', M11=0.707106781, M12=-0.707106781, M21=0.707106781, M22=0.707106781);
+    -webkit-transform: translate(1.24264068711em, 15px) rotate(45deg);
+    -moz-transform: translate(1.24264068711em, 15px) rotate(45deg);
+    -o-transform: translate(1.24264068711em, 15px) rotate(45deg);
+}
+
+#content {
+    background: #fff;
+    padding: 15px;
+
+    min-height: 770px;
+}
+
+#visualizerDiv {
+    margin-bottom: 2.5em;
+}
+
+#visualizerDiv * {
+    display: block;
+    margin: 0 auto;
+}
+
+#menu {
+    padding: 10px;
+    background-image: url('images/ants.png');
+    background-repeat: no-repeat;
+    background-position: center -58px;
+}
+
+#menu h1 {
+    font-size: 1.4em;
+    text-shadow: none;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+#menu form, #menu ul {
+    margin: 5px 5px 5px 10px;
+}
+
+#menu a {
+    color: #fff;
+}
+
+#menu .highlight {
+    list-style-type: circle;
+}
+
+#sponsor_bar {
+    text-align: center;
+    font-size: 0.9em;
+    padding: 5px 5px 5px 10px;
+}
+
+#sponsor_bar p {
+    text-align: center;
+}
+
+#footer {
+    padding: 15px;
+    color: #fff;
+    text-shadow: #000 1px 1px 3px;
+}
+
+#footer a {
+	color: #fff;
+}
+
+.toc {
+    float: right;
+    border: dotted 1px #eee;
+    padding: 1em;
+    margin: 1em;
+    margin-top: 0px;
+}
+
+.profile {
+	float: left;
+	width: 49%;
+}
+
+.rank {
+	float: right;
+    width: 49%;
+}

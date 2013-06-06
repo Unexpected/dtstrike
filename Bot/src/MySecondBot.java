@@ -34,7 +34,7 @@ public class MySecondBot {
 		Planet dest = null;
 		int destScore = Integer.MAX_VALUE;
 		for (Planet p : game.getNotMyPlanets()) {
-			int score = p.numShips;
+			int score = game.distance(p.id, source.id);
 			if (score < destScore) {
 				destScore = score;
 				dest = p;
