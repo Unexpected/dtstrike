@@ -53,7 +53,11 @@
   <script>!window.jQuery && document.write('<script src="js/jquery-1.4.2.min.js"><\/script>')</script>
   <script>
   <?php
-  $input = file_get_contents('input');
+  $gameFile = 'input';
+  if (isset($_GET['game_file'])) {
+	$gameFile = $_GET['game_file'];
+  }
+  $input = file_get_contents($gameFile);
   echo 'var data = "' . str_replace("\n", "\\n", $input) . '"';
   ?>
   </script>
