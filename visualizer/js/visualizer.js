@@ -191,7 +191,7 @@ var Visualizer = {
         var mostShips = 100;
         for(var i=0; i < this.moves.length; i++ ){
             var turn = this.moves[i]
-            turn.shipCount=[0,0,0]
+            turn.shipCount=[0,0,0,0,0]
             for(var j=0; j < turn.moving.length; j++ ){
                 var fleet = turn.moving[j]
                 turn.shipCount[fleet.owner]+=fleet.numShips
@@ -208,7 +208,7 @@ var Visualizer = {
 
         var heightFactor = canvas.height / mostShips / 1.05
         var widthFactor = canvas.width / Math.max(200, this.moves.length)
-        for(var i = 1; i <= 2; i++ ){
+        for(var i = 1; i <= this.players.length; i++ ){
             ctx.strokeStyle = this.config.teamColor[i];
             ctx.fillStyle = this.config.teamColor[i];
             ctx.beginPath();
