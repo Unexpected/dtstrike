@@ -23,13 +23,7 @@
 
   <div id="container">
     <header>
-      <table id="players">
-        <tr>
-          <td width='40%' align="right" class="player1Name"></td>
-          <td width='20%' align="center" class="playerVs">Loading</td>
-          <td width='40%' align="left" class="player2Name"></td>
-        </tr>
-      </table>
+	  <div id="players">Loading</div>
     </header>
     
     <div id="main">

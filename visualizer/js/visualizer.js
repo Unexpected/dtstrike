@@ -6,8 +6,13 @@ var Visualizer = {
     haveDrawnBackground: false,
     frameDrawStarted: null,
     frameDrawEnded: null,
-    players: ["Player A", "Player B"],
-    playerIds: ["-1", "-1"],
+    players: [{
+	  id: "-1",
+	  name: "Player 1"
+	},{
+	  id: "-1",
+	  name: "Player 2"
+	}],
     planets: [],
     moves: [],
     dirtyRegions: [],
@@ -18,7 +23,7 @@ var Visualizer = {
       showFleetText: true,
       display_margin: 50,
       turnsPerSecond: 8,
-      teamColor: ['#455','#c00','#7ac']
+      teamColor: ['#455','#c00','#7ac','#0c0','#00c']
     },
     
     setup: function(data) {
@@ -273,11 +278,8 @@ var Visualizer = {
             for(var i = 0; i < input.length; i++) {
                 var value = input[i].split('=');
                 switch(value[0]) {
-                    case "player_one": this.players[0] = value[1]; break;
-                    case "player_two": this.players[1] = value[1]; break;
+                    case "players": this.players = value[1].split('|').map(ParserUtils.parsePlayer); break;
                     case "playback_string": data = value[1]; break;
-                    case "player_one_id": this.playerIds[0] = value[1]; break;
-                    case "player_two_id": this.playerIds[1] = value[1]; break;
                 }
             }
         }
@@ -359,6 +361,15 @@ var ParserUtils = {
 		}
     },
     
+    parsePlayer: function(data) {
+        data = data.split(':');
+        // (id,name)
+        return {
+            id: parseInt(data[0]),
+            name: data[1]
+        };
+    },
+    
     parsePlanetState: function(data) {
         data = data.split('.');
         // (owner,numShips)
@@ -435,12 +446,12 @@ var ParserUtils = {
       $('#turnCounter').text('Turn: '+Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length)
     })
     
-    $('.player1Name').html('<a href="profile.php?user_id=' + Visualizer.playerIds[0] + '">' + Visualizer.players[0] + '</a>')
-    $('.player1Name a').css({'color':Visualizer.config.teamColor[1],'text-decoration':'none'})
-    $('.player2Name').html('<a href="profile.php?user_id=' + Visualizer.playerIds[1] + '">' + Visualizer.players[1] + '</a>')
-    $('.player2Name a').css({'color':Visualizer.config.teamColor[2],'text-decoration':'none'})
-    $('.playerVs').text('v.s.')
-    $('title').text(Visualizer.players[0]+' v.s. '+Visualizer.players[1]+' - Planet Wars')
+	var playersHtml = '';
+    for(var i = 0; i < Visualizer.players.length; i++) {
+		playersHtml += '<a style="color: '+ Visualizer.config.teamColor[i+1] +'" href="profile.php?user_id=' + Visualizer.players[i].id + '">' + (i+1) + '. ' + Visualizer.players[i].name + '</a>&nbsp;&nbsp;';
+	}
+	$('#players').html(playersHtml)
+    $('title').text('CGI - Planet Wars')
     
     Visualizer.start();
     Visualizer.drawChart();
