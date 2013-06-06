@@ -83,21 +83,41 @@ var Visualizer = {
 
             disp_x = this.unitToPixel(planet.x) + this.config.display_margin;
             disp_y = this.unitToPixel(planet.y) + this.config.display_margin;
-
-            // Add shadow
-            ctx.beginPath();
-            ctx.arc(disp_x + 0.5, this.canvas.height - disp_y + 0.5, this.config.planet_pixels[planet.growthRate] + 1, 0, Math.PI*2, true);
-            ctx.closePath();
-            ctx.fillStyle = "#000";
-            ctx.fill();
-
-            // Draw circle
-            ctx.beginPath();
-            ctx.arc(disp_x, this.canvas.height - disp_y, this.config.planet_pixels[planet.growthRate], 0, Math.PI*2, true);
-            ctx.closePath();
-            ctx.fillStyle = this.config.teamColor[planet.owner];
-            // TODO: hightlight planet when a fleet has reached them
-            ctx.fill();
+			
+			if (planet.type == 'E') {
+				// Add shadow
+				ctx.beginPath();
+				ctx.arc(disp_x + 0.5, this.canvas.height - disp_y + 0.5, this.config.planet_pixels[planet.growthRate] + 1, 0, Math.PI*2, true);
+				ctx.closePath();
+				ctx.fillStyle = "#000";
+				ctx.fill();
+				
+				// Draw circle
+				ctx.beginPath();
+				ctx.arc(disp_x, this.canvas.height - disp_y, this.config.planet_pixels[planet.growthRate], 0, Math.PI*2, true);
+				ctx.closePath();
+				ctx.fillStyle = this.config.teamColor[planet.owner];
+				// TODO: hightlight planet when a fleet has reached them
+				ctx.fill();
+			} else {
+				var squareSize = 40;
+				var halfSquare = parseInt(squareSize / 2);
+				
+				// Add shadow
+				ctx.beginPath();
+				ctx.rect(disp_x - halfSquare + 0.5, this.canvas.height - disp_y - halfSquare + 0.5, squareSize + 1, squareSize + 1);
+				ctx.closePath();
+				ctx.fillStyle = "#000";
+				ctx.fill();
+				
+				// Draw square
+				ctx.beginPath();
+				ctx.rect(disp_x - halfSquare, this.canvas.height - disp_y - halfSquare, squareSize, squareSize);
+				ctx.closePath();
+				ctx.fillStyle = this.config.teamColor[planet.owner];
+				// TODO: hightlight planet when a fleet has reached them
+				ctx.fill();
+			}
 
             ctx.fillStyle = "#fff";
             ctx.fillText(planet.numShips, disp_x, this.canvas.height - disp_y + 5);
@@ -317,13 +337,26 @@ var ParserUtils = {
     parsePlanet: function(data) {
         data = data.split(',');
         // (x,y,owner,numShips,growthRate)
-        return {
-            x: parseFloat(data[0]),
-            y: parseFloat(data[1]),
-            owner: parseInt(data[2]),
-            numShips: parseInt(data[3]),
-            growthRate: parseInt(data[4])
-        };
+		if (data.length == 5) {
+			// Old data style
+			return {
+				type: 'E',
+				x: parseFloat(data[0]),
+				y: parseFloat(data[1]),
+				owner: parseInt(data[2]),
+				numShips: parseInt(data[3]),
+				growthRate: parseInt(data[4])
+			};
+		} else {
+			return {
+				type: data[0],
+				x: parseFloat(data[1]),
+				y: parseFloat(data[2]),
+				owner: parseInt(data[3]),
+				numShips: parseInt(data[4]),
+				growthRate: parseInt(data[5])
+			};
+		}
     },
     
     parsePlanetState: function(data) {
