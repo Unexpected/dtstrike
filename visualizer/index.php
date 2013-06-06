@@ -28,7 +28,6 @@
     
     <div id="main">
         <canvas id="display" width="640" height="640"></canvas>
-        <p id="turnCounter">Loading</p>
         <p id="controls">
             <a href="#" id="start-button"><span class="small">|</span>&laquo;</a> | 
             <a href="#" id="prev-frame-button">&laquo;</a> | 
@@ -36,10 +35,11 @@
             <a href="#" id="next-frame-button">&raquo;</a> | 
             <a href="#" id="end-button">&raquo;<span class="small">|</span></a>
         </p>
-        
         <p>
-          <br>
-          <br>
+		  <div>
+		  <span style="float: left">Macth: <span id="macthId">Loading</span></span>
+		  <span style="float: right">Turn: <span id="turnCounter">Loading</span></span>
+		  </div>
           <canvas id="chart" width="640" height="100" ></canvas>
         </p>
     </div>

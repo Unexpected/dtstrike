@@ -6,6 +6,7 @@ var Visualizer = {
     haveDrawnBackground: false,
     frameDrawStarted: null,
     frameDrawEnded: null,
+	game_id: -1,
     players: [],
     planets: [],
     moves: [],
@@ -20,6 +21,7 @@ var Visualizer = {
 	  E_planet_size: 20,
 	  M_planet_size: 40
     },
+	chartFeedLine: null,
     
     setup: function(data) {
         // Setup Context
@@ -286,6 +288,7 @@ var Visualizer = {
             for(var i = 0; i < input.length; i++) {
                 var value = input[i].split('=');
                 switch(value[0]) {
+					case "game_id": this.game_id = value[1]; break;
                     case "players": this.players = value[1].split('|').map(ParserUtils.parsePlayer); break;
                     case "playback_string": data = value[1]; break;
                 }
@@ -451,7 +454,7 @@ var ParserUtils = {
     })
     
     $('#display').bind('drawn', function(){
-      $('#turnCounter').text('Turn: '+Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length)
+      $('#turnCounter').text(Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length)
     })
     
 	var playersHtml = '';
@@ -459,7 +462,8 @@ var ParserUtils = {
 		playersHtml += '<a style="color: '+ Visualizer.config.teamColor[i+1] +'" href="profile.php?user_id=' + Visualizer.players[i].id + '">' + (i+1) + '. ' + Visualizer.players[i].name + '</a>&nbsp;&nbsp;';
 	}
 	$('#players').html(playersHtml)
-    $('title').text('CGI - Planet Wars')
+    $('title').text('CGI - Planet Wars - Match '+Visualizer.game_id)
+    $('#macthId').text(Visualizer.game_id)
     
     Visualizer.start();
     Visualizer.drawChart();
