@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -23,6 +24,7 @@ public class Game {
 	public Game(File mapFile, int turnTime, int turns, String logFile)
 			throws Exception {
 		this.winner = -1;
+		new File(logFile).delete();
 		this.logWriter = new BufferedWriter(new FileWriter(logFile, true));
 		if (parse(mapFile) > 0) {
 			throw new Exception("Invalid map file");
@@ -76,6 +78,7 @@ public class Game {
 	 */
 	public String playerView(int paramInt) {
 		StringBuilder sb = new StringBuilder();
+		Locale.setDefault(new Locale("en"));
 		for (Planet p : planets) {
 			if (p instanceof MilitaryPlanet) {
 				sb.append(String.format("M %f %f %d %d\n", p.x, p.y, p.owner,
@@ -188,6 +191,7 @@ public class Game {
 		Map<Integer, Integer> ships = new TreeMap<Integer, Integer>();
 
 		ships.put(p.owner, p.numShips);
+		List<Fleet> keepFleets = new ArrayList<Fleet>();
 		for (Fleet f : fleets) {
 			if (planets.get(f.destinationPlanet) == p && f.turnsRemaining == 0) {
 				if (ships.get(f.owner) == null) {
@@ -195,8 +199,12 @@ public class Game {
 				}
 				int currentShips = ships.get(f.owner);
 				ships.put(f.owner, f.numShips + currentShips);
+			} else {
+				keepFleets.add(f);
 			}
 		}
+
+		fleets = keepFleets;
 
 		int maxShips = ships.get(p.owner);
 		int maxOwner = p.owner;
@@ -230,6 +238,12 @@ public class Game {
 		}
 		fis.close();
 		String map = bos.toString();
+		return parse(map);
+	}
+
+	private int parse(String map) {
+		planets = new ArrayList<Planet>();
+		fleets = new ArrayList<Fleet>();
 
 		planets = new ArrayList<Planet>();
 		fleets = new ArrayList<Fleet>();
@@ -260,7 +274,7 @@ public class Game {
 						if (this.gameLog.length() > 0) {
 							gameLog.append(":");
 						}
-						gameLog.append("").append(x).append(",").append(y)
+						gameLog.append("M").append(x).append(",").append(y)
 								.append(",").append(owner).append(",")
 								.append(numShips);
 					} else if (line[0].equals("E")) {
@@ -279,9 +293,9 @@ public class Game {
 						if (this.gameLog.length() > 0) {
 							this.gameLog.append(":");
 						}
-						this.gameLog.append("").append(x).append(",").append(y)
-								.append(",").append(owner).append(",")
-								.append(numShips).append(",")
+						this.gameLog.append("E").append(x).append(",")
+								.append(y).append(",").append(owner)
+								.append(",").append(numShips).append(",")
 								.append(economicValue);
 					} else if (line[0].equals("F")) {
 						if (line.length != 7) {

@@ -31,7 +31,12 @@ public class Engine {
 				String player = args[i];
 				Process localProcess = null;
 				try {
-					localProcess = Runtime.getRuntime().exec(player);
+					localProcess = Runtime
+							.getRuntime()
+							.exec(player,
+									null,
+									new File(
+											"D:\\Perso\\DTStrike\\dtstrike\\Bot\\bin"));
 				} catch (Exception localException1) {
 					localProcess = null;
 				}
@@ -50,14 +55,14 @@ public class Engine {
 			}
 
 			int turn = 1;
-			while (game.winner == -1) {
+			while (game.winner == -1 && turn <= turns) {
 				for (int i = 0; i < players.size(); i++) {
 					int id = i + 1;
 					String playerView;
 					Process p = players.get(i);
 					if (p != null && game.isAlive(id)) {
 						// We send data only to living players
-						playerView = game.playerView(id) + "go\n";
+						playerView = game.playerView(id) + "go " + id + "\n";
 						try {
 							OutputStream localOutputStream = p
 									.getOutputStream();
@@ -68,6 +73,7 @@ public class Engine {
 							game.writeLogMessage("engine > player" + id + ": "
 									+ playerView);
 						} catch (Exception localException2) {
+							localException2.printStackTrace();
 							// Player p --> crash
 							players.set(i, null);
 						}
@@ -86,8 +92,7 @@ public class Engine {
 				// Loops until every player has finished is turn or turn time is
 				// over
 				while (!allTrue(hasPlayed)
-						&& (System.currentTimeMillis() - currentTurnTime) < turnTime
-						&& turn < turns) {
+						&& (System.currentTimeMillis() - currentTurnTime) < turnTime) {
 
 					// For each player that hasn't played
 					for (int i = 0; i < players.size(); i++) {
