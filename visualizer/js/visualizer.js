@@ -83,7 +83,7 @@ var Visualizer = {
 
             disp_x = this.unitToPixel(planet.x) + this.config.display_margin;
             disp_y = this.unitToPixel(planet.y) + this.config.display_margin;
-			
+						
 			if (planet.type == 'E') {
 				// Add shadow
 				ctx.beginPath();
@@ -105,7 +105,7 @@ var Visualizer = {
 				
 				// Add shadow
 				ctx.beginPath();
-				ctx.rect(disp_x - halfSquare + 0.5, this.canvas.height - disp_y - halfSquare + 0.5, squareSize + 1, squareSize + 1);
+				ctx.rect(disp_x - halfSquare - 2, this.canvas.height - disp_y - halfSquare - 2, squareSize + 4, squareSize + 4);
 				ctx.closePath();
 				ctx.fillStyle = "#000";
 				ctx.fill();
