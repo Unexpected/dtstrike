@@ -1,0 +1,9 @@
+/Bot/bin
+bin
+/Bot/bin/MyBot.class
+/Bot/bin/Planet.class
+/Bot/bin/.gitignore
+/Bot/bin/EconomicPlanet.class
+/Bot/bin/Fleet.class
+/Bot/bin/Game.class
+/Bot/bin/MilitaryPlanet.class
