@@ -176,15 +176,17 @@ var Visualizer = {
           
           this.dirtyRegions.push([disp_x - 25 , this.canvas.height - disp_y - 35, 50, 50])
         }
+		
+//		this.drawChart(frame);
         
         $(this.canvas).trigger('drawn');
     },
     
-    drawChart: function(){
+    drawChart: function(frame){
         var canvas = document.getElementById('chart')
         var ctx = canvas.getContext('2d');
-        ctx.scale(1,-1)
-        ctx.translate(0,-canvas.height)
+        ctx.scale(1,-1);
+        ctx.translate(0,-canvas.height);
         
         // Total the ship counts
         var mostShips = 100;
@@ -226,14 +228,27 @@ var Visualizer = {
             ctx.fill();
         }
 		
+		// Feed Line
+		/*
+		ctx.strokeStyle = '#000';
+		ctx.fillStyle = '#000';
+		ctx.beginPath();
+		ctx.moveTo(frame*widthFactor, 0);
+		ctx.lineTo(frame*widthFactor, canvas.height);
+		ctx.stroke();
+		ctx.closePath();
+        ctx.restore();
+		*/
+		
+		// Add onclick event
 		canvas.addEventListener('click', function(event) {
 			var x = event.pageX - canvas.offsetLeft,
 				y = event.pageY - canvas.offsetTop;
 			
-			var frame = x / widthFactor + 1;
-			gotoAction(frame);
+			gotoAction((x / widthFactor + 1));
 		}, false);
 		
+//        $(canvas).trigger('drawn');
     },
     
     start: function() {
@@ -439,6 +454,18 @@ var ParserUtils = {
         return false;
     }
     $('#next-frame-button').click(nextAction);
+    
+    var fastAction = function() {
+        Visualizer.config.turnsPerSecond += 2;
+        return false;
+    }
+    $('#fast-button').click(fastAction);
+	
+    var slowAction = function() {
+        Visualizer.config.turnsPerSecond -= 2;
+        return false;
+    }
+    $('#slow-button').click(slowAction);
 	
     $(document.documentElement).keydown(function(evt){
         if(evt.keyCode == '37'){ // Left Arrow
@@ -466,7 +493,7 @@ var ParserUtils = {
     $('#macthId').text(Visualizer.game_id)
     
     Visualizer.start();
-    Visualizer.drawChart();
+	Visualizer.drawChart();
 })(window.jQuery);
 
 function gotoAction(frame) {

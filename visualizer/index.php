@@ -29,11 +29,13 @@
     <div id="main">
         <canvas id="display" width="640" height="640"></canvas>
         <p id="controls">
-            <a href="#" id="start-button"><span class="small">|</span>&laquo;</a> | 
+            <a href="#" id="slow-button"><span class="small">|</span> -</a> | 
+            <a href="#" id="start-button">&laquo;</a> | 
             <a href="#" id="prev-frame-button">&laquo;</a> | 
             <a href="#" id="play-button">&#9654;</a> | 
             <a href="#" id="next-frame-button">&raquo;</a> | 
-            <a href="#" id="end-button">&raquo;<span class="small">|</span></a>
+            <a href="#" id="end-button">&raquo;</a> | 
+            <a href="#" id="fast-button">+ <span class="small">|</span></a>
         </p>
         <p>
 		  <div>
