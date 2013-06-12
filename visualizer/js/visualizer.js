@@ -177,12 +177,42 @@ var Visualizer = {
           this.dirtyRegions.push([disp_x - 25 , this.canvas.height - disp_y - 35, 50, 50])
         }
 		
-//		this.drawChart(frame);
+		this.drawFeedline(frame);
         
         $(this.canvas).trigger('drawn');
     },
+	
+    drawFeedline: function(frame){
+        var canvas = document.getElementById('feedline')
+        var ctx = canvas.getContext('2d');
+		
+        var widthFactor = canvas.width / Math.max(200, this.moves.length)
+		
+		// Clear
+		//ctx.clearRect((frame-1)*widthFactor, 0, (frame-1)*widthFactor, canvas.height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		
+		// Feed Line
+		ctx.strokeStyle = '#000';
+		ctx.fillStyle = '#000';
+		ctx.beginPath();
+		ctx.moveTo(frame*widthFactor, 0);
+		ctx.lineTo(frame*widthFactor, canvas.height);
+		ctx.stroke();
+		ctx.closePath();
+		
+		// Add onclick event
+		canvas.addEventListener('click', function(event) {
+			var x = event.pageX - canvas.offsetLeft,
+				y = event.pageY - canvas.offsetTop;
+			
+			gotoAction((x / widthFactor + 1));
+		}, false);
+		
+        $(canvas).trigger('drawn');
+	},
     
-    drawChart: function(frame){
+    drawChart: function(){
         var canvas = document.getElementById('chart')
         var ctx = canvas.getContext('2d');
         ctx.scale(1,-1);
@@ -228,27 +258,14 @@ var Visualizer = {
             ctx.fill();
         }
 		
-		// Feed Line
-		/*
-		ctx.strokeStyle = '#000';
-		ctx.fillStyle = '#000';
-		ctx.beginPath();
-		ctx.moveTo(frame*widthFactor, 0);
-		ctx.lineTo(frame*widthFactor, canvas.height);
-		ctx.stroke();
-		ctx.closePath();
-        ctx.restore();
-		*/
-		
 		// Add onclick event
-		canvas.addEventListener('click', function(event) {
+		/*canvas.addEventListener('click', function(event) {
 			var x = event.pageX - canvas.offsetLeft,
 				y = event.pageY - canvas.offsetTop;
 			
 			gotoAction((x / widthFactor + 1));
 		}, false);
-		
-//        $(canvas).trigger('drawn');
+		*/
     },
     
     start: function() {

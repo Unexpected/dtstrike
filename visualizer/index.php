@@ -38,11 +38,14 @@
             <a href="#" id="fast-button">+ <span class="small">|</span></a>
         </p>
         <p>
-		  <div>
-		  <span style="float: left">Macth: <span id="macthId">Loading</span></span>
-		  <span style="float: right">Turn: <span id="turnCounter">Loading</span></span>
+		  <div style="height: 20px;">
+			  <span style="float: left">Macth: <span id="macthId">Loading</span></span>
+			  <span style="float: right">Turn: <span id="turnCounter">Loading</span></span>
 		  </div>
-          <canvas id="chart" width="640" height="100" ></canvas>
+		  <div style="height: 100px;">
+			  <canvas id="chart" width="640" height="100" style="position: absolute; background-color: transparent; z-index: 1" ></canvas>
+			  <canvas id="feedline" width="640" height="100" style="position: absolute; background-color: transparent; z-index: 2" ></canvas>
+		  </div>
         </p>
     </div>
     
