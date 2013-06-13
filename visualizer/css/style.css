@@ -100,6 +100,13 @@ h1 {
   margin-bottom: 5px;
 }
 
+.winner {
+	font-weight: bold;
+}
+.looser {
+	text-decoration: line-through;
+}
+
 #chart {
     background:white; 
     border-top: solid 1px #607890;
