@@ -8,6 +8,9 @@ var Visualizer = {
     frameDrawStarted: null,
     frameDrawEnded: null,
 	game_id: -1,
+	game_time: -1,
+	map_id: '',
+	winner: -1,
     players: [],
     planets: [],
     moves: [],
@@ -27,7 +30,7 @@ var Visualizer = {
         // Setup Context
         this.canvas = document.getElementById('display');
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.textAlign = 'center'
+        this.ctx.textAlign = 'center';
         
         // Parse data
         this.parseData(data);
@@ -128,13 +131,13 @@ var Visualizer = {
         }
         
         // Draw Fleets
-        this.ctx.font = this.config.fleet_font
+        this.ctx.font = this.config.fleet_font;
         for(var i = 0; i < fleets.length; i++) {
           var fleet = fleets[i];
           
           var progress = (fleet.progress + 1 + (frame - frameNumber)) / (fleet.tripLength + 2);
-          fleet.x = fleet.source.x + (fleet.destination.x - fleet.source.x) * progress
-          fleet.y = fleet.source.y + (fleet.destination.y - fleet.source.y) * progress
+          fleet.x = fleet.source.x + (fleet.destination.x - fleet.source.x) * progress;
+          fleet.y = fleet.source.y + (fleet.destination.y - fleet.source.y) * progress;
           disp_x = this.unitToPixel(fleet.x) + this.config.display_margin;
           disp_y = this.unitToPixel(fleet.y) + this.config.display_margin;
           
@@ -162,7 +165,7 @@ var Visualizer = {
           ctx.lineTo(-40, -30);
           ctx.closePath();
           ctx.fill();
-          ctx.strokeStyle = "#fff"
+          ctx.strokeStyle = "#fff";
           ctx.stroke();
           ctx.restore();
 
@@ -174,7 +177,7 @@ var Visualizer = {
             ctx.fillText(fleet.numShips, disp_x, this.canvas.height - disp_y);
           }
           
-          this.dirtyRegions.push([disp_x - 25 , this.canvas.height - disp_y - 35, 50, 50])
+          this.dirtyRegions.push([disp_x - 25 , this.canvas.height - disp_y - 35, 50, 50]);
         }
 		
 		this.drawFeedline(frame);
@@ -183,10 +186,10 @@ var Visualizer = {
     },
 	
     drawFeedline: function(frame){
-        var canvas = document.getElementById('feedline')
+        var canvas = document.getElementById('feedline');
         var ctx = canvas.getContext('2d');
 		
-        var widthFactor = canvas.width / Math.max(200, this.moves.length)
+        var widthFactor = canvas.width / Math.max(200, this.moves.length);
 		
 		// Clear
         //canvas.width = canvas.width;
@@ -203,12 +206,10 @@ var Visualizer = {
 		ctx.closePath();
 		
 		this.feedline = frame;
-		
-        $(canvas).trigger('drawn');
 	},
     
     drawChart: function(){
-        var canvas = document.getElementById('chart')
+        var canvas = document.getElementById('chart');
         var ctx = canvas.getContext('2d');
         ctx.scale(1,-1);
         ctx.translate(0,-canvas.height);
@@ -235,16 +236,17 @@ var Visualizer = {
             }
         }
 
-        var heightFactor = canvas.height / mostShips / 1.05
-        var widthFactor = canvas.width / Math.max(200, this.moves.length)
+        var heightFactor = canvas.height / mostShips / 1.05;
+        var widthFactor = canvas.width / Math.max(200, this.moves.length);
         for(var i = 1; i <= this.players.length; i++ ){
             ctx.strokeStyle = this.config.teamColor[i];
             ctx.fillStyle = this.config.teamColor[i];
             ctx.beginPath();
-            ctx.moveTo(0,this.moves[0].shipCount[i] * heightFactor)
+            ctx.moveTo(0,this.moves[0].shipCount[i] * heightFactor);
+            var shipCount = 0;
             for(var j=1; j < this.moves.length; j++ ){
-                var shipCount = this.moves[j].shipCount[i]
-                ctx.lineTo(j*widthFactor, shipCount*heightFactor)
+                shipCount = this.moves[j].shipCount[i];
+                ctx.lineTo(j*widthFactor, shipCount*heightFactor);
             }
             ctx.stroke();
             
@@ -267,7 +269,7 @@ var Visualizer = {
     
     run: function() {
       if(!this.playing) return;
-      this.frameDrawStarted = new Date().getTime()
+      this.frameDrawStarted = new Date().getTime();
       
       if(this.frame >= Visualizer.moves.length ){
         this.stop();
@@ -275,7 +277,7 @@ var Visualizer = {
       }
       this.drawFrame(this.frame);
       
-      var frameAdvance = (this.frameDrawStarted - this.frameDrawEnded) / (1000 / this.config.turnsPerSecond )
+      var frameAdvance = (this.frameDrawStarted - this.frameDrawEnded) / (1000 / this.config.turnsPerSecond );
       if(isNaN(frameAdvance)){
         frameAdvance = 0.3;
       }
@@ -300,20 +302,26 @@ var Visualizer = {
     parseData: function(input) {
         input = input.split(/\n/);
         
-        var data;
-        if(input.length == 1) data = input[0];
-        else {
+        if(input.length == 1) {
+        	this.parsePlaybackData(input[0]);
+        } else {
+        	data = "";
             for(var i = 0; i < input.length; i++) {
                 var value = input[i].split('=');
                 switch(value[0]) {
 					case "game_id": this.game_id = value[1]; break;
+					case "winner": this.winner = value[1]; break;
+					case "map_id": this.map_id = value[1]; break;
+					case "timestamp": this.game_time = value[1]; break;
                     case "players": this.players = value[1].split('|').map(ParserUtils.parsePlayer); break;
-                    case "playback_string": data = value[1]; break;
+                    case "playback_string": this.parsePlaybackData(value[1]); break;
                 }
             }
         }
-        
-        var data = data.split('|');
+    },
+    
+    parsePlaybackData: function(input) {
+    	var data = input.split('|');
         
         // planets: [(x,y,owner,numShips,growthRate)]
         this.planets = data[0].split(':').map(ParserUtils.parsePlanet);
@@ -330,19 +338,19 @@ var Visualizer = {
         // turns: [(owner,numShips)] 
         // ++ [(owner,numShips,sourcePlanet,destinationPlanet,totalTripLength,turnsRemaining)]
         if(data.length < 2){ 
-          return // No turns.
+          return; // No turns.
         } 
         var turns = data[1].split(':').slice(0,-1);
         for(var i = 0; i < turns.length; i++) {
             var turn = turns[i].split(',');
-            var move = {}
+            var move = {};
             
-            move.planets = turn.slice(0, this.planets.length).map(ParserUtils.parsePlanetState)
-            var fleet_strings = turn.slice(this.planets.length)
+            move.planets = turn.slice(0, this.planets.length).map(ParserUtils.parsePlanetState);
+            var fleet_strings = turn.slice(this.planets.length);
             if( fleet_strings.length == 1 && fleet_strings[0] == '' ){
-                fleet_strings = []
+                fleet_strings = [];
             }
-            move.moving = fleet_strings.map(ParserUtils.parseFleet)
+            move.moving = fleet_strings.map(ParserUtils.parseFleet);
             
             this.moves.push(move);
         }
@@ -411,22 +419,37 @@ var ParserUtils = {
     _eof: true
 };
 
-(function($) {
-    Visualizer.setup(data);
-    
+function initStaticData() {
+	var playersHtml = '';
+    for (var i = 0; i < Visualizer.players.length; i++) {
+		playersHtml += '<a style="color: '+ Visualizer.config.teamColor[i+1] +'"';
+		if (Visualizer.winner == Visualizer.players[i].id) {
+			playersHtml += ' class="winner"';
+		} else {
+			playersHtml += ' class="looser"';
+		}
+		playersHtml += ' href="profile.php?user_id=' + Visualizer.players[i].id + '">';
+		playersHtml += (i+1) + '. ' + Visualizer.players[i].name;
+		playersHtml += '</a>&nbsp;&nbsp;';
+	}
+	$('#players').html(playersHtml);
+    $('title').text('CGI - Planet Wars - Match '+Visualizer.game_id);
+    $('#macthId').text(Visualizer.game_id);
+}
+
+function hookButtons() {
     // Hook buttons
-    var playAction = function() {
+    $('#play-button').click(function() {
         if(!Visualizer.playing){
-          if(Visualizer.frame > Visualizer.moves.length - 2){
-            Visualizer.setFrame(0);
+            if(Visualizer.frame > Visualizer.moves.length - 2){
+              Visualizer.setFrame(0);
+            }
+            Visualizer.start();
+          } else {
+            Visualizer.stop();
           }
-          Visualizer.start();
-        } else {
-          Visualizer.stop();
-        }
-        return false;
-    }
-    $('#play-button').click(playAction);
+          return false;
+      });
     
     $('#start-button').click(function() {
         Visualizer.setFrame(0);
@@ -442,67 +465,56 @@ var ParserUtils = {
         return false;
     });
 
-    var prevAction = function() {
+    $('#prev-frame-button').click(function() {
         Visualizer.setFrame(Visualizer.frame - 1, true);
         Visualizer.drawFrame(Visualizer.frame);
         Visualizer.stop();
         return false;
-    }
-    $('#prev-frame-button').click(prevAction);
+    });
     
-    var nextAction = function() {
+    $('#next-frame-button').click(function() {
         Visualizer.setFrame(Visualizer.frame + 1);
         Visualizer.drawFrame(Visualizer.frame);
         Visualizer.stop();
         return false;
-    }
-    $('#next-frame-button').click(nextAction);
+    });
     
-    var fastAction = function() {
+    $('#fast-button').click(function() {
         Visualizer.config.turnsPerSecond += 2;
         return false;
-    }
-    $('#fast-button').click(fastAction);
+    });
 	
-    var slowAction = function() {
+    $('#slow-button').click(function() {
         Visualizer.config.turnsPerSecond -= 2;
         return false;
-    }
-    $('#slow-button').click(slowAction);
-	
+    });
+}
+
+function bindActionsAndEvents() {
     $(document.documentElement).keydown(function(evt){
         if(evt.keyCode == '37'){ // Left Arrow
-            prevAction();
+        	$('#prev-frame-button').click();
             return false;
         }else if(evt.keyCode == '39'){ // Right Arrow
-            nextAction();
+        	$('#next-frame-button').click();
             return false;
         }else if(evt.keyCode == '32'){ // Spacebar
-            playAction();
+        	$('#play-button').click();
             return false;
         }
-    })
+    });
     
+    // Update turn counter after redraw
     $('#display').bind('drawn', function(){
-      $('#turnCounter').text(Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length)
-    })
-    
-	var playersHtml = '';
-    for(var i = 0; i < Visualizer.players.length; i++) {
-		playersHtml += '<a style="color: '+ Visualizer.config.teamColor[i+1] +'" href="profile.php?user_id=' + Visualizer.players[i].id + '">' + (i+1) + '. ' + Visualizer.players[i].name + '</a>&nbsp;&nbsp;';
-	}
-	$('#players').html(playersHtml)
-    $('title').text('CGI - Planet Wars - Match '+Visualizer.game_id)
-    $('#macthId').text(Visualizer.game_id)
-    
+      $('#turnCounter').text(Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length);
+    });
 		
 	// Add onclick event on timeline
 	$('#feedline').click(function(event) {
 		var canvas = document.getElementById('feedline');
-	    var widthFactor = canvas.width / Math.max(200, Visualizer.moves.length)
+	    var widthFactor = canvas.width / Math.max(200, Visualizer.moves.length);
 		
-		var x = event.pageX - canvas.offsetLeft,
-			y = event.pageY - canvas.offsetTop;
+		var x = event.pageX - canvas.offsetLeft;
 		
 		Visualizer.stop();
 		Visualizer.setFrame((x / widthFactor + 1));
@@ -510,6 +522,14 @@ var ParserUtils = {
 		
 		return false;
 	});
+}
+
+(function($) {
+    Visualizer.setup(data);
+    
+    hookButtons();
+    bindActionsAndEvents();
+    initStaticData();
     
     Visualizer.start();
 	Visualizer.drawChart();
