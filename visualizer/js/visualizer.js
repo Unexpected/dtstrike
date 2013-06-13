@@ -2,6 +2,7 @@ var Visualizer = {
     canvas: null,
     ctx: null,
     frame: 0,
+    feedline: 0,
     playing: false,
     haveDrawnBackground: false,
     frameDrawStarted: null,
@@ -21,7 +22,6 @@ var Visualizer = {
 	  E_planet_size: 20,
 	  M_planet_size: 40
     },
-	chartFeedLine: null,
     
     setup: function(data) {
         // Setup Context
@@ -189,8 +189,9 @@ var Visualizer = {
         var widthFactor = canvas.width / Math.max(200, this.moves.length)
 		
 		// Clear
-		//ctx.clearRect((frame-1)*widthFactor, 0, (frame-1)*widthFactor, canvas.height);
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //canvas.width = canvas.width;
+		ctx.clearRect((this.feedline - 1)*widthFactor, 0, (this.feedline + 1)*widthFactor, canvas.height);
+		//ctx.clearRect(0, 0, canvas.width, canvas.height);
 		
 		// Feed Line
 		ctx.strokeStyle = '#000';
@@ -201,13 +202,7 @@ var Visualizer = {
 		ctx.stroke();
 		ctx.closePath();
 		
-		// Add onclick event
-		canvas.addEventListener('click', function(event) {
-			var x = event.pageX - canvas.offsetLeft,
-				y = event.pageY - canvas.offsetTop;
-			
-			gotoAction((x / widthFactor + 1));
-		}, false);
+		this.feedline = frame;
 		
         $(canvas).trigger('drawn');
 	},
@@ -257,15 +252,6 @@ var Visualizer = {
             ctx.arc((j-1)*widthFactor, shipCount*heightFactor, 2, 0, Math.PI*2, true);
             ctx.fill();
         }
-		
-		// Add onclick event
-		/*canvas.addEventListener('click', function(event) {
-			var x = event.pageX - canvas.offsetLeft,
-				y = event.pageY - canvas.offsetTop;
-			
-			gotoAction((x / widthFactor + 1));
-		}, false);
-		*/
     },
     
     start: function() {
@@ -365,7 +351,7 @@ var Visualizer = {
     _eof: true
 };
 
-var ParserUtils = {    
+var ParserUtils = {
     parseFleet: function(data) {
         data = data.split('.');
         // (owner,numShips,sourcePlanet,destinationPlanet,totalTripLength,turnsRemaining)
@@ -509,13 +495,22 @@ var ParserUtils = {
     $('title').text('CGI - Planet Wars - Match '+Visualizer.game_id)
     $('#macthId').text(Visualizer.game_id)
     
+		
+	// Add onclick event on timeline
+	$('#feedline').click(function(event) {
+		var canvas = document.getElementById('feedline');
+	    var widthFactor = canvas.width / Math.max(200, Visualizer.moves.length)
+		
+		var x = event.pageX - canvas.offsetLeft,
+			y = event.pageY - canvas.offsetTop;
+		
+		Visualizer.stop();
+		Visualizer.setFrame((x / widthFactor + 1));
+		Visualizer.drawFrame(Visualizer.frame);
+		
+		return false;
+	});
+    
     Visualizer.start();
 	Visualizer.drawChart();
 })(window.jQuery);
-
-function gotoAction(frame) {
-	Visualizer.setFrame(frame);
-	Visualizer.drawFrame(frame);
-	Visualizer.stop();
-	return false;
-}
