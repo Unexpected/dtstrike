@@ -7,3 +7,4 @@ bin
 /Bot/bin/Fleet.class
 /Bot/bin/Game.class
 /Bot/bin/MilitaryPlanet.class
+/website/application/logs/*.php
