@@ -24,6 +24,9 @@ echo ^<?php > %fileName%
 echo Class %modelName% extends Model { >> %fileName%
 echo. >> %fileName%
 
+echo   var $TABLE_NAME = '%tableName%'; >> %fileName%
+echo. >> %fileName%
+
 REM Recuperation des variables
 set subquery=%mysql% -e "select `COLUMN_NAME`, `COLUMN_TYPE`, `DATA_TYPE` from INFORMATION_SCHEMA.COLUMNS where `TABLE_NAME` = '%1' order by `ORDINAL_POSITION`"
 for /f "delims=" %%a in ('%subquery%') do (
@@ -36,10 +39,18 @@ echo   function %modelName%() {>> %fileName%
 echo     // Call the Model constructor>> %fileName%
 echo     parent::Model();>> %fileName%
 echo   }>> %fileName%
-echo. >> %fileName%
 
+REM Functions
+echo. >> %fileName%
+echo   function getAll() {>> %fileName%
+echo     $query = $this-^>db-^>query($this-^>TABLE_NAME);>> %fileName%
+echo     if ($query-^>num_rows() > 0) {>> %fileName%
+echo       return $query-^>result();>> %fileName%
+echo     }>> %fileName%
+echo   }>> %fileName%
 
 REM Footer
+echo. >> %fileName%
 echo } >> %fileName%
 echo. >> %fileName%
 
@@ -49,7 +60,7 @@ goto:eof
 echo     Var %1 of type %2
 set defVal=''
 if "x%3" =="xint" set defVal=-1
-echo   var $%1 = %defVal%; // %2 >> %fileName%
+echo   var $%1 = %defVal%; // %2>> %fileName%
 goto:eof
 
 
