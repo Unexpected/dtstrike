@@ -44,7 +44,7 @@ REM Functions
 echo. >> %fileName%
 echo   function getAll() {>> %fileName%
 echo     $query = $this-^>db-^>query($this-^>TABLE_NAME);>> %fileName%
-echo     if ($query-^>num_rows() > 0) {>> %fileName%
+echo     if ($query-^>num_rows()) > 0) {>> %fileName%
 echo       return $query-^>result();>> %fileName%
 echo     }>> %fileName%
 echo   }>> %fileName%

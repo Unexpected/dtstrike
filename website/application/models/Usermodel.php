@@ -26,7 +26,7 @@ Class Usermodel extends Model {
  
   function getAll() {
     $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows()  {
+    if ($query->num_rows())  {
       return $query->result();
     }
   }
