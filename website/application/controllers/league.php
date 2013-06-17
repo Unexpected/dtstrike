@@ -16,7 +16,16 @@ class League extends CI_Controller {
 
 	public function create()
 	{
-		$data['page_title'] = "Création d'une ligue";
+		$data['page_title'] = "CrÃ©ation d'une ligue";
+      
+		$this->load->view('all_header', $data);
+		$this->load->view('todo');
+		$this->load->view('all_footer');
+	}
+
+	public function mine()
+	{
+		$data['page_title'] = "Mes ligues";
       
 		$this->load->view('all_header', $data);
 		$this->load->view('todo');

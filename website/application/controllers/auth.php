@@ -28,10 +28,8 @@ class Auth extends CI_Controller {
     function __construct() {
         parent::__construct();
 
-        $this->load->helper('form');
         $this->load->library('Form_validation');
         $this->load->library('AuthLDAP');
-        $this->load->helper('url');
         $this->load->library('table');
     }
 

@@ -16,7 +16,7 @@ class Tournament extends CI_Controller {
 
 	public function create()
 	{
-		$data['page_title'] = "Création d'un tournois";
+		$data['page_title'] = "CrÃ©ation d'un tournois";
       
 		$this->load->view('all_header', $data);
 		$this->load->view('todo');
@@ -25,7 +25,16 @@ class Tournament extends CI_Controller {
 
 	public function join()
 	{
-		$data['page_title'] = "Inscription à un tournoi";
+		$data['page_title'] = "Inscription Ã  un tournoi";
+      
+		$this->load->view('all_header', $data);
+		$this->load->view('todo');
+		$this->load->view('all_footer');
+	}
+
+	public function mine()
+	{
+		$data['page_title'] = "Mes tournois";
       
 		$this->load->view('all_header', $data);
 		$this->load->view('todo');
