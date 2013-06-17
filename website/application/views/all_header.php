@@ -43,9 +43,20 @@
 		margin: 14px 0 14px 0;
 		padding: 12px 10px 12px 10px;
 	}
+	
+	#menu{
+		float: left;
+		width: 200px;
+	}
+	#menu > ul {
+		list-style-type: none;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
 
 	#body{
-		margin: 0 15px 0 15px;
+		margin: 0 15px 0 205px;
+		min-height: 300px;
 	}
 	
 	p.footer{
@@ -69,4 +80,6 @@
 <div id="container">
 	<h1><?php echo $page_title;?></h1>
 
+	<?php include 'menu.php'; ?>
+	
 	<div id="body">
