@@ -64,8 +64,8 @@ $config['user_search_filter'] = '';  // Additional search filters to use for use
 $config['group_search_filter'] = ''; // Additional search filters to use for group lookups
 $config['login_attribute'] = 'cn';
 $config['schema_type'] = 'ad'; // Use rfc2307, rfc2307bis, or ad
-$config['proxy_user'] = '__edit__';
-$config['proxy_pass'] = '__edit__';
+$config['proxy_user'] = getenv('LDAP_USER');
+$config['proxy_pass'] = getenv('LDAP_PASS');
 $config['roles'] = array(1 => '_KLS_Utilisateurs', 
                          3 => 'FR_R2A_LYO_DirectionTechnique'); // FIXME Ajouter les bons rôles
 $config['auditlog'] = 'application/logs/audit.log';  // Some place to log attempted logins (separate from message log)
