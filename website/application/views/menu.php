@@ -2,7 +2,7 @@
 	// FIXME : Voir si on peut mieux faire ...
 	$userRoles = array();
 	if (is_logged_in($this)) {
-		$userRoles = array('User'=>1, "League"=>2, "Tournament"=>3);
+		$userRoles = array('User'=>1, "League"=>2, "Tournament"=>3, "ADMIN"=>4);
 	}
 	
 	$menu = array(
@@ -32,6 +32,11 @@
 		
 		if (isset($userRoles["Tournament"])) {
 			$menu = array_merge($menu, array(array("Mes tournois", site_url("tournament/mine"))));
+		}
+		
+		if (isset($userRoles["ADMIN"])) {
+			$menu = array_merge($menu, array(array('', '')
+			, array("Administration", site_url("admin"))));
 		}
 		
 		$menu = array_merge($menu, array(array('', '')
