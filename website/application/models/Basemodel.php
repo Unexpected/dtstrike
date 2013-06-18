@@ -19,6 +19,7 @@ Class Basemodel extends CI_Model {
 		if ($query->num_rows())  {
 			return $query->result();
 		}
+		return array();
 	}
 	
 	function insert() {
