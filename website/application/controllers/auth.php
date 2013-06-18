@@ -51,50 +51,34 @@ class Auth extends CI_Controller {
                     $rules->set_value('username'),
                     $rules->set_value('password'))) {
                 // Login WIN!
+                
+        		// FIXME : Ajouter User DB
+        		// FIXME : Ajouter gestion des Rôles et Fonctions
+        		
                 if($this->session->flashdata('tried_to')) {
                     redirect($this->session->flashdata('tried_to'));
                 }else {
-                $this->load->view('auth/success_view', array(
-                    'username' => $this->session->userdata('username'), 
-                    'role_name' => $this->session->userdata('role_name'),
-                    'role_level' => $this->session->userdata('role_level'),
-                    'logged_in' => $this->session->userdata('logged_in'),
-                    'name' => $this->session->userdata('name'),
-                    'id' => $this->session->userdata('session_id'),
-                    'user_agent' => $this->session->userdata('user_agent')
-                  )
-                );
+                    redirect('welcome');
                 }
             }else {
                 // Login FAIL
+				$data['page_title'] = 'Identification sur DTstrike';
+				$this->load->view('all_header', $data);
                 $this->load->view('auth/login_form', array('login_fail_msg'
                                         => 'Error with LDAP authentication.'));
+				$this->load->view('all_footer');
             }
-        }else {
-                // Already logged in...
-                $this->load->view('auth/success_view', array(
-                    'username' => $this->session->userdata('username'), 
-                    'role_name' => $this->session->userdata('role_name'),
-                    'role_level' => $this->session->userdata('role_level'),
-                    'logged_in' => $this->session->userdata('logged_in'),
-                    'name' => $this->session->userdata('name'),
-                    'id' => $this->session->userdata('session_id'),
-                    'user_agent' => $this->session->userdata('user_agent')
-                  )
-                );
+        } else {
+			// Already logged in...
+			redirect('welcome');
         }
     }
 
     function logout() {
         if($this->session->userdata('logged_in')) {
-            $data['name'] = $this->session->userdata('cn');
-            $data['username'] = $this->session->userdata('username');
-            $data['logged_in'] = TRUE;
             $this->authldap->logout();
-        } else {
-            $data['logged_in'] = FALSE;
         }
-            $this->load->view('auth/logout_view', $data);
+		redirect('welcome');
     }
 }
 
