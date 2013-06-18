@@ -21,7 +21,7 @@ set fileName=%modelName%.php
 
 REM Header
 echo ^<?php > %fileName%
-echo Class %modelName% extends Model { >> %fileName%
+echo Class %modelName% extends Basemodel {>> %fileName%
 echo. >> %fileName%
 
 REM Recuperation des variables
@@ -32,14 +32,19 @@ for /f "delims=" %%a in ('%subquery%') do (
 
 REM Constructor
 echo. >> %fileName%
-echo   function %modelName%() {>> %fileName%
-echo     // Call the Model constructor>> %fileName%
-echo     parent::Model();>> %fileName%
+echo   function __construct() {>> %fileName%
+echo     // Call the BaseModel constructor>> %fileName%
+echo     parent::__construct();>> %fileName%
 echo   }>> %fileName%
-echo. >> %fileName%
 
+REM Functions
+echo. >> %fileName%
+echo   function getTableName() {>> %fileName%
+echo     return '%tableName%';>> %fileName%
+echo   }>> %fileName%
 
 REM Footer
+echo. >> %fileName%
 echo } >> %fileName%
 echo. >> %fileName%
 
@@ -49,7 +54,7 @@ goto:eof
 echo     Var %1 of type %2
 set defVal=''
 if "x%3" =="xint" set defVal=-1
-echo   var $%1 = %defVal%; // %2 >> %fileName%
+echo   var $%1 = %defVal%; // %2>> %fileName%
 goto:eof
 
 

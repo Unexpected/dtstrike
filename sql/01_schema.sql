@@ -229,3 +229,17 @@ user_data TEXT NOT NULL ,
 PRIMARY KEY ( session_id ) ,
 KEY  `last_activity_idx` (  `last_activity` )
 );
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+  `name` varchar(10) NOT NULL,
+  `descr` varchar(150) NOT NULL,
+  PRIMARY KEY (`name`)
+);
+
+DROP TABLE IF EXISTS `user_roles`;
+CREATE TABLE `user_roles` (
+  `user_id` int(11) NOT NULL,
+  `role_name` varchar(10) NOT NULL,
+  PRIMARY KEY (`user_id`,`role_name`)
+);

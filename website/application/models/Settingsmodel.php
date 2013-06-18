@@ -1,13 +1,17 @@
 <?php 
-Class Settingsmodel extends Model { 
+Class Settingsmodel extends Basemodel {
  
-  var $name = ''; // varchar(20) 
-  var $number = -1; // int(11) 
-  var $string = ''; // varchar(255) 
+  var $name = ''; // varchar(20)
+  var $number = -1; // int(11)
+  var $string = ''; // varchar(255)
  
-  function Settingsmodel() {
-    // Call the Model constructor
-    parent::Model();
+  function __construct() {
+    // Call the BaseModel constructor
+    parent::__construct();
+  }
+ 
+  function getTableName() {
+    return 'settings';
   }
  
 } 

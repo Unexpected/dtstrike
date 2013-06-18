@@ -1,8 +1,8 @@
 <?php 
-Class Organizationmodel extends Basemodel {
+Class Rolesmodel extends Basemodel {
  
-  var $org_id = -1; // int(11)
-  var $name = ''; // varchar(128)
+  var $name = ''; // varchar(10)
+  var $descr = ''; // varchar(150)
  
   function __construct() {
     // Call the BaseModel constructor
@@ -10,7 +10,7 @@ Class Organizationmodel extends Basemodel {
   }
  
   function getTableName() {
-    return 'organization';
+    return 'roles';
   }
  
 } 

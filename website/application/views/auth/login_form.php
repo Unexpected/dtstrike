@@ -1,10 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-      <title>Please Login</title>
-  </head>
-  <body>
       <?php echo form_fieldset('Login'); ?>
       <?php echo validation_errors();?>
 
@@ -28,5 +21,3 @@
       <?php echo form_submit('login', 'Login'); ?>
       <?php echo form_close(); ?>
       <?php echo form_fieldset_close(); ?>
-  </body>
-</html>

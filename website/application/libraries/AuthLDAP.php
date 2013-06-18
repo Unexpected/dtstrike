@@ -119,6 +119,7 @@ class AuthLDAP {
         $this->_audit("Successful login: ".$user_info['cn']."(".$username.") from ".$this->ci->input->ip_address());
 
         // Set the session data
+        // FIXME : Remove rôles
         $customdata = array('username' => $username,
                             'cn' => $user_info['cn'],
                             'role_name' => $user_info['role_name'],
@@ -239,6 +240,7 @@ class AuthLDAP {
         $dn = stripslashes($entries[0]['dn']);
         $id = $entries[0][$this->login_attribute][0];
         
+        // FIXME : Remove rôles
         if($this->schema_type == 'rfc2307') {
             $get_role_arg = $id;               
         }else if($this->schema_type == 'rfc2307bis' || $this->schema_type == 'ad') {

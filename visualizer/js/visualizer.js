@@ -21,7 +21,7 @@ var Visualizer = {
       showFleetText: true,
       display_margin: 50,
       turnsPerSecond: 8,
-      teamColor: ['#455','#c00','#7ac','#0c0','#00c'],
+      teamColor: ['#455','#E31937','#FF6A00','#F2A200','#A1C4D0'],
 	  E_planet_size: 20,
 	  M_planet_size: 40
     },
