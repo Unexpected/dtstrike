@@ -1,7 +1,7 @@
 <?php
 	// FIXME : Voir si on peut mieux faire ...
 	$userRoles = array();
-	if ($this->session->userdata('logged_in')) {
+	if (is_logged_in($this)) {
 		$userRoles = array('User'=>1, "League"=>2, "Tournament"=>3);
 	}
 	

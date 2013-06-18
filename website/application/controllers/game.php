@@ -25,6 +25,8 @@ class Game extends CI_Controller {
 
 	public function mine()
 	{
+		verify_user_logged($this, 'user');
+		
 		$data['page_title'] = "Mes parties";
       
 		$this->load->view('all_header', $data);

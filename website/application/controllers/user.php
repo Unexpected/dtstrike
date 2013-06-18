@@ -9,10 +9,7 @@ class User extends CI_Controller {
 
 	public function index()
 	{
-		if (!$this->authldap->is_authenticated()) {
-			$this->session->set_flashdata('tried_to', 'user');
-			redirect('auth');
-		}
+		verify_user_logged($this, 'user');
 		
 		$data['page_title'] = 'Mon compte';
 		$this->load->view('all_header', $data);
@@ -31,6 +28,8 @@ class User extends CI_Controller {
 
 	public function bots()
 	{
+		verify_user_logged($this, 'user/bots');
+		
 		$data['page_title'] = "Mes bots";
       
 		$this->load->view('all_header', $data);

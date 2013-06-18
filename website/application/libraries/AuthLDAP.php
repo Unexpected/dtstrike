@@ -32,6 +32,8 @@
  * @todo            Rework roles system a little bit to a "auth level" paradigm
  */
 class AuthLDAP {
+	var $AUTH_URL = 'auth';
+	
     function __construct() {
         $this->ci =& get_instance();
 
