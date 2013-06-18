@@ -1,7 +1,5 @@
 <?php 
-Class Matchup_playermodel extends Model { 
- 
-  var $TABLE_NAME = 'matchup_player'; 
+Class Matchup_playermodel extends BaseModel {
  
   var $matchup_id = -1; // int(11)
   var $user_id = -1; // int(11)
@@ -12,15 +10,12 @@ Class Matchup_playermodel extends Model {
   var $deleted = ''; // tinyint(1)
  
   function Matchup_playermodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'matchup_player';
   }
  
 } 

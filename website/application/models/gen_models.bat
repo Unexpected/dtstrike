@@ -21,10 +21,7 @@ set fileName=%modelName%.php
 
 REM Header
 echo ^<?php > %fileName%
-echo Class %modelName% extends Model { >> %fileName%
-echo. >> %fileName%
-
-echo   var $TABLE_NAME = '%tableName%'; >> %fileName%
+echo Class %modelName% extends BaseModel {>> %fileName%
 echo. >> %fileName%
 
 REM Recuperation des variables
@@ -36,17 +33,14 @@ for /f "delims=" %%a in ('%subquery%') do (
 REM Constructor
 echo. >> %fileName%
 echo   function %modelName%() {>> %fileName%
-echo     // Call the Model constructor>> %fileName%
-echo     parent::Model();>> %fileName%
+echo     // Call the BaseModel constructor>> %fileName%
+echo     parent::BaseModel();>> %fileName%
 echo   }>> %fileName%
 
 REM Functions
 echo. >> %fileName%
-echo   function getAll() {>> %fileName%
-echo     $query = $this-^>db-^>query($this-^>TABLE_NAME);>> %fileName%
-echo     if ($query-^>num_rows()) > 0) {>> %fileName%
-echo       return $query-^>result();>> %fileName%
-echo     }>> %fileName%
+echo   function getTableName() {>> %fileName%
+echo     return '%tableName%';>> %fileName%
 echo   }>> %fileName%
 
 REM Footer

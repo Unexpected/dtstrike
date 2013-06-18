@@ -1,7 +1,5 @@
 <?php 
-Class Submissionmodel extends Model { 
- 
-  var $TABLE_NAME = 'submission'; 
+Class Submissionmodel extends BaseModel {
  
   var $submission_id = -1; // int(11)
   var $user_id = -1; // int(11)
@@ -25,15 +23,12 @@ Class Submissionmodel extends Model {
   var $game_count = -1; // int(11)
  
   function Submissionmodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'submission';
   }
  
 } 

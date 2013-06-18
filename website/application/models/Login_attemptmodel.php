@@ -1,7 +1,5 @@
 <?php 
-Class Login_attemptmodel extends Model { 
- 
-  var $TABLE_NAME = 'login_attempt'; 
+Class Login_attemptmodel extends BaseModel {
  
   var $timestamp = ''; // datetime
   var $username = ''; // varchar(64)
@@ -10,15 +8,12 @@ Class Login_attemptmodel extends Model {
   var $real_ip = ''; // varchar(18)
  
   function Login_attemptmodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'login_attempt';
   }
  
 } 

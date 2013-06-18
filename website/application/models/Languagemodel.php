@@ -1,21 +1,16 @@
 <?php 
-Class Languagemodel extends Model { 
- 
-  var $TABLE_NAME = 'language'; 
+Class Languagemodel extends BaseModel {
  
   var $language_id = -1; // int(11)
   var $name = ''; // varchar(64)
  
   function Languagemodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'language';
   }
  
 } 

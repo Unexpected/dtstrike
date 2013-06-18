@@ -1,7 +1,5 @@
 <?php 
-Class User_cookiemodel extends Model { 
- 
-  var $TABLE_NAME = 'user_cookie'; 
+Class User_cookiemodel extends BaseModel {
  
   var $user_id = -1; // int(11)
   var $cookie = ''; // varchar(256)
@@ -9,15 +7,12 @@ Class User_cookiemodel extends Model {
   var $forgot = ''; // tinyint(1)
  
   function User_cookiemodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'user_cookie';
   }
  
 } 

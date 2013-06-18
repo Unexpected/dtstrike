@@ -1,7 +1,5 @@
 <?php 
-Class Opponentsmodel extends Model { 
- 
-  var $TABLE_NAME = 'opponents'; 
+Class Opponentsmodel extends BaseModel {
  
   var $game_id = -1; // int(11)
   var $user_id = -1; // int(11)
@@ -9,15 +7,12 @@ Class Opponentsmodel extends Model {
   var $timestamp = ''; // datetime
  
   function Opponentsmodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'opponents';
   }
  
 } 

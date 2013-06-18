@@ -1,7 +1,5 @@
 <?php 
-Class Usermodel extends Model { 
- 
-  var $TABLE_NAME = 'user'; 
+Class Usermodel extends BaseModel {
  
   var $user_id = -1; // int(11)
   var $username = ''; // varchar(128)
@@ -20,15 +18,12 @@ Class Usermodel extends Model {
   var $max_game_id = -1; // int(11)
  
   function Usermodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'user';
   }
  
 } 

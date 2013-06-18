@@ -1,21 +1,16 @@
 <?php 
-Class User_status_codemodel extends Model { 
- 
-  var $TABLE_NAME = 'user_status_code'; 
+Class User_status_codemodel extends BaseModel {
  
   var $status_id = -1; // int(11)
   var $name = ''; // varchar(256)
  
   function User_status_codemodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'user_status_code';
   }
  
 } 

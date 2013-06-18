@@ -1,7 +1,5 @@
 <?php 
-Class Mapmodel extends Model { 
- 
-  var $TABLE_NAME = 'map'; 
+Class Mapmodel extends BaseModel {
  
   var $map_id = -1; // int(11)
   var $filename = ''; // varchar(256)
@@ -11,15 +9,12 @@ Class Mapmodel extends Model {
   var $timestamp = ''; // datetime
  
   function Mapmodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'map';
   }
  
 } 

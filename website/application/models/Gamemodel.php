@@ -1,7 +1,5 @@
 <?php 
-Class Gamemodel extends Model { 
- 
-  var $TABLE_NAME = 'game'; 
+Class Gamemodel extends BaseModel {
  
   var $game_id = -1; // int(11)
   var $seed_id = -1; // int(11)
@@ -16,15 +14,12 @@ Class Gamemodel extends Model {
   var $replay_path = ''; // varchar(255)
  
   function Gamemodel() {
-    // Call the Model constructor
-    parent::Model();
+    // Call the BaseModel constructor
+    parent::BaseModel();
   }
  
-  function getAll() {
-    $query = $this->db->query($this->TABLE_NAME);
-    if ($query->num_rows())  {
-      return $query->result();
-    }
+  function getTableName() {
+    return 'game';
   }
  
 } 
