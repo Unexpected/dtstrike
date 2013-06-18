@@ -1,0 +1,25 @@
+<?xml version="1.0" ?> 
+<project name="engine" default="jar" basedir="..">
+	
+	<target name="init">
+		<mkdir dir="dist/build/classes" />
+	</target>
+	
+	<target name="compile" depends="init" >
+		<javac destdir="dist/build/classes" debug="true" srcdir="src" includeantruntime="false" />
+		<copy todir="dist/build/classes">
+			<fileset dir="src">
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="jar" depends="clean, compile">
+		<jar destfile="dist/engine.jar" basedir="dist/build/classes" />
+	</target>
+	
+	<target name="clean">
+		<delete dir="dist" />
+	</target>
+	
+</project>

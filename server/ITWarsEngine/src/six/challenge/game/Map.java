@@ -1,3 +1,4 @@
+package six.challenge.game;
 import java.io.File;
 
 public class Map {

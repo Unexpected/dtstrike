@@ -1,3 +1,5 @@
+package six.challenge.game;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -5,10 +7,13 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 public class Game {
@@ -19,20 +24,35 @@ public class Game {
 	public StringBuffer gameLog = new StringBuffer();
 	public String mapName;
 	public int numPlayers;
+	public boolean errorAtStartup = false;
 
 	public List<Planet> planets;
 	public List<Fleet> fleets;
+	public Map<Integer, Set<EconomicPlanet>> playersEconomicPlanets;
+	public Map<Integer, Set<MilitaryPlanet>> playersMilitaryPlanets;
 
 	public BufferedWriter logWriter;
 
-	public Game(File mapFile, int turnTime, int turns, String logFile)
-			throws Exception {
+	public Game(File mapFile, int turnTime, int turns, String logFile) {
 		this.winner = -1;
 		this.mapName = mapFile.getName();
 		new File(logFile).delete();
-		this.logWriter = new BufferedWriter(new FileWriter(logFile, true));
-		if (parse(mapFile) > 0) {
-			throw new Exception("Invalid map file");
+		try {
+			this.logWriter = new BufferedWriter(new FileWriter(logFile, true));
+		} catch (IOException ioEx) {
+			System.err.println("Error: Unable to open log file " + logFile);
+			ioEx.printStackTrace(System.err);
+			errorAtStartup = true;
+		}
+		try {
+			if (parse(mapFile) != 0) {
+				System.err.println("Error: Invalid map " + mapFile);
+				errorAtStartup = true;
+			}
+		} catch (IOException ioEx) {
+			System.err.println("Error: Unable to open map file " + mapFile);
+			ioEx.printStackTrace(System.err);
+			errorAtStartup = true;
 		}
 	}
 
@@ -138,6 +158,9 @@ public class Game {
 	}
 
 	public int issueOrder(int id, int sourcePlanet, int destPlanet, int numShips) {
+		if (numShips == 0) {
+			return 0;
+		}
 		Planet localPlanet = (Planet) this.planets.get(sourcePlanet);
 		if ((localPlanet.owner != id) || (numShips > localPlanet.numShips)
 				|| (numShips < 0)) {
@@ -164,21 +187,42 @@ public class Game {
 		return (int) Math.ceil(Math.sqrt(d1 * d1 + d2 * d2));
 	}
 
+	public Planet getClosestPlanet(Planet origin,
+			Set<? extends Planet> destinations) {
+		Planet destination = null;
+		int distance = Integer.MAX_VALUE;
+
+		for (Planet d : destinations) {
+			int newDistance = distance(origin.id, d.id);
+			if (newDistance < distance) {
+				distance = newDistance;
+				destination = d;
+			}
+		}
+		return destination;
+	}
+
 	public void doTimeStep() {
-		int[] revenue = new int[64];
-
 		for (Planet p : planets) {
-			if (p instanceof EconomicPlanet && p.owner != 0) {
-				revenue[p.owner] = revenue[p.owner]
-						+ ((EconomicPlanet) p).revenue;
+			if (p instanceof EconomicPlanet && p.owner > 0) {
+				if (playersMilitaryPlanets.get(p.owner).size() > 0) {
+					Planet dest = getClosestPlanet(p,
+							playersMilitaryPlanets.get(p.owner));
+					if (dest != null) {
+						int distance = distance(p.id, dest.id);
+						fleets.add(new Fleet(p.owner,
+								((EconomicPlanet) p).revenue, p.id, dest.id,
+								distance, distance));
+					}
+				}
 			}
 		}
 
-		for (Planet p : planets) {
-			if (p instanceof MilitaryPlanet && p.owner != 0) {
-				p.numShips += revenue[p.owner];
-			}
-		}
+		// for (Planet p : planets) {
+		// if (p instanceof MilitaryPlanet && p.owner != 0) {
+		// p.numShips += revenue[p.owner];
+		// }
+		// }
 
 		for (Fleet f : fleets) {
 			f.doTimeStep();
@@ -208,44 +252,44 @@ public class Game {
 	}
 
 	private void fight(Planet p) {
-		Map<Integer, Integer> ships = new TreeMap<Integer, Integer>();
+		Map<Integer, Integer> battleships = new TreeMap<Integer, Integer>();
 
-		ships.put(p.owner, p.numShips);
-		List<Fleet> keepFleets = new ArrayList<Fleet>();
+		battleships.put(p.owner, p.numShips);
+		List<Fleet> keptFleets = new ArrayList<Fleet>();
 		for (Fleet f : fleets) {
-			if (planets.get(f.destinationPlanet) == p && f.turnsRemaining == 0) {
-				if (ships.get(f.owner) == null) {
-					ships.put(f.owner, 0);
+			if (f.destinationPlanet == p.id && f.turnsRemaining == 0) {
+				if (battleships.get(f.owner) == null) {
+					battleships.put(f.owner, 0);
 				}
-				int currentShips = ships.get(f.owner);
-				ships.put(f.owner, f.numShips + currentShips);
+				int currentShips = battleships.get(f.owner);
+				battleships.put(f.owner, f.numShips + currentShips);
 			} else {
-				keepFleets.add(f);
+				keptFleets.add(f);
 			}
 		}
 
-		if (ships.keySet().size() == 0) {
+		fleets = keptFleets;
+
+		if (battleships.keySet().size() == 0) {
 			// No fight
 			return;
-		} else if (ships.keySet().size() == 1) {
+		} else if (battleships.keySet().size() == 1) {
 			// Only one player
-			p.numShips = ships.get(p.owner);
+			p.numShips = battleships.get(p.owner);
 			return;
 		}
-
-		fleets = keepFleets;
 
 		int maxShips = -1;
 		int maxOwner = -1;
 		int secondShips = -1;
 
-		for (Entry<Integer, Integer> e : ships.entrySet()) {
+		for (Entry<Integer, Integer> e : battleships.entrySet()) {
 			if (e.getValue() > maxShips) {
 				maxShips = e.getValue();
 				maxOwner = e.getKey();
 			}
 		}
-		for (Entry<Integer, Integer> e : ships.entrySet()) {
+		for (Entry<Integer, Integer> e : battleships.entrySet()) {
 			if (e.getKey().intValue() != maxOwner && e.getValue() > secondShips) {
 				secondShips = e.getValue();
 			}
@@ -257,6 +301,23 @@ public class Game {
 		} else {
 			// Biggest fleet is new owner (maybe doesn't change)
 			p.numShips = maxShips - secondShips;
+			if (p.owner != maxOwner) {
+				if (p instanceof MilitaryPlanet) {
+					if (p.owner != 0) {
+						playersMilitaryPlanets.get(p.owner).remove(
+								(MilitaryPlanet) p);
+					}
+					playersMilitaryPlanets.get(maxOwner)
+							.add((MilitaryPlanet) p);
+				} else {
+					if (p.owner != 0) {
+						playersEconomicPlanets.get(p.owner).remove(
+								(EconomicPlanet) p);
+					}
+					playersEconomicPlanets.get(maxOwner)
+							.add((EconomicPlanet) p);
+				}
+			}
 			p.owner = maxOwner;
 		}
 	}
@@ -274,19 +335,17 @@ public class Game {
 		return parse(map);
 	}
 
-	public void saveGameLogToFile(int winnerId) {
+	public void saveGameLogToFile(int winnerId, int gameId, File gLog) {
 
-		File logsFolder = new File(GAMES_FOLDER);
-		int gameId = logsFolder.listFiles().length + 1;
-		File gLog = new File(GAMES_FOLDER + gameId + ".game");
 		FileWriter fw = null;
 		try {
 			fw = new FileWriter(gLog);
-			fw.write("game_id=" + gameId + "\n");
-			fw.write("winner=" + winnerId + "\n");
-			fw.write("map_id=" + mapName + "\n");
-			fw.write("draw=" + (winnerId == 0 ? 1 : 0) + "\n");
-			fw.write("timestamp=" + System.currentTimeMillis() + "\n");
+			fw.write("var data=\"");
+			fw.write("game_id=" + gameId + "\\n");
+			fw.write("winner=" + winnerId + "\\n");
+			fw.write("map_id=" + mapName + "\\n");
+			fw.write("draw=" + (winnerId == 0 ? 1 : 0) + "\\n");
+			fw.write("timestamp=" + System.currentTimeMillis() + "\\n");
 			fw.write("players=");
 			for (int i = 1; i <= numPlayers; i++) {
 				if (i > 1) {
@@ -294,9 +353,9 @@ public class Game {
 				}
 				fw.write(i + ":player" + i);
 			}
-			fw.write("\n");
+			fw.write("\\n");
 			fw.write("playback_string=" + gameLog.toString());
-			fw.write("\n");
+			fw.write("\\n\"");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -314,9 +373,8 @@ public class Game {
 	private int parse(String map) {
 		planets = new ArrayList<Planet>();
 		fleets = new ArrayList<Fleet>();
-
-		planets = new ArrayList<Planet>();
-		fleets = new ArrayList<Fleet>();
+		playersEconomicPlanets = new HashMap<Integer, Set<EconomicPlanet>>();
+		playersMilitaryPlanets = new HashMap<Integer, Set<MilitaryPlanet>>();
 
 		String[] lines = map.split("\n");
 		for (int i = 0; i < lines.length; i++) {
@@ -338,9 +396,16 @@ public class Game {
 						int owner = Integer.parseInt(line[3]);
 						int numShips = Integer.parseInt(line[4]);
 
-						MilitaryPlanet p = new MilitaryPlanet(owner, numShips,
-								x, y);
+						MilitaryPlanet p = new MilitaryPlanet(planets.size(),
+								owner, numShips, x, y);
 						planets.add(p);
+						if (owner != 0) {
+							if (playersMilitaryPlanets.get(owner) == null) {
+								playersMilitaryPlanets.put(owner,
+										new HashSet<MilitaryPlanet>());
+							}
+							playersMilitaryPlanets.get(owner).add(p);
+						}
 						if (this.gameLog.length() > 0) {
 							gameLog.append(":");
 						}
@@ -357,9 +422,17 @@ public class Game {
 						int numShips = Integer.parseInt(line[4]);
 						int economicValue = Integer.parseInt(line[5]);
 
-						EconomicPlanet p = new EconomicPlanet(owner, numShips,
-								economicValue, x, y);
+						EconomicPlanet p = new EconomicPlanet(planets.size(),
+								owner, numShips, economicValue, x, y);
 						planets.add(p);
+						if (owner != 0) {
+							if (playersEconomicPlanets.get(owner) == null) {
+								playersEconomicPlanets.put(owner,
+										new HashSet<EconomicPlanet>());
+							}
+							playersEconomicPlanets.get(owner).add(p);
+						}
+
 						if (this.gameLog.length() > 0) {
 							this.gameLog.append(":");
 						}

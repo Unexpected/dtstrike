@@ -1,3 +1,4 @@
+package six.challenge.game;
 public class Fleet {
 	public int owner;
 	public int numShips;

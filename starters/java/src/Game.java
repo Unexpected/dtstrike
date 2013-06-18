@@ -224,8 +224,8 @@ public class Game {
 	// * the ships will take a few turns to reach their destination. Travel
 	// is not instant. See the Distance() function for more info.
 	public void issueOrder(int sourcePlanet, int destinationPlanet, int numShips) {
-		System.out.println("" + sourcePlanet + " " + destinationPlanet + " "
-				+ numShips);
+		System.out.print("" + sourcePlanet + " " + destinationPlanet + " "
+				+ numShips + "\n");
 		System.out.flush();
 	}
 
@@ -240,14 +240,15 @@ public class Game {
 	// * the ships will take a few turns to reach their destination. Travel
 	// is not instant. See the Distance() function for more info.
 	public void issueOrder(Planet source, Planet dest, int numShips) {
-		System.out.println("" + source.id + " " + dest.id + " " + numShips);
+		System.out
+				.print("" + source.id + " " + dest.id + " " + numShips + "\n");
 		System.out.flush();
 	}
 
 	// Sends the game engine a message to let it know that we're done sending
 	// orders. This signifies the end of our turn.
 	public void finishTurn() {
-		System.out.println("go");
+		System.out.print("go\n");
 		System.out.flush();
 	}
 
