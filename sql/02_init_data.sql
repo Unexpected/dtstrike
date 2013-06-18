@@ -265,3 +265,10 @@ INSERT INTO `language` VALUES (0,'Unknown'),
 (17,'Go'),
 (18,'Groovy');
 UNLOCK TABLES;
+
+LOCK TABLES `roles` WRITE;
+INSERT INTO `roles` (`name`, `descr`) VALUES
+('ADMIN', 'Administrateur'),
+('USER', 'Utilisateur'),
+('BETA', 'Beta testeur');
+UNLOCK TABLES;
