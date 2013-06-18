@@ -9,14 +9,18 @@
 		array("Accueil", site_url("welcome"))
 		, array('', '')
 		, array("Dernières parties", site_url("game"))
-		, array("Ligues", site_url("league"))
-		, array("Tournois", site_url("tournament"))
-		, array('', '')
 	);
+	if (isset($userRoles["League"])) {
+		$menu = array_merge($menu, array(array("Ligues", site_url("league"))));
+	}
+	if (isset($userRoles["Tournament"])) {
+		$menu = array_merge($menu, array(array("Tournois", site_url("tournament"))));
+	}
+	$menu = array_merge($menu, array(array('', '')));
 	
 	if (!isset($userRoles["User"])) {
-		$menu = array_merge($menu, array(array("S'enregistrer", site_url("user/register"))
-		, array("Se logger", site_url("auth/login"))));
+		//$menu = array_merge($menu, array(array("S'enregistrer", site_url("user/register"))));
+		$menu = array_merge($menu, array(array("S'identifier", site_url("auth/login"))));
 	} else {
 		$menu = array_merge($menu, array(array("Mon compte", site_url("user"))
 		, array("Mes bots", site_url("user/bots"))
