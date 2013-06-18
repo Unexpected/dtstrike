@@ -1,13 +1,13 @@
 <?php 
-Class Workermodel extends BaseModel {
+Class Workermodel extends Basemodel {
  
   var $worker_id = -1; // int(11)
   var $ip_address = ''; // varchar(15)
   var $api_key = ''; // varchar(256)
  
-  function Workermodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

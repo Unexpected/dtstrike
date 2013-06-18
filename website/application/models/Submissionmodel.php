@@ -1,5 +1,5 @@
 <?php 
-Class Submissionmodel extends BaseModel {
+Class Submissionmodel extends Basemodel {
  
   var $submission_id = -1; // int(11)
   var $user_id = -1; // int(11)
@@ -22,9 +22,9 @@ Class Submissionmodel extends BaseModel {
   var $max_game_id = -1; // int(11)
   var $game_count = -1; // int(11)
  
-  function Submissionmodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

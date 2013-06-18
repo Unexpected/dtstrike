@@ -1,14 +1,14 @@
 <?php 
-Class User_cookiemodel extends BaseModel {
+Class User_cookiemodel extends Basemodel {
  
   var $user_id = -1; // int(11)
   var $cookie = ''; // varchar(256)
   var $expires = ''; // datetime
   var $forgot = ''; // tinyint(1)
  
-  function User_cookiemodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

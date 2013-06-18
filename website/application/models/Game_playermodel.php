@@ -1,5 +1,5 @@
 <?php 
-Class Game_playermodel extends BaseModel {
+Class Game_playermodel extends Basemodel {
  
   var $game_id = -1; // int(11)
   var $user_id = -1; // int(11)
@@ -17,9 +17,9 @@ Class Game_playermodel extends BaseModel {
   var $sigma_after = ''; // float
   var $valid = ''; // tinyint(1)
  
-  function Game_playermodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

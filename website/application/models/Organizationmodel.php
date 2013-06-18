@@ -1,12 +1,12 @@
 <?php 
-Class Organizationmodel extends BaseModel {
+Class Organizationmodel extends Basemodel {
  
   var $org_id = -1; // int(11)
   var $name = ''; // varchar(128)
  
-  function Organizationmodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

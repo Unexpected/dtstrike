@@ -21,7 +21,7 @@ set fileName=%modelName%.php
 
 REM Header
 echo ^<?php > %fileName%
-echo Class %modelName% extends BaseModel {>> %fileName%
+echo Class %modelName% extends Basemodel {>> %fileName%
 echo. >> %fileName%
 
 REM Recuperation des variables
@@ -32,9 +32,9 @@ for /f "delims=" %%a in ('%subquery%') do (
 
 REM Constructor
 echo. >> %fileName%
-echo   function %modelName%() {>> %fileName%
+echo   function __construct() {>> %fileName%
 echo     // Call the BaseModel constructor>> %fileName%
-echo     parent::BaseModel();>> %fileName%
+echo     parent::__construct();>> %fileName%
 echo   }>> %fileName%
 
 REM Functions

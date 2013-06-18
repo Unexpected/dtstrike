@@ -1,5 +1,5 @@
 <?php 
-Class Login_attemptmodel extends BaseModel {
+Class Login_attemptmodel extends Basemodel {
  
   var $timestamp = ''; // datetime
   var $username = ''; // varchar(64)
@@ -7,9 +7,9 @@ Class Login_attemptmodel extends BaseModel {
   var $naive_ip = ''; // varchar(18)
   var $real_ip = ''; // varchar(18)
  
-  function Login_attemptmodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

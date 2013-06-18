@@ -1,12 +1,12 @@
 <?php 
-Class Rolesmodel extends BaseModel {
+Class Rolesmodel extends Basemodel {
  
   var $name = ''; // varchar(10)
   var $descr = ''; // varchar(150)
  
-  function Rolesmodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

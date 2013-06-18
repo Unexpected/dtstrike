@@ -1,17 +1,21 @@
 <?php 
-Class Basemodel extends Model {
+Class Basemodel extends CI_Model {
 
-	function Basemodel() {
+	function __construct() {
 		// Call the Model constructor
-		parent::Model();
+		parent::__construct();
 	}
 	
 	function getTableName() {
-		// Need to be implemented on all implementations
+		// Implement this
 	}
 
-	function getAll() {
-		$query = $this->db->query($this->getTableName());
+	function getAll($limit = -1) {
+		if ($limit > 0) {
+			$this->db->limit($limit);
+		}
+		
+		$query = $this->db->get($this->getTableName());
 		if ($query->num_rows())  {
 			return $query->result();
 		}
@@ -25,5 +29,8 @@ Class Basemodel extends Model {
         $this->db->update($this->getTableName(), $this, array($idField => $idValue));
 	}
 
+	function delete($idField, $idValue) {
+		$this->db->delete($this->getTableName(), $this, array($idField => $idValue));
+	}
 }
 

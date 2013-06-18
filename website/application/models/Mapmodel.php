@@ -1,5 +1,5 @@
 <?php 
-Class Mapmodel extends BaseModel {
+Class Mapmodel extends Basemodel {
  
   var $map_id = -1; // int(11)
   var $filename = ''; // varchar(256)
@@ -8,9 +8,9 @@ Class Mapmodel extends BaseModel {
   var $max_turns = -1; // int(11)
   var $timestamp = ''; // datetime
  
-  function Mapmodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

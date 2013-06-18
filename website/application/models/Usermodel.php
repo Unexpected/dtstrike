@@ -1,5 +1,5 @@
 <?php 
-Class Usermodel extends BaseModel {
+Class Usermodel extends Basemodel {
  
   var $user_id = -1; // int(11)
   var $username = ''; // varchar(128)
@@ -17,9 +17,9 @@ Class Usermodel extends BaseModel {
   var $shutdown_date = ''; // datetime
   var $max_game_id = -1; // int(11)
  
-  function Usermodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

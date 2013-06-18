@@ -1,12 +1,12 @@
 <?php 
-Class User_status_codemodel extends BaseModel {
+Class User_status_codemodel extends Basemodel {
  
   var $status_id = -1; // int(11)
   var $name = ''; // varchar(256)
  
-  function User_status_codemodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

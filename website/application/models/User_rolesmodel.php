@@ -1,12 +1,12 @@
 <?php 
-Class User_rolesmodel extends BaseModel {
+Class User_rolesmodel extends Basemodel {
  
   var $user_id = -1; // int(11)
   var $role_name = ''; // varchar(10)
  
-  function User_rolesmodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

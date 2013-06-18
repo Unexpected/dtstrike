@@ -1,5 +1,5 @@
 <?php 
-Class Matchupmodel extends BaseModel {
+Class Matchupmodel extends Basemodel {
  
   var $matchup_id = -1; // int(11)
   var $seed_id = -1; // int(11)
@@ -10,9 +10,9 @@ Class Matchupmodel extends BaseModel {
   var $matchup_timestamp = ''; // datetime
   var $deleted = ''; // tinyint(1)
  
-  function Matchupmodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {

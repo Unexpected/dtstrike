@@ -3,11 +3,17 @@
 class Game extends CI_Controller {
     function __construct() {
         parent::__construct();
+        
+        $this->load->model('Gamemodel');
     }
 
 	public function index()
 	{
 		$data['page_title'] = 'Les dernières parties';
+		
+		// Recup des 20 dernières parties
+		$games = $this->Gamemodel->getAll(20);
+        log_message('debug', $games);
       
 		$this->load->view('all_header', $data);
 		$this->load->view('todo');

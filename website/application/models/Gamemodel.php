@@ -1,5 +1,5 @@
 <?php 
-Class Gamemodel extends BaseModel {
+Class Gamemodel extends Basemodel {
  
   var $game_id = -1; // int(11)
   var $seed_id = -1; // int(11)
@@ -13,9 +13,9 @@ Class Gamemodel extends BaseModel {
   var $worker_id = ''; // int(11)
   var $replay_path = ''; // varchar(255)
  
-  function Gamemodel() {
+  function __construct() {
     // Call the BaseModel constructor
-    parent::BaseModel();
+    parent::__construct();
   }
  
   function getTableName() {
