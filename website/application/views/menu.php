@@ -1,6 +1,5 @@
 <?php
 	// FIXME : Voir si on peut mieux faire ...
-	// FIXME : Utiliser des rubriques ? <li class="nav-header"><i class="icon-xx icon-2x"></i>Title</li>
 	$userRoles = array();
 	if (is_logged_in($this)) {
 		$userRoles = array('User'=>1, "League"=>2, "Tournament"=>3, "ADMIN"=>4);
@@ -8,7 +7,8 @@
 	
 	$menu = array(
 		array("Accueil", site_url("welcome"))
-		, array('', '')
+		, array('Synthèse du concours', '')
+		, array("Classement actuel", site_url("game/rank"))
 		, array("Dernières parties", site_url("game"))
 	);
 	if (isset($userRoles["League"])) {
@@ -17,7 +17,7 @@
 	if (isset($userRoles["Tournament"])) {
 		$menu = array_merge($menu, array(array("Tournois", site_url("tournament"))));
 	}
-	$menu = array_merge($menu, array(array('', '')));
+	$menu = array_merge($menu, array(array('Mon compte', '')));
 	
 	if (!isset($userRoles["User"])) {
 		//$menu = array_merge($menu, array(array("S'enregistrer", site_url("user/register"))));
@@ -36,7 +36,7 @@
 		}
 		
 		if (isset($userRoles["ADMIN"])) {
-			$menu = array_merge($menu, array(array('', '')
+			$menu = array_merge($menu, array(array('Administration', '')
 			, array("Administration", site_url("admin"))));
 		}
 		
@@ -50,7 +50,7 @@
 	foreach ($menu as $menuEntry) {
 		if ($menuEntry[1] == '') {
 ?>
-		<li class="divider"></li>
+		<li class="nav-header"><i class="icon-xx icon-2x"></i><?php echo $menuEntry[0]; ?></li>
 <?php
 		} else {
 ?>
