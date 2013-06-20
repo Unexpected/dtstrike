@@ -3,11 +3,11 @@
 <head>
 	<meta charset="utf-8">
 	<title>DTstrike</title>
-	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="static/css/font-awesome.css" />
-	<link rel="stylesheet" type="text/css" href="static/css/styles-dark.css" id="skin" />
-	<script type="text/javascript" src="static/js/jquery-2.0.2.js"></script>
-	<script type="text/javascript" src="static/js/challenge.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/bootstrap.css") ?>" />
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/font-awesome.css") ?>" />
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-dark.css") ?>" id="skin" />
+	<script type="text/javascript" src="<?php echo base_url("static/js/jquery-2.0.2.js") ?>"></script>
+	<script type="text/javascript" src="<?php echo base_url("static/js/challenge.js") ?>"></script>
 </head>
 <body>
 	<header class="navbar navbar-fixed-top">
