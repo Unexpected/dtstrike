@@ -422,3 +422,11 @@ select {
 	background-color: #ddd;
 	color: #333333;
 }
+
+.logo {
+	width: 100px;
+	height: 100px;
+}
+div.logo {
+	display: inline-block;
+}
