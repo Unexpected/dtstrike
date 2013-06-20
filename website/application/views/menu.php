@@ -6,10 +6,12 @@
 	}
 	
 	$menu = array(
-		array("Accueil", site_url("welcome"))
+		array('Six Challenge', '')
+		, array("Accueil", site_url("welcome"))
 		, array('Synthèse du concours', '')
 		, array("Classement actuel", site_url("game/rank"))
 		, array("Dernières parties", site_url("game"))
+		, array("Les cartes officielles", site_url("game/maps"))
 	);
 	if (isset($userRoles["League"])) {
 		$menu = array_merge($menu, array(array("Ligues", site_url("league"))));
@@ -21,7 +23,7 @@
 	
 	if (!isset($userRoles["User"])) {
 		//$menu = array_merge($menu, array(array("S'enregistrer", site_url("user/register"))));
-		$menu = array_merge($menu, array(array("S'identifier", site_url("auth/login"))));
+		$menu = array_merge($menu, array(array("Se connecter", site_url("auth/login"))));
 	} else {
 		$menu = array_merge($menu, array(array("Mon compte", site_url("user"))
 		, array("Mes bots", site_url("user/bots"))
@@ -35,13 +37,12 @@
 			$menu = array_merge($menu, array(array("Mes tournois", site_url("tournament/mine"))));
 		}
 		
+		$menu = array_merge($menu, array(array("Se déconnecter", site_url("auth/logout"))));
+		
 		if (isset($userRoles["ADMIN"])) {
 			$menu = array_merge($menu, array(array('Administration', '')
 			, array("Administration", site_url("admin"))));
 		}
-		
-		$menu = array_merge($menu, array(array('', '')
-		, array("Se délogger", site_url("auth/logout"))));
 	}
 ?>
 <div id="menu" class="span3">
