@@ -1,5 +1,6 @@
 <?php
 	// FIXME : Voir si on peut mieux faire ...
+	// FIXME : Utiliser des rubriques ? <li class="nav-header"><i class="icon-xx icon-2x"></i>Title</li>
 	$userRoles = array();
 	if (is_logged_in($this)) {
 		$userRoles = array('User'=>1, "League"=>2, "Tournament"=>3, "ADMIN"=>4);
@@ -43,13 +44,13 @@
 		, array("Se délogger", site_url("auth/logout"))));
 	}
 ?>
-<div id="menu">
-	<ul>
+<div id="menu" class="span3">
+	<ul class="nav nav-list">
 <?php
 	foreach ($menu as $menuEntry) {
 		if ($menuEntry[1] == '') {
 ?>
-		<li><hr/></li>
+		<li class="divider"></li>
 <?php
 		} else {
 ?>

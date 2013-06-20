@@ -1,0 +1,153 @@
+@font-face {
+	font-family: 'Space Ranger';
+	src: url('../fonts/spaceranger.ttf');
+	font-style: normal;
+	font-weight: normal;
+}
+
+body {
+	padding: 136px 0 55px 0;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.navbar-inner h1 {
+	font-family: 'Space Ranger';
+	font-size: 4em;
+	letter-spacing: 0.25em;
+    word-spacing: 0.5em;
+    padding: 0.25em;
+    text-align: center;
+}
+
+.navbar h1 a {
+	text-decoration: none;
+	text-shadow: 0 0 3px #ffffff;
+}
+
+.navbar h1 a:hover {
+	text-decoration: none;
+	text-shadow: 0 0 5px #ffffff;
+}
+
+.navbar h1 .icon-rocket {
+	position: relative;
+	top: 5px;
+}
+
+.nav-header > i[class^="icon-"] {
+	margin-right: 8px;
+}
+
+#menu, section {
+	background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+	margin: 0;
+}
+
+section {
+    padding: 14px;
+    position: relative;
+	margin-bottom: 17px;
+	box-shadow: 0 0 20px #E0E0E0 inset;
+}
+
+.nav-list li.nav-header:first-child {
+	border-radius: 4px;
+}
+
+.nav-list li > a {
+	border-top: 1px solid #dddddd;
+}
+
+.nav-list li + .nav-header {
+	border-top: 1px solid #dddddd;
+}
+
+.nav-list li.nav-header {
+	background-image: linear-gradient(to bottom, #fff, #eee);
+}
+
+.nav li + .nav-header {
+	margin-top: 0;
+}
+
+.nav-list .divider {
+	display: none;
+}
+
+.nav-list > li > a {
+	color: inherit;
+}
+
+.nav-list > .active > a,
+.nav-list > .active > a:hover,
+.nav-list > .active > a:focus {
+	cursor: default;
+}
+
+.nav-header,
+.nav-list > li > a,
+.nav-list .nav-header {
+	text-shadow: none;
+	padding: 5px 15px;
+}
+
+.nav > li > a {
+	transition: background-color 0.2s;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+	text-decoration: none;
+	transition: none;
+	background-color: #eee;
+}
+
+.icon-2x:before {
+	vertical-align: -10%;
+}
+
+.table-striped tbody > tr > td,
+.table-striped tbody > tr > th {
+	transition: background-color 0.2s;
+}
+
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+	background-color: #eee;
+	transition: none;
+}
+
+@media (max-width: 979px) {
+	body {
+		padding: 0;
+	}
+}
+
+@media (min-width: 980px) {
+	body {
+		background-image: url('../images/light/1600.jpg');
+	}
+}
+
+@media (min-width: 768px) and (max-width: 979px) {
+	body {
+		background-image: url('../images/light/979.jpg');
+	}
+}
+
+@media (max-width: 767px) {
+	body {
+		background-image: url('../images/light/767.jpg');
+	}
+}
+
+@media (max-width: 480px) {
+	body {
+		background-image: url('../images/light/480.jpg');
+	}
+}
