@@ -30,8 +30,8 @@ body {
 .navbar-inner h1,
 h2 {
 	font-family: 'Space Ranger';
-	letter-spacing: 0.25em;
-	word-spacing: 0.5em;
+	letter-spacing: 0.2em;
+	word-spacing: 0.3em;
 }
 
 .navbar h1 a {
@@ -426,7 +426,5 @@ select {
 .logo {
 	width: 100px;
 	height: 100px;
-}
-div.logo {
 	display: inline-block;
 }

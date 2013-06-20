@@ -16,8 +16,8 @@ body {
 .navbar-inner h1 {
 	font-family: 'Space Ranger';
 	font-size: 4em;
-	letter-spacing: 0.25em;
-    word-spacing: 0.5em;
+	letter-spacing: 0.2em;
+    word-spacing: 0.3em;
     padding: 0.25em;
     text-align: center;
 }
@@ -150,4 +150,10 @@ section {
 	body {
 		background-image: url('../images/light/480.jpg');
 	}
+}
+
+.logo {
+	width: 100px;
+	height: 100px;
+	display: inline-block;
 }
