@@ -62,6 +62,7 @@ class AuthLDAP {
             log_message('error', 'LDAP functionality not present in php.');
         }
 
+        $this->dev_bypass          = $this->ci->config->item('dev_bypass');
         $this->ldap_uri            = $this->ci->config->item('ldap_uri');
         $this->schema_type         = $this->ci->config->item('schema_type');
         $this->use_tls             = $this->ci->config->item('use_tls');
@@ -171,7 +172,20 @@ class AuthLDAP {
      * @param string $password
      * @return array 
      */
-    private function _authenticate($username, $password) {        
+    private function _authenticate($username, $password) {
+    	if ($this->dev_bypass) {
+    		// Dev mode, bypass LDAP
+    		if ($username == $password) {
+    			// Logged
+		        return array('cn' => $username, 'dn' => $username, 'id' => $username,
+		            'role_name' => 'ADMIN',
+		            'role_level' => 1);
+    		} else {
+    			// Fail
+            	show_error('Dev mode: Invalid credentials for '.$username);
+    		}
+    	}
+    	
         foreach($this->ldap_uri as $uri) {
             $this->ldapconn = ldap_connect($uri);
             if($this->ldapconn) {

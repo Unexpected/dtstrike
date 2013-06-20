@@ -53,6 +53,7 @@
  * The following may be used as a guide for setting up to authenticate
  * against OpenLDAP server
  */
+$config['dev_bypass'] = TRUE; // If TRUE, ldap isn't called
 $config['ldap_uri'] = array('ldap://fr-dc019.groupinfra.com:389/');
 $config['use_tls'] = false; // Encrypted without using SSL
 $config['search_base'] = 'OU=FR,OU=Landlord FR,OU=Corporate,DC=groupinfra,DC=com';
