@@ -11,35 +11,49 @@ class Game extends CI_Controller {
 	public function index()
 	{
 		$data['page_title'] = 'Les dernières parties';
+		$data['page_icon'] = 'play-sign';
 		
 		// Recup des 20 dernières parties
 		$limit = 20;
 		$games = $this->Gamemodel->getAll($limit);
-		$data2['limit'] = $limit;
-		$data2['games'] = $games;
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('game_list', $data2);
-		$this->load->view('all_footer');
+		$data['limit'] = $limit;
+		$data['games'] = $games;
+
+		render($this, 'game_list', $data);
 	}
 
 	public function view()
 	{
 		$data['page_title'] = "Visualisation";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'play-circle';
+		render($this, 'todo', $data);
 	}
 
 	public function mine()
 	{
 		verify_user_logged($this, 'user');
-		
+
 		$data['page_title'] = "Mes parties";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'briefcase';
+		render($this, 'todo', $data);
 	}
+
+	public function rank()
+	{
+		verify_user_logged($this, 'user');
+
+		$data['page_title'] = "Classement actuel";
+		$data['page_icon'] = 'trophy';
+		render($this, 'todo', $data);
+	}
+
+	public function maps()
+	{
+		verify_user_logged($this, 'user');
+
+		$data['page_title'] = "Les cartes officielles";
+		$data['page_icon'] = 'sitemap';
+		render($this, 'todo', $data);
+	}
+
 }

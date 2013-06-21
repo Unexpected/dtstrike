@@ -13,16 +13,16 @@
 	<header class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<h1 class="pull-left">
-				<a href="">SIX <i class="icon-rocket icon-large"></i> Challenge</a>
+				<a href="<?php echo base_url() ?>">SIX <i class="icon-rocket icon-large"></i> Challenge</a>
 			</h1>
 			<div class="logo pull-right">
-				<img id="logo_fixed" src="static/images/logo/logo_six_full.png" style="display: none;" />
-				<img src="static/images/logo/logo_six_front.png" style="display: none;" />
-				<img src="static/images/logo/logo_six_back_1.png" style="display: none;" />
-				<img src="static/images/logo/logo_six_back_2.png" style="display: none;" />
-				<img src="static/images/logo/logo_six_back_3.png" style="display: none;" />
-				<img src="static/images/logo/logo_six_back_4.png" style="display: none;" />
-				<img src="static/images/logo/logo_six_back_5.png" style="display: none;" />
+				<img id="logo_fixed" src="<?php echo base_url("static/images/logo/logo_six_full.png") ?>" style="display: none;" />
+				<img src="<?php echo base_url("static/images/logo/logo_six_front.png") ?>" style="display: none;" />
+				<img src="<?php echo base_url("static/images/logo/logo_six_back_1.png") ?>" style="display: none;" />
+				<img src="<?php echo base_url("static/images/logo/logo_six_back_2.png") ?>" style="display: none;" />
+				<img src="<?php echo base_url("static/images/logo/logo_six_back_3.png") ?>" style="display: none;" />
+				<img src="<?php echo base_url("static/images/logo/logo_six_back_4.png") ?>" style="display: none;" />
+				<img src="<?php echo base_url("static/images/logo/logo_six_back_5.png") ?>" style="display: none;" />
 				<canvas id="logo" width="100" height="100"></canvas>
 			</div>
 		</div>
@@ -32,4 +32,4 @@
 			<div class="span9 pull-right">
 				<?php // FIXME Utiliser plusieurs sections ?>
 				<section>
-					<h2><?php echo $page_title;?></h2>
+					<h2><i class="icon-<?php echo $page_icon;?> icon-large"></i> <?php echo $page_title;?></h2>

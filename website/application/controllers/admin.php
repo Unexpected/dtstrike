@@ -9,24 +9,22 @@ class Admin extends CI_Controller {
 	{
 		verify_user_logged($this, 'admin');
 		verify_user_role($this, 'admin');
-		
+
 		$data['page_title'] = 'Administration de DTstrike';
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'cogs';
+
+		render($this, 'todo', $data);
 	}
 
 	public function user()
 	{
 		verify_user_logged($this, 'admin/user');
 		verify_user_role($this, 'admin');
-		
+
 		$data['page_title'] = "Liste des utilisateurs";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'user';
+
+		render($this, 'todo', $data);
 	}
 
 	public function user_update()
@@ -35,10 +33,9 @@ class Admin extends CI_Controller {
 		verify_user_role($this, 'admin');
 
 		$data['page_title'] = "MaJ d'un utilisateur";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'save';
+
+		render($this, 'todo', $data);
 	}
 
 	public function user_save()

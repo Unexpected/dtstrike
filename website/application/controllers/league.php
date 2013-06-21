@@ -8,35 +8,26 @@ class League extends CI_Controller {
 	public function index()
 	{
 		verify_user_role($this, 'league');
-		
+
 		$data['page_title'] = "Les ligues";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		render($this, 'todo', $data);
 	}
 
 	public function create()
 	{
 		verify_user_logged($this, 'league/create');
 		verify_user_role($this, 'league');
-		
+
 		$data['page_title'] = "Création d'une ligue";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		render($this, 'todo', $data);
 	}
 
 	public function mine()
 	{
 		verify_user_logged($this, 'league/mine');
 		verify_user_role($this, 'league');
-		
+
 		$data['page_title'] = "Mes ligues";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		render($this, 'todo', $data);
 	}
 }

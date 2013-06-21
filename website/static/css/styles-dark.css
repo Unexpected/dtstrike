@@ -428,3 +428,7 @@ select {
 	height: 100px;
 	display: inline-block;
 }
+
+legend {
+	color: inherit;
+}

@@ -6,9 +6,9 @@
 	}
 	
 	$menu = array(
-		array('Six Challenge', '')
+		array('Six Challenge', '', 'globe')
 		, array("Accueil", site_url("welcome"))
-		, array('Synthèse du concours', '')
+		, array('Synthèse du concours', '', 'gamepad')
 		, array("Classement actuel", site_url("game/rank"))
 		, array("Dernières parties", site_url("game"))
 		, array("Les cartes officielles", site_url("game/maps"))
@@ -19,7 +19,7 @@
 	if (isset($userRoles["Tournament"])) {
 		$menu = array_merge($menu, array(array("Tournois", site_url("tournament"))));
 	}
-	$menu = array_merge($menu, array(array('Mon compte', '')));
+	$menu = array_merge($menu, array(array('Mon compte', '', 'user')));
 	
 	if (!isset($userRoles["User"])) {
 		//$menu = array_merge($menu, array(array("S'enregistrer", site_url("user/register"))));
@@ -40,7 +40,7 @@
 		$menu = array_merge($menu, array(array("Se déconnecter", site_url("auth/logout"))));
 		
 		if (isset($userRoles["ADMIN"])) {
-			$menu = array_merge($menu, array(array('Administration', '')
+			$menu = array_merge($menu, array(array('Administration', '', 'cogs')
 			, array("Administration", site_url("admin"))));
 		}
 	}
@@ -51,7 +51,7 @@
 	foreach ($menu as $menuEntry) {
 		if ($menuEntry[1] == '') {
 ?>
-		<li class="nav-header"><i class="icon-xx icon-2x"></i><?php echo $menuEntry[0]; ?></li>
+		<li class="nav-header"><i class="icon-<?php echo $menuEntry[2]; ?> icon-2x"></i><?php echo $menuEntry[0]; ?></li>
 <?php
 		} else {
 ?>

@@ -30,7 +30,7 @@ class Auth extends CI_Controller {
 
         $this->load->library('Form_validation');
         $this->load->library('AuthLDAP');
-        $this->load->library('table');
+        $this->load->library('Bootstrap');
     }
 
     function index() {
@@ -63,10 +63,9 @@ class Auth extends CI_Controller {
             }else {
                 // Login FAIL
 				$data['page_title'] = 'Identification sur Six Challenge';
-				$this->load->view('all_header', $data);
-                $this->load->view('auth/login_form', array('login_fail_msg'
-                                        => 'Error with LDAP authentication.'));
-				$this->load->view('all_footer');
+				$data['page_icon'] = 'user';
+				$data['login_fail_msg'] = 'Error with LDAP authentication.';
+				render($this, 'auth/login_form', $data);
             }
         } else {
 			// Already logged in...

@@ -10,30 +10,25 @@ class User extends CI_Controller {
 	public function index()
 	{
 		verify_user_logged($this, 'user');
-		
+
 		$data['page_title'] = 'Mon compte';
-		$this->load->view('all_header', $data);
-		$this->load->view('user/index');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'cogs';
+		render($this, 'user/index', $data);
 	}
 
 	public function register()
 	{
 		$data['page_title'] = "Enregistrement sur DTstrike";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'user';
+		render($this, 'todo', $data);
 	}
 
 	public function bots()
 	{
 		verify_user_logged($this, 'user/bots');
-		
+
 		$data['page_title'] = "Mes bots";
-      
-		$this->load->view('all_header', $data);
-		$this->load->view('todo');
-		$this->load->view('all_footer');
+		$data['page_icon'] = 'fighter-jet';
+		render($this, 'todo', $data);
 	}
 }

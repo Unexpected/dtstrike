@@ -55,14 +55,15 @@ class AuthLDAP {
      * @return void
      */
     private function _init() {
+    	$this->dev_bypass = $this->ci->config->item('dev_bypass');
+    	
         // Verify that the LDAP extension has been loaded/built-in
         // No sense continuing if we can't
-        if (! function_exists('ldap_connect')) {
+        if (!$this->dev_bypass && !function_exists('ldap_connect')) {
             show_error('LDAP functionality not present.  Either load the module ldap php module or use a php with ldap support compiled in.');
             log_message('error', 'LDAP functionality not present in php.');
         }
 
-        $this->dev_bypass          = $this->ci->config->item('dev_bypass');
         $this->ldap_uri            = $this->ci->config->item('ldap_uri');
         $this->schema_type         = $this->ci->config->item('schema_type');
         $this->use_tls             = $this->ci->config->item('use_tls');
