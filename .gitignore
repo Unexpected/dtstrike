@@ -8,3 +8,5 @@ bin
 /Bot/bin/Game.class
 /Bot/bin/MilitaryPlanet.class
 /website/application/logs/*.php
+/website/api/server_info.php
+/logs/*.php
