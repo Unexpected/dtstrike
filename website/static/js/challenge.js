@@ -19,11 +19,11 @@ function initCanvas() {
 		var context = canvas.getContext('2d');
 		
 		frontImageObj = new Image();
-		frontImageObj.src = '/six/static/images/logo/logo_six_front.png';
+		frontImageObj.src = $('#logo_front').attr('src');
 
 		for (var i=0; i<5; i++) {
 			backImageObj[i] = new Image();
-			backImageObj[i].src = '/six/static/images/logo/logo_six_back_'+(i+1)+'.png';
+			backImageObj[i].src = $('#logo_back_'+(i+1)).attr('src');
 		}
 		
 		animate();

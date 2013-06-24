@@ -17,12 +17,12 @@
 			</h1>
 			<div class="logo pull-right">
 				<img id="logo_fixed" src="<?php echo base_url("static/images/logo/logo_six_full.png") ?>" style="display: none;" />
-				<img src="<?php echo base_url("static/images/logo/logo_six_front.png") ?>" style="display: none;" />
-				<img src="<?php echo base_url("static/images/logo/logo_six_back_1.png") ?>" style="display: none;" />
-				<img src="<?php echo base_url("static/images/logo/logo_six_back_2.png") ?>" style="display: none;" />
-				<img src="<?php echo base_url("static/images/logo/logo_six_back_3.png") ?>" style="display: none;" />
-				<img src="<?php echo base_url("static/images/logo/logo_six_back_4.png") ?>" style="display: none;" />
-				<img src="<?php echo base_url("static/images/logo/logo_six_back_5.png") ?>" style="display: none;" />
+				<img id="logo_front" src="<?php echo base_url("static/images/logo/logo_six_front.png") ?>" style="display: none;" />
+				<img id="logo_back_1" src="<?php echo base_url("static/images/logo/logo_six_back_1.png") ?>" style="display: none;" />
+				<img id="logo_back_2" src="<?php echo base_url("static/images/logo/logo_six_back_2.png") ?>" style="display: none;" />
+				<img id="logo_back_3" src="<?php echo base_url("static/images/logo/logo_six_back_3.png") ?>" style="display: none;" />
+				<img id="logo_back_4" src="<?php echo base_url("static/images/logo/logo_six_back_4.png") ?>" style="display: none;" />
+				<img id="logo_back_5" src="<?php echo base_url("static/images/logo/logo_six_back_5.png") ?>" style="display: none;" />
 				<canvas id="logo" width="100" height="100"></canvas>
 			</div>
 		</div>

@@ -4,7 +4,7 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
-		$data['page_title'] = 'Bienvenue sur DTstrike!';
+		$data['page_title'] = 'Bienvenue sur Six Challenge!';
 		$data['page_icon'] = 'rocket';
 		render($this, 'welcome_message', $data);
 	}
