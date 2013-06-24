@@ -17,7 +17,7 @@ set tableName=%1
 set subtableName=%tableName:~0,1%
 call :UpCase subtableName
 set modelName=%subtableName%%tableName:~1%model
-set fileName=%modelName%.php
+set fileName=%tableName%model.php
 
 REM Header
 echo ^<?php > %fileName%
