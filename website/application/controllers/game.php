@@ -40,8 +40,6 @@ class Game extends CI_Controller {
 
 	public function rank()
 	{
-		verify_user_logged($this, 'user');
-
 		$data['page_title'] = "Classement actuel";
 		$data['page_icon'] = 'trophy';
 		render($this, 'todo', $data);
@@ -49,8 +47,6 @@ class Game extends CI_Controller {
 
 	public function maps()
 	{
-		verify_user_logged($this, 'user');
-
 		$data['page_title'] = "Les cartes officielles";
 		$data['page_icon'] = 'sitemap';
 		render($this, 'todo', $data);
