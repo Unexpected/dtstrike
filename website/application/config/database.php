@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'dtstrike';
-$db['default']['password'] = 'dtstrike';
-$db['default']['database'] = 'dtstrike';
+$db['default']['username'] = 'contest';
+$db['default']['password'] = 'contest';
+$db['default']['database'] = 'contest';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

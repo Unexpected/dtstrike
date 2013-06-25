@@ -269,6 +269,5 @@ UNLOCK TABLES;
 LOCK TABLES `roles` WRITE;
 INSERT INTO `roles` (`name`, `descr`) VALUES
 ('ADMIN', 'Administrateur'),
-('USER', 'Utilisateur'),
-('BETA', 'Beta testeur');
+('USER', 'Utilisateur');
 UNLOCK TABLES;
