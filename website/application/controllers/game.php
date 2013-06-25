@@ -10,23 +10,24 @@ class Game extends CI_Controller {
 
 	public function index()
 	{
-		$data['page_title'] = 'Les dernières parties';
-		$data['page_icon'] = 'play-sign';
-		
 		// Recup des 20 dernières parties
 		$limit = 20;
 		$games = $this->Gamemodel->getAll($limit);
 		$data['limit'] = $limit;
 		$data['games'] = $games;
-
-		render($this, 'game_list', $data);
+		
+		$data['page_title'] = 'Les dernières parties';
+		$data['page_icon'] = 'play-sign';
+		render($this, 'game/game_list', $data);
 	}
 
-	public function view()
+	public function view($game_id)
 	{
+		// FIXME : Load game datas (path, id, ???)
+		
 		$data['page_title'] = "Visualisation";
 		$data['page_icon'] = 'play-circle';
-		render($this, 'todo', $data);
+		render($this, 'game/game_view', $data);
 	}
 
 	public function mine()
