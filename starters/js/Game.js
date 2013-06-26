@@ -3,6 +3,7 @@ var fs = require('fs');
 exports.game = {
 	'bot' : null,
 	'currentTurn' : -1,
+	'myID' : -1,
 	'orders' : [],
 	'planets' : [],
 	'fleets' : [],
@@ -25,7 +26,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner == myID) {
+			if (p.owner == this.myID) {
 				result.push(p);
 			}
 		}
@@ -36,7 +37,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner == myID && p.type == 'M') {
+			if (p.owner == this.myID && p.type == 'M') {
 				result.push(p);
 			}
 		}
@@ -58,7 +59,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner != 0 && p.owner != myID) {
+			if (p.owner != 0 && p.owner != this.myID) {
 				result.push(p);
 			}
 		}
@@ -69,7 +70,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner != myID) {
+			if (p.owner != this.myID) {
 				result.push(p);
 			}
 		}
@@ -149,8 +150,18 @@ exports.game = {
 	},
 	'processLine' : function(line) {
 		line = line.trim().split(' ');
+		
+		if(line[0] === 'go') {
+			this.myID = parseInt(line[1]);
+			this.bot.onTurn();
+			return;
+		} else if(line[0] === 'end') {
+			this.bot.onEnd();
+			return;
+		}
+		
 		if (line.length != 0) {
-			if (line[0].equals("M")) {
+			if (line[0] == "M") {
 				if (line.length != 5) {
 					return 1;
 				}
@@ -161,7 +172,7 @@ exports.game = {
 					'owner' : parseInt(line[3]),
 					'numShips' : parseInt(line[4])
 				});
-			} else if (line[0].equals("E")) {
+			} else if (line[0] == "E") {
 				if (line.length != 6) {
 					return 1;
 				}
@@ -173,7 +184,7 @@ exports.game = {
 					'numShips' : parseInt(line[4]),
 					'revenue' : parseInt(line[5])
 				});
-			} else if (line[0].equals("F")) {
+			} else if (line[0] == "F") {
 				if (line.length != 7) {
 					return 1;
 				}
@@ -201,10 +212,10 @@ exports.game = {
 		for ( var i = 0, len = this.orders.length; i < len; ++i) {
 			var order = this.orders[i];
 			fs.writeSync(process.stdout.fd, '' + order.src + ' ' + order.dest
-					+ ' ' + order.numShips + '\n');
+					+ ' ' + order.numShip + '\n');
 		}
 		this.orders = [];
 		fs.writeSync(process.stdout.fd, 'go\n');
-		process.stdout.flush();
+		//process.stdout.flush();
 	},
 };
