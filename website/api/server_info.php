@@ -11,13 +11,13 @@ $server_info = array(
     "db_name" 		=> $db[$active_group]['database'],
     "mailer_address" => "donotsend",
     "submissions_open" => True,
-    "repo_path" => $repo_dir,
-    "uploads_path" => $upload_dir,
-    "maps_path" => $map_dir,
-    "replay_path" => $replay_dir,
-    "api_create_key" => $api_create_key,
-    "api_log" => $api_log,
-    "game_result_errors" => $game_result_errors
+    "repo_path" => $config['repo_dir'],
+    "uploads_path" => $config['upload_dir'],
+    "maps_path" => $config['map_dir'],
+    "replay_path" => $config['replay_dir'],
+    "api_create_key" => $config['api_create_key'],
+    "api_log" => $config['api_log'],
+    "game_result_errors" => $config['game_result_errors']
 );
 
 ?>
