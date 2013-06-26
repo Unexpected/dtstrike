@@ -1,5 +1,7 @@
 <?
 
+// FIXME : Cette API ne pourra pas fonctionner, api_query_key n'existe pas dans les configs
+
 require_once('server_info.php');
 if ($_GET['api_query_key'] != $server_info['api_query_key']) {
   header('HTTP/1.0 401 Unauthorized');
