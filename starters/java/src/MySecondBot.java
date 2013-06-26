@@ -16,9 +16,9 @@ public class MySecondBot {
 
 	public static void doTurn(Game game) {
 		// (1) If we currently have a fleet in flight, just do nothing.
-		if (game.getMyFleets().size() >= 1) {
-			return;
-		}
+		// if (game.getMyFleets().size() >= 3) {
+		// return;
+		// }
 		// (2) Find my strongest military planet.
 		Planet source = null;
 		int sourceShips = Integer.MIN_VALUE;
@@ -28,6 +28,9 @@ public class MySecondBot {
 				sourceShips = score;
 				source = p;
 			}
+		}
+		if (source == null) {
+			return;
 		}
 
 		// (3) Find the weakest enemy or neutral planet.
@@ -44,7 +47,7 @@ public class MySecondBot {
 		// (4) Send half the ships from my strongest planet to the weakest
 		// planet that I do not own.
 		if (source != null && dest != null) {
-			int numShips = source.numShips / 2;
+			int numShips = source.numShips;
 			game.issueOrder(source, dest, numShips);
 		}
 	}

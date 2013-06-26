@@ -57,7 +57,7 @@ public class MyOtherBot {
 	public static void main(String[] args) {
 
 		try {
-			fw = new FileWriter(new File("D:/Temp/bot"
+			fw = new FileWriter(new File("D:/Temp/otherbot"
 					+ new Random().nextInt(1000) + ".log"));
 			log("bot started", fw);
 			String line = "";
