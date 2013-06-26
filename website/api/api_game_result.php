@@ -242,8 +242,8 @@ if (array_key_exists('error', $gamedata)) {
             }
         }
     }
-    $gamedata->user_url = "http://" . $gamedata->location . "/profile.php?user=~";
-    $gamedata->game_url = "http://" . $gamedata->location . "/visualizer.php?game=~";
+    $gamedata->user_url = "http://" . $gamedata->location . "/user/~";
+    $gamedata->game_url = "http://" . $gamedata->location . "/game/~";
     $gamedata->date = date(DATE_ATOM);
     $gamedata->game_id = $game_id;
     $gamedata->worker_id = $worker['worker_id'];

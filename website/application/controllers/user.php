@@ -31,4 +31,11 @@ class User extends CI_Controller {
 		$data['page_icon'] = 'fighter-jet';
 		render($this, 'todo', $data);
 	}
+
+	public function view($user_id)
+	{
+		$data['page_title'] = "Fiche du joueur";
+		$data['page_icon'] = 'user';
+		render($this, 'todo', $data);
+	}
 }
