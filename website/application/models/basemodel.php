@@ -68,6 +68,28 @@ Class Basemodel extends CI_Model {
 		}
 		return array();
 	}
+
+	/**
+	 * Count dans une table.
+	 *
+	 * @param array(array()) $clauses [default array()]
+	 * @return int
+	 */
+	function count($clauses = array()) {
+		// Ajout des conditions
+		if (is_array($clauses) && count($clauses) > 0) {
+			foreach ($clauses as $clause) {
+				if (isset($clause[2])) {
+					$this->db->or_where($clause[0], $clause[1]);
+				} else {
+					$this->db->where($clause[0], $clause[1]);
+				}
+			}
+		}
+		
+		// Lancement de la requête
+		return $this->db->count_all();
+	}
 	
 	/**
 	 * Insert d'une donnée en base.
