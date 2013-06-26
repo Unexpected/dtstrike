@@ -28,8 +28,6 @@
  * @link            http://www.techrockdo.com/projects/auth_ldap
  * @license         GNU Lesser General Public License (LGPL)
  * @copyright       Copyright © 2010-2013 by Greg Wojtak <gwojtak@techrockdo.com>
- * @todo            Allow for privileges in groups of groups in AD
- * @todo            Rework roles system a little bit to a "auth level" paradigm
  */
 class AuthLDAP {
     function __construct() {
@@ -84,7 +82,6 @@ class AuthLDAP {
         $this->login_attribute     = strtolower($this->login_attribute);
         $this->proxy_user          = $this->ci->config->item('proxy_user');
         $this->proxy_pass          = $this->ci->config->item('proxy_pass');
-        $this->roles               = $this->ci->config->item('roles');
         $this->auditlog            = $this->ci->config->item('auditlog');
         if($this->schema_type == 'rfc2307') {
             $this->member_attribute = 'memberUid';
@@ -92,12 +89,6 @@ class AuthLDAP {
             $this->member_attribute = 'member';
             
         }
-        
-        $this->role_filter = '';
-        foreach($this->roles as $role) {
-            $this->role_filter .= '(cn='.$role.')';
-        }
-        $this->role_filter = '(|'.$this->role_filter.')';
     }
 
     /**
@@ -113,19 +104,13 @@ class AuthLDAP {
          */
 
         $user_info = $this->_authenticate($username,$password);
-        if(empty($user_info['role_level'])) {
-            log_message('info', $username." has no role to play.");
-            show_error($username.' succssfully authenticated, but is not allowed because the username was not found in an allowed access group.');
-        }
         // Record the login
         $this->_audit("Successful login: ".$user_info['cn']."(".$username.") from ".$this->ci->input->ip_address());
 
-        // Set the session data
-        // FIXME : Remove rôles
+        // Set the user session data
         $customdata = array('username' => $username,
                             'cn' => $user_info['cn'],
-                            'role_name' => $user_info['role_name'],
-                            'role_level' => $user_info['role_level'],
+                            'mail' => $user_info['mail'],
                             'logged_in' => TRUE);
     
         $this->ci->session->set_userdata($customdata);
@@ -178,9 +163,7 @@ class AuthLDAP {
     		// Dev mode, bypass LDAP
     		if ($username == $password) {
     			// Logged
-		        return array('cn' => $username, 'dn' => $username, 'id' => $username,
-		            'role_name' => 'ADMIN',
-		            'role_level' => 1);
+		        return array('cn' => $username, 'dn' => $username, 'mail' => $username.'@cgi.com', 'id' => $username);
     		} else {
     			// Fail
             	show_error('Dev mode: Invalid credentials for '.$username);
@@ -234,7 +217,7 @@ class AuthLDAP {
         $filter = '(&(objectClass='.$this->user_object_class.')('.$this->login_attribute.'='.$username.'))';
         foreach($this->user_search_base as $usb) {
             $search = ldap_search($this->ldapconn, $usb, $filter, 
-                array('dn', $this->login_attribute, 'cn'));
+                array('dn', $this->login_attribute, 'cn', 'mail'));
             $entries = ldap_get_entries($this->ldapconn, $search);
             if(isset($entries[0]['dn'])) {
                 $binddn = $entries[0]['dn'];
@@ -254,17 +237,9 @@ class AuthLDAP {
         $cn = $entries[0]['cn'][0];
         $dn = stripslashes($entries[0]['dn']);
         $id = $entries[0][$this->login_attribute][0];
+        $mail = $entries[0]['mail'][0];
         
-        // FIXME : Remove rôles
-        if($this->schema_type == 'rfc2307') {
-            $get_role_arg = $id;               
-        }else if($this->schema_type == 'rfc2307bis' || $this->schema_type == 'ad') {
-            $get_role_arg = $this->ldap_escape($dn, false);
-        }
-        $role_level = $this->_get_role($get_role_arg);
-        return array('cn' => $cn, 'dn' => $entries[0]['dn'], 'id' => $id,
-            'role_name' => $this->roles[$role_level],
-            'role_level' => $role_level);
+        return array('cn' => $cn, 'dn' => $entries[0]['dn'], 'mail' => $mail, 'id' => $id);
     }
 
     /**
@@ -294,45 +269,6 @@ class AuthLDAP {
         foreach ($metaChars as $key => $value) $quotedMetaChars[$key] = '\\'.str_pad(dechex(ord($value)), 2, '0');
         $str=str_replace($metaChars,$quotedMetaChars,$str); //replace them
         return ($str);  
-    }
-    
-    private function _get_role_level($role_name) {
-        foreach($this->roles as $level => $name) {
-            if(strtolower($name) == $role_name) {
-                return $level;
-            }
-        }
-    }
-    
-    /**
-     * @access private
-     * @param string $username
-     * @return int
-     */
-    private function _get_role($username) {        
-        $filter = '(&('.$this->member_attribute.'='.$username.')'.$this->role_filter.')';
-        $role = '';
-        
-        foreach($this->group_search_base as $gsb) {
-            $search = ldap_search($this->ldapconn, $gsb, $filter, array('cn'));
-            if($search) {
-                $results = ldap_get_entries($this->ldapconn, $search);
-                if($results['count'] != 0) {                    
-                    for($i = 0; $i < $results['count']; $i++) {
-                        $role = $results[$i]['cn'][0];
-                        if($role) {
-                            return $this->_get_role_level(strtolower($role));
-                        }
-                    }
-                }else {
-                    log_message('error', "Error finding any groups");
-                    show_error("Group search successful but no memberships were found");
-                }
-            }
-        }     
-        log_message('error', "Error searching for group:".ldap_error($this->ldapconn));
-        show_error('Couldn\'t find groups: '.ldap_error($this->ldapconn));
-        return false;
     }
 }
 

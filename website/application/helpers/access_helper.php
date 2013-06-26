@@ -33,7 +33,16 @@ if ( ! function_exists('verify_user_role'))
 	{
 		$roles = get_user_roles($context);
 		
-		if (!array_key_exists($role_to_check, $roles)) {
+		if (!is_array($roles) || count($roles) == 0) {
+			redirect("welcome");
+		}
+		
+		// Admin
+		if ($roles[0] == 'ADMIN') {
+			return;
+		}
+		
+		if (array_search($role_to_check, $roles) === FALSE) {
 			redirect("welcome");
 		}
 	}

@@ -38,13 +38,6 @@
  * schema_type        - The schema type your Directory Server uses.  Currently supported are rfc2307, rfc2307bis, and ad
  * proxy_user         - Distinguised name of a proxy user if your LDAP server does not allow anonymous binds
  * proxy pass         - Password to use with above
- * roles              - An array of role names to use within your app.  The values are arbitrary.  
- *                      The keys themselves represent the
- *			"security level," ie
- *			if( $security_level >= 3 ) {
- *				// Is a power user
- *				echo display_info_for_power_users_or_admins();
- *			}
  * auditlog         - Location to log auditable events.  Needs to be writeable
  *                      by the web server
  */
@@ -53,7 +46,7 @@
  * The following may be used as a guide for setting up to authenticate
  * against OpenLDAP server
  */
-$config['dev_bypass'] = TRUE; // If TRUE, ldap isn't called
+$config['dev_bypass'] = FALSE; // If TRUE, ldap isn't called
 $config['ldap_uri'] = array('ldap://fr-dc019.groupinfra.com:389/');
 $config['use_tls'] = false; // Encrypted without using SSL
 $config['search_base'] = 'OU=FR,OU=Landlord FR,OU=Corporate,DC=groupinfra,DC=com';
@@ -67,30 +60,6 @@ $config['login_attribute'] = 'cn';
 $config['schema_type'] = 'ad'; // Use rfc2307, rfc2307bis, or ad
 $config['proxy_user'] = getenv('LDAP_USER');
 $config['proxy_pass'] = getenv('LDAP_PASS');
-$config['roles'] = array(1 => '_KLS_Utilisateurs', 
-                         3 => 'FR_R2A_LYO_DirectionTechnique'); // FIXME Ajouter les bons rôles
 $config['auditlog'] = 'application/logs/audit.log';  // Some place to log attempted logins (separate from message log)
-
-/*
- * The following is a sample configuration for Active Directory servers
- * 
- * $config['ldap_uri'] = array('ldaps://dc1.mycompany.com/', 'ldaps://dc2.mycompany.com/');
- * $config['use_tls'] = false;  // Using SSL above, don't use TLS with it
- * $config['search_base'] = 'DC=mycompany,DC=com';
- * $config['user_search_base'] = 'CN=Users,DC=mycompany,DC=com';
- * $config['group_search_base'] = 'CN=Users,DC=mycompany,DC=com';
- * $config['user_object_class'] = 'user';
- * $config['group_object_class'] = 'group';
- * $config['user_search_filter'] = '';
- * $config['group_search_filter'] = '';
- * $config['login_attribute'] = 'sAMAccountName';
- * $config['schema_type'] = 'ad'; // Could also use rfc2307bis
- * $config['proxy_user'] = 'ProxyUser@mycompany.com';  // Or CN=ProxyUser,CN=Users,DC=mycompany,DC=com
- * $config['proxy_pass'] = 'mysecretpasswordofawesomeness';
- * $config['roles'] = array(1 => 'User', 
- *                        3 => 'Power User',
- *                        5 => 'Administrator');
- * $config['auditlog'] = 'application/logs/audit.log';
- */
 
 ?>
