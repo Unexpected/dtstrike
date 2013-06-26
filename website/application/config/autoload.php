@@ -80,7 +80,7 @@ $autoload['helper'] = array('url', 'form', 'file', 'access', 'template');
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('contest');
 
 
 /*
