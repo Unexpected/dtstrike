@@ -33,4 +33,7 @@
 			<div class="span9 pull-right">
 				<?php // FIXME Utiliser plusieurs sections ?>
 				<section>
-					<h2><i class="icon-<?php echo $page_icon;?> icon-large"></i> <?php echo $page_title;?></h2>
+					<h2><?php 				
+	if (isset($page_icon)) { ?><i class="icon-<?php echo $page_icon;?> icon-large"></i>&nbsp;<?php } 
+	
+?><?php echo $page_title; ?></h2>
