@@ -2,10 +2,10 @@
 cls
 
 set PATH=D:\dev\php\xampp\mysql\bin;%PATH%
-set mysql=mysql -u dtstrike -pdtstrike -h localhost dtstrike -B -N
+set mysql=mysql -u contest -pcontest -h localhost contest -B -N
 
-set query=%mysql% -e "select distinct `TABLE_NAME` from INFORMATION_SCHEMA.COLUMNS where `TABLE_SCHEMA` = 'dtstrike' and `TABLE_NAME`<>'ci_sessions' order by `TABLE_NAME`"
-REM set query=%mysql% -e "select distinct `TABLE_NAME` from INFORMATION_SCHEMA.COLUMNS where `TABLE_SCHEMA` = 'dtstrike' and `TABLE_NAME`<>'ci_sessions' order by `TABLE_NAME` limit 2"
+set query=%mysql% -e "select distinct `TABLE_NAME` from INFORMATION_SCHEMA.COLUMNS where `TABLE_SCHEMA` = 'contest' and `TABLE_NAME`<>'ci_sessions' order by `TABLE_NAME`"
+REM set query=%mysql% -e "select distinct `TABLE_NAME` from INFORMATION_SCHEMA.COLUMNS where `TABLE_SCHEMA` = 'contest' and `TABLE_NAME`<>'ci_sessions' order by `TABLE_NAME` limit 2"
 
 echo Start
 for /f %%i in ('%query%') do call :genModel %%i
