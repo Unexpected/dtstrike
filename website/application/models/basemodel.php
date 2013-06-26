@@ -37,6 +37,31 @@ Class Basemodel extends CI_Model {
 	}
 
 	/**
+	 * Récupère toutes les lignes d'une table pour affichage combo
+	 * 
+	 * @param $id_field nom du champ servant d'ID
+	 * @return array($id_field => $value_field)
+	 */
+	function getAllForCombo($id_field, $value_field) {
+		// Ajout du select
+		$this->db->select($id_field.', '.$value_field);
+		
+		// Lancement de la requête
+		$query = $this->db->get($this->getTableName());
+		if ($query->num_rows())  {
+			$results = $query->result();
+			
+			$resultArray = array();
+			foreach ($results as $result) {
+				$resultArray[$result->$id_field] = $result->$value_field;
+			}
+			
+			return $resultArray;
+		}
+		return array();
+	}
+
+	/**
 	 * Recherche dans une table.
 	 * Permet de définir les colonnes et les conditions
 	 *
@@ -111,10 +136,10 @@ Class Basemodel extends CI_Model {
 
 	/**
 	 * Mise à jour de la donnée spécifiée.
-	 * Utiliser la classe courante pour les donnée.
+	 * 
 	 */
-	function update($idField, $idValue) {
-        $this->db->update($this->getTableName(), $this, array($idField => $idValue));
+	function update($idField, $idValue, $data) {
+        $this->db->update($this->getTableName(), $data, array($idField => $idValue));
 	}
 
 	/**

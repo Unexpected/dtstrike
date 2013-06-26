@@ -29,21 +29,26 @@ if ( ! function_exists('verify_user_logged'))
 
 if ( ! function_exists('verify_user_role'))
 {
-	function verify_user_role($context, $role_to_check)
+	function verify_user_role($context, $role_to_check, $returnValue = FALSE)
 	{
 		$roles = get_user_roles($context);
 		
 		if (!is_array($roles) || count($roles) == 0) {
+			if ($returnValue) return false;
 			redirect("welcome");
 		}
 		
 		// Admin
 		if ($roles[0] == 'ADMIN') {
+			if ($returnValue) return true;
 			return;
 		}
 		
 		if (array_search($role_to_check, $roles) === FALSE) {
+			if ($returnValue) return false;
 			redirect("welcome");
 		}
+		
+		if ($returnValue) return true;
 	}
 }

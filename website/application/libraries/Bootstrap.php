@@ -22,6 +22,20 @@ class Bootstrap {
 		echo $this->start() . "\t\t" . form_submit(array('name' => $name, 'class'=> "btn"), $value) . "\n" . $this->end();
 	}
 
+	public function multiselect($label_text = '', $attributes = array(), $name = '', $options = array(), $selected = array())
+	{
+		echo $this->start($label_text, $attributes) . "\t\t" . 
+			form_multiselect($name, $options, $selected) . "\n" . 
+			$this->end();
+	}
+
+	public function select($label_text = '', $attributes = array(), $name = '', $options = array(), $selected = array())
+	{
+		echo $this->start($label_text, $attributes) . "\t\t" . 
+			form_dropdown($name, $options, $selected) . "\n" . 
+			$this->end();
+	}
+
 	function start($label_text = '', $attributes = array())
 	{
 		// FIXME Gérer classe CSS erreur + message

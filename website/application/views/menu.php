@@ -1,10 +1,4 @@
 <?php
-	// FIXME : Voir si on peut mieux faire ...
-	$userRoles = array();
-	if (is_logged_in($this)) {
-		$userRoles = array('User'=>1, "League"=>2, "Tournament"=>3, "ADMIN"=>4);
-	}
-	
 	$menu = array(
 		array('Six Challenge', '', 'globe')
 		, array("Accueil", site_url("welcome"))
@@ -13,33 +7,33 @@
 		, array("Dernières parties", site_url("game"))
 		, array("Les cartes officielles", site_url("game/maps"))
 	);
-	if (isset($userRoles["League"])) {
+	if (verify_user_role($this, "league", TRUE)) {
 		$menu = array_merge($menu, array(array("Ligues", site_url("league"))));
 	}
-	if (isset($userRoles["Tournament"])) {
+	if (verify_user_role($this, "tournament", TRUE)) {
 		$menu = array_merge($menu, array(array("Tournois", site_url("tournament"))));
 	}
 	$menu = array_merge($menu, array(array('Mon compte', '', 'user')));
 	
-	if (!isset($userRoles["User"])) {
+	if (!is_logged_in($this)) {
 		//$menu = array_merge($menu, array(array("S'enregistrer", site_url("user/register"))));
 		$menu = array_merge($menu, array(array("Se connecter", site_url("auth/login"))));
 	} else {
 		$menu = array_merge($menu, array(array("Mon compte", site_url("user"))
 		, array("Mes bots", site_url("user/bots"))
 		, array("Mes parties", site_url("game/mine"))));
-		
-		if (isset($userRoles["League"])) {
+
+		if (verify_user_role($this, "league", TRUE)) {
 			$menu = array_merge($menu, array(array("Mes ligues", site_url("league/mine"))));
 		}
-		
-		if (isset($userRoles["Tournament"])) {
+
+		if (verify_user_role($this, "tournament", TRUE)) {
 			$menu = array_merge($menu, array(array("Mes tournois", site_url("tournament/mine"))));
 		}
 		
 		$menu = array_merge($menu, array(array("Se déconnecter", site_url("auth/logout"))));
-		
-		if (isset($userRoles["ADMIN"])) {
+
+		if (verify_user_role($this, "admin", TRUE)) {
 			$menu = array_merge($menu, array(array('Administration', '', 'cogs')
 			, array("Administration", site_url("admin"))));
 		}
