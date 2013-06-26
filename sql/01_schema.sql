@@ -1,10 +1,9 @@
 DROP TABLE IF EXISTS `country`;
 CREATE TABLE `country` (
-  `country_id` int(11) NOT NULL,
   `country_code` varchar(8) DEFAULT NULL,
   `name` varchar(64) DEFAULT NULL,
   `flag_filename` varchar(16) DEFAULT NULL,
-  PRIMARY KEY (`country_id`)
+  PRIMARY KEY (`country_code`)
 );
 
 DROP TABLE IF EXISTS `game`;
@@ -56,16 +55,6 @@ CREATE TABLE `language` (
   `language_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`language_id`)
-);
-
-DROP TABLE IF EXISTS `login_attempt`;
-CREATE TABLE `login_attempt` (
-  `timestamp` datetime NOT NULL,
-  `username` varchar(64) NOT NULL,
-  `password` varchar(40) NOT NULL,
-  `naive_ip` varchar(18) NOT NULL,
-  `real_ip` varchar(18) NOT NULL,
-  KEY `timestamp` (`timestamp`,`username`,`password`,`naive_ip`,`real_ip`)
 );
 
 DROP TABLE IF EXISTS `map`;
@@ -174,40 +163,17 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(128) NOT NULL,
-  `password` varchar(256) NOT NULL,
-  `reset` varchar(256) NULL,
   `email` varchar(256) NOT NULL,
-  `status_id` int(11) NOT NULL,
-  `activation_code` varchar(256) NOT NULL DEFAULT '',
   `org_id` int(11) NOT NULL,
   `bio` varchar(4096) DEFAULT NULL,
-  `country_id` int(11) DEFAULT NULL,
+  `country_code` varchar(8) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `activated` tinyint(1) NOT NULL,
-  `admin` tinyint(1) NOT NULL,
   `shutdown_date` datetime DEFAULT NULL,
   `max_game_id` int(11) NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY (`username`),
   KEY `user_id` (`user_id`,`username`),
   KEY `user_created_idx` (`created`)
-);
-
-DROP TABLE IF EXISTS `user_cookie`;
-CREATE TABLE `user_cookie` (
-  `user_id` int(11) NOT NULL,
-  `cookie` varchar(256) NOT NULL,
-  `expires` datetime NOT NULL,
-  `forgot` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`, `cookie`)
-);
-
-DROP TABLE IF EXISTS `user_status_code`;
-CREATE TABLE `user_status_code` (
-  `status_id` int(11) NOT NULL,
-  `name` varchar(256) NOT NULL,
-  PRIMARY KEY (`status_id`),
-  UNIQUE KEY (`name`)
 );
 
 DROP TABLE IF EXISTS `worker`;
