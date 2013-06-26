@@ -1,5 +1,7 @@
 <?php 
 Class Basemodel extends CI_Model {
+	
+	var $resultAsArray = FALSE;
 
 	function __construct() {
 		// Call the Model constructor
@@ -25,7 +27,11 @@ Class Basemodel extends CI_Model {
 		// Lancement de la requête
 		$query = $this->db->get($this->getTableName());
 		if ($query->num_rows())  {
-			return $query->result();
+			if ($this->resultAsArray) {
+				return $query->result_array();
+			} else {
+				return $query->result();
+			}
 		}
 		return array();
 	}
@@ -64,7 +70,11 @@ Class Basemodel extends CI_Model {
 		// Lancement de la requête
 		$query = $this->db->get($this->getTableName());
 		if ($query->num_rows())  {
-			return $query->result();
+			if ($this->resultAsArray) {
+				return $query->result_array();
+			} else {
+				return $query->result();
+			}
 		}
 		return array();
 	}
