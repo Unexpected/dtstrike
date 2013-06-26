@@ -36,13 +36,21 @@ class Bootstrap {
 			$this->end();
 	}
 
+	public function text($label_text = '', $value = '')
+	{
+		echo $this->start($label_text) . "\t\t" . 
+			'<div>' . $value . "</div>\n" . 
+			$this->end();
+	}
+
 	function start($label_text = '', $attributes = array())
 	{
 		// FIXME Gérer classe CSS erreur + message
 		$result = '<div class="control-group">' . "\n";
 		if ($label_text != '')
 		{
-			$result .= "\t" . form_label($label_text, $attributes['id'], array('class' => 'control-label')) . "\n";
+			$id = isset($attributes['id']) ? $attributes['id'] : '';
+			$result .= "\t" . form_label($label_text, $id, array('class' => 'control-label')) . "\n";
 		}
 		$result .= "\t" . '<div class="controls">' . "\n";
 		return $result;
