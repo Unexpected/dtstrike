@@ -269,5 +269,7 @@ UNLOCK TABLES;
 LOCK TABLES `roles` WRITE;
 INSERT INTO `roles` (`name`, `descr`) VALUES
 ('ADMIN', 'Administrateur'),
-('USER', 'Utilisateur');
+('USER', 'Utilisateur'),
+('LEAGUE', 'Accès aux ligues'),
+('TOURNAMENT', 'Accès aux tournois');
 UNLOCK TABLES;
