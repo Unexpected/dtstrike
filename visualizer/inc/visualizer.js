@@ -141,40 +141,50 @@ var Visualizer = {
           disp_x = this.unitToPixel(fleet.x) + this.config.display_margin;
           disp_y = this.unitToPixel(fleet.y) + this.config.display_margin;
           
-          // Draw ship
-          ctx.fillStyle = this.config.teamColor[fleet.owner];
-          ctx.beginPath();
-          ctx.save();
-          ctx.translate(disp_x, this.canvas.height - disp_y);
-          
-          var scale = Math.log(Math.max(fleet.numShips,4)) * 0.03;
-          ctx.scale(scale, scale);
-          
-          var angle = Math.PI/2 - Math.atan(
-              (fleet.source.y - fleet.destination.y) /
-              (fleet.source.x - fleet.destination.x)
-          );
-          if(fleet.source.x - fleet.destination.x < 0) {
-              angle = angle - Math.PI;
-          }
-          ctx.rotate(angle);
-          
-          ctx.moveTo(0, -10);
-          ctx.lineTo(40,-30);
-          ctx.lineTo(0, 100);
-          ctx.lineTo(-40, -30);
-          ctx.closePath();
-          ctx.fill();
-          ctx.strokeStyle = "#fff";
-          ctx.stroke();
-          ctx.restore();
+          if (fleet.source.type == 'M') {
+	          // Draw ship
+	          ctx.fillStyle = this.config.teamColor[fleet.owner];
+	          ctx.beginPath();
+	          ctx.save();
+	          ctx.translate(disp_x, this.canvas.height - disp_y);
+	          
+	          var scale = Math.log(Math.max(fleet.numShips,4)) * 0.03;
+	          ctx.scale(scale, scale);
+	          
+	          var angle = Math.PI/2 - Math.atan(
+	              (fleet.source.y - fleet.destination.y) /
+	              (fleet.source.x - fleet.destination.x)
+	          );
+	          if(fleet.source.x - fleet.destination.x < 0) {
+	              angle = angle - Math.PI;
+	          }
+	          ctx.rotate(angle);
+	          
+	          ctx.moveTo(0, -10);
+	          ctx.lineTo(40,-30);
+	          ctx.lineTo(0, 100);
+	          ctx.lineTo(-40, -30);
+	          ctx.closePath();
+	          ctx.fill();
+	          ctx.strokeStyle = "#fff";
+	          ctx.stroke();
+	          ctx.restore();
+	
+	          // Draw text
+	          if(this.config.showFleetText==true){
+	            angle = -1 * (angle + Math.PI/2); // switch the axis around a little
+	            disp_x += -11 * Math.cos(angle);
+	            disp_y += -11 * Math.sin(angle) - 5;
+	            ctx.fillText(fleet.numShips, disp_x, this.canvas.height - disp_y);
+	          }
+          } else if (fleet.source.type == 'E') {
+	          // Draw dot
+	          ctx.fillStyle = this.config.teamColor[fleet.owner];
 
-          // Draw text
-          if(this.config.showFleetText==true){
-            angle = -1 * (angle + Math.PI/2); // switch the axis around a little
-            disp_x += -11 * Math.cos(angle);
-            disp_y += -11 * Math.sin(angle) - 5;
-            ctx.fillText(fleet.numShips, disp_x, this.canvas.height - disp_y);
+	          ctx.beginPath();
+	          ctx.arc(disp_x, this.canvas.height - disp_y, 2, 0, Math.PI*2, true);
+	          ctx.closePath();
+	          ctx.fill();
           }
           
           this.dirtyRegions.push([disp_x - 25 , this.canvas.height - disp_y - 35, 50, 50]);
