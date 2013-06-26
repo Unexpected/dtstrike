@@ -32,6 +32,11 @@ var Visualizer = {
         this.ctx = this.canvas.getContext('2d');
         this.ctx.textAlign = 'center';
         
+        if (!data) {
+        	alert('Erreur lors du chargement');
+        	return;
+        }
+        
         // Parse data
         this.parseData(data);
         

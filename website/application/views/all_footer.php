@@ -5,7 +5,6 @@
 	</div>
 	<footer class="navbar navbar-fixed-bottom">
 		<div class="navbar-inner">
-			<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</p>
 			<form class="navbar-search pull-right" action="">
 				<select id="cssSelector" name="cssSelector" title="Choose your side">
 					<option value="Choose your side" selected="selected" disabled="disabled">Choose your side</option>

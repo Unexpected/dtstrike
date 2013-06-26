@@ -30,6 +30,6 @@
   </div> <!-- end of #container -->
 
   <link rel="stylesheet" href="<?php echo base_url("visualizer/inc/style.css?v=1") ?>">
-  <script type="text/javascript" src="<?php echo base_url("visualizer/game.js") ?>"></script>
-  <?php /*echo $replay_data;*/ ?>
+  <script type="text/javascript">var data = false;</script>
+  <script type="text/javascript" src="<?php echo base_url($replay_file) ?>"></script>
   <script type="text/javascript" src="<?php echo base_url("visualizer/inc/visualizer.js?v=1") ?>"></script>

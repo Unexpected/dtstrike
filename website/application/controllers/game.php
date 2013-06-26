@@ -23,7 +23,7 @@ class Game extends CI_Controller {
 
 	public function view($game_id)
 	{
-		// FIXME : Load game datas (path, id, ???)
+		$data['replay_file'] = 'replays/replay_'.$game_id.'.js';
 		
 		$data['page_title'] = "Visualisation";
 		$data['page_icon'] = 'play-circle';
