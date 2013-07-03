@@ -5,6 +5,9 @@
 | -------------------------------------------------------------------
 */
 
+/* Submission are open */
+$config['submissions_open'] = TRUE;
+
 /* Repo (GiT) dir */
 $config['repo_dir'] = '';
 

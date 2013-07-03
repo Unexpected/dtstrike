@@ -43,6 +43,13 @@ class Bootstrap {
 			$this->end();
 	}
 
+	public function upload($label_text = '', $attributes = array(), $value = '')
+	{
+		echo $this->start($label_text, $attributes) . "\t\t" . 
+			form_upload($attributes, $value) . "\n" . 
+			$this->end();
+	}
+
 	function start($label_text = '', $attributes = array())
 	{
 		// FIXME Gérer classe CSS erreur + message

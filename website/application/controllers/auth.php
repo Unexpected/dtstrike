@@ -30,7 +30,6 @@ class Auth extends CI_Controller {
 
         $this->load->library('Form_validation');
         $this->load->library('AuthLDAP');
-        $this->load->library('Bootstrap');
 
         $this->load->model('Usermodel');
         $this->load->model('User_rolesmodel');
@@ -88,6 +87,7 @@ class Auth extends CI_Controller {
 					$this->User_rolesmodel->role_name = 'USER';
 					$this->User_rolesmodel->insert();
             	}
+				$this->session->set_userdata('user_id', $user_id);
             	
             	// Load roles from DB
             	$roles_db = $this->User_rolesmodel->search('role_name', array(array("user_id", $user_id)));
