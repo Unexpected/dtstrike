@@ -122,7 +122,10 @@ exports.game = {
 		}
 		return numShips;
 	},
-
+	
+	/**
+	 *  Do NOT touch the following methods
+	 */
 	'start' : function(botInput) {
 		this.bot = botInput;
 		this.planets = [];
