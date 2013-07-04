@@ -341,9 +341,8 @@ def interactive_options(options):
 
 def get_options(argv):
     """ Get all the options required for setup """
-    current_username = os.environ.get("SUDO_USER", getpass.getuser())
-    top_level = os.path.abspath(os.path.join(TEMPLATE_DIR, ".."))
-    root_dir = os.path.split(top_level)[0]
+    top_level='/home'
+    root_dir = os.path.join(top_level, 'contest')
     map_dir = os.path.join(root_dir, 'maps')
     replay_dir = os.path.join(root_dir, 'games')
     upload_dir = os.path.join(root_dir, 'uploads')
@@ -357,7 +356,7 @@ def get_options(argv):
         "install_pkg_languages": False,
         "install_jailguard": False,
         "packages_only": False,
-        "username": current_username,
+        "username": "root",
         "root_dir": root_dir,
         "map_dir": map_dir,
         "replay_dir": replay_dir,
@@ -438,7 +437,6 @@ def get_options(argv):
 
 def main(argv=["worker_setup.py"]):
     """ Completely set everything up from a fresh ec2 instance """
-    _, ubuntu_arch = check_ubuntu_version()
     opts = get_options(argv)
     opts.arch = ubuntu_arch
     with Environ("DEBIAN_FRONTEND", "noninteractive"):
