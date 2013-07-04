@@ -193,13 +193,12 @@ def setup_base_chroot(options):
     base_chroot_dir = os.path.join(chroot_dir, "aic-base")
     if not os.path.exists(base_chroot_dir):
         os.makedirs(base_chroot_dir)
-        run_cmd("debootstrap --variant=buildd --arch %s natty \
+        run_cmd("debootstrap --arch %s wheezy \
                 %s %s" % (options.arch, base_chroot_dir, options.os_url))
         with CD(TEMPLATE_DIR):
             run_cmd("cp chroot_configs/chroot.d/aic-base /etc/schroot/chroot.d/")
             with open("chroot_configs/sources.list.template", "r") as sl_file:
-                sources_template = sl_file.read()
-            sources_contents = sources_template.format(src_url=options.src_url)
+                sources_contents = sl_file.read()
             chroot_filename = "%s/etc/apt/sources.list" % (base_chroot_dir,)
             with open(chroot_filename, "w") as sources_file:
                 sources_file.write(sources_contents)
@@ -367,8 +366,7 @@ def get_options(argv):
         "create_jails": True,
         "api_url":  "http://"+ '.'.join(getfqdn().split('.')[1:]) +"/",
         "api_key": "",
-        "src_url": "mirror://mirrors.ubuntu.com/mirrors.txt",
-        "os_url": "http://us.archive.ubuntu.com/ubuntu/",
+        "os_url": "http://ftp.fr.debian.org/debian/",
         "install_cronjob": False,
         "run_worker": False,
         "interactive": True,
@@ -412,8 +410,6 @@ def get_options(argv):
             help="Api key used when communicating with the main server")
     parser.add_option("-b", "--api-url", action="store", dest="api_url",
             help="Base url for queries to the main server")
-    parser.add_option("--src-url", action="store", dest="src_url",
-            help="Source url for chroot apt use")
     parser.add_option("--os-url", action="store", dest="os_url",
             help="Base OS url for chroot install")
     parser.add_option("--install-cronjob", action="store_true",
@@ -438,7 +434,7 @@ def get_options(argv):
 def main(argv=["worker_setup.py"]):
     """ Completely set everything up from a fresh ec2 instance """
     opts = get_options(argv)
-    opts.arch = ubuntu_arch
+    opts.arch = 'i686'
     with Environ("DEBIAN_FRONTEND", "noninteractive"):
         if opts.update_system:
             run_cmd("apt-get update")
