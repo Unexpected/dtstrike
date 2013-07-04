@@ -3,10 +3,11 @@
 function current_user_id() {
 	$ci =& get_instance();
 
-	if ( isset($ci->session->userdata('user_id')) ) {
-		return $ci->session->userdata('user_id');
-	} else {
+	$user_id = $ci->session->userdata('user_id');
+	if ( $user_id === FALSE ) {
 		return -1;
+	} else {
+		return $user_id;
 	}
 }
 
