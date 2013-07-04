@@ -1,0 +1,3 @@
+
+deb http://ftp.fr.debian.org/debian/ wheezy main non-free contrib
+deb http://security.debian.org/ wheezy/updates main contrib non-free
