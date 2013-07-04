@@ -457,8 +457,7 @@ def main(argv=["worker_setup.py"]):
     if opts.create_jails:
         setup_base_jail(opts)
         setup_jailusers(opts)
-    start_script = os.path.join(opts.root_dir, opts.local_repo,
-            "worker/start_worker.sh")
+    start_script = os.path.join(opts.root_dir, "worker/start_worker.sh")
     if opts.install_cronjob:
         cron_file = "/etc/cron.d/ai-contest"
         if not file_contains(cron_file, start_script):
