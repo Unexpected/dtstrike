@@ -81,7 +81,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
 			var fleet = this.fleets[i];
-			if (fleet.owner === 0) {
+			if (fleet.owner == this.myID) {
 				result.push(fleet);
 			}
 		}
@@ -91,7 +91,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
 			var fleet = this.fleets[i];
-			if (fleet.owner !== 0) {
+			if (fleet.owner != this.myID) {
 				result.push(fleet);
 			}
 		}
@@ -170,7 +170,7 @@ exports.game = {
 				}
 				this.planets.push({
 					'type' : 'M',
-					'id' : this.planets.length+1,
+					'id' : this.planets.length,
 					'x' : parseInt(line[1]),
 					'y' : parseInt(line[2]),
 					'owner' : parseInt(line[3]),
@@ -182,7 +182,7 @@ exports.game = {
 				}
 				this.planets.push({
 					'type' : 'E',
-					'id' : this.planets.length+1,
+					'id' : this.planets.length,
 					'x' : parseInt(line[1]),
 					'y' : parseInt(line[2]),
 					'owner' : parseInt(line[3]),

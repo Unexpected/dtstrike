@@ -16,8 +16,10 @@ public class MyBot {
 
 	public static void doTurn(Game game) {
 		// (1) If we currently have a fleet in flight, just do nothing.
-		if (game.getMyFleets().size() >= 1) {
-			return;
+		for (Fleet f : game.getMyFleets()) {
+			if (game.getPlanet(f.sourcePlanet) instanceof MilitaryPlanet) {
+				return;
+			}
 		}
 		// (2) Find my strongest military planet.
 		Planet source = null;

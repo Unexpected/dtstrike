@@ -1,0 +1,32 @@
+server_info = {{
+    "mail_username": "donotreply@ai-contest.com",
+    "mail_name": "AI Contest",
+    "mail_password": "",
+    "repo_path": "{repo_dir}",
+    "maps_path": "{map_dir}",
+    "compiled_path": "{compiled_dir}",
+    "logs_path": "{log_dir}",
+    "api_base_url": "{api_url}",
+    "api_key": "{api_key}",
+    "secure_jail": True,
+    "memory_limit": 1500,
+    "game_options": {{
+        "turns": 1500,
+        "loadtime": 3000,
+        "turntime": 500,
+        "viewradius2": 77,
+        "attackradius2": 5,
+        "spawnradius2": 1,
+        "location": "{api_url}",
+        "serial": 2,
+        "food_rate": (5,11),
+        "food_turn": (19,37),
+        "food_start": (75,175),
+        "food_visible": (3,5),
+        "food": "symmetric",
+        "attack": "focus",
+        "kill_points": 2,
+        "cutoff_turn": 150,
+        "cutoff_percent": 0.85
+    }}
+}}

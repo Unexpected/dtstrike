@@ -72,7 +72,7 @@ function current_submission_id() {
 	}
 	$query = "SELECT submission_id, timestamp FROM submission " .
 			"WHERE user_id = " . $user_id . " ORDER BY timestamp DESC LIMIT 1";
-	$result_id = $ci->Submissionmodel->db->simple_query($query);
+	$result = $ci->Submissionmodel->db->simple_query($query);
 	if (!$result) {
 		log_message("error", $query, mysql_error());
 		return -1;
@@ -88,10 +88,12 @@ function submission_directory($submission_id) {
 	$ci =& get_instance();
 
 	$submission_id = intval($submission_id);
-	return $ci->config->item('uploads_path')."/".strval((int)($submission_id/1000))."/".strval($submission_id);
+	return $ci->config->item('upload_dir')."/".strval((int)($submission_id/1000))."/".strval($submission_id);
 }
 
-function update_current_submission_status($status) {
+function update_current_submission_status($new_status) {
+	$ci =& get_instance();
+	
 	// Update current submission status
 	$submission_id = current_submission_id();
 	if ($submission_id < 0) {
@@ -106,4 +108,8 @@ function update_current_submission_status($status) {
 	$query = "UPDATE submission SET status = " . $new_status .
 			" WHERE submission_id = " . $submission_id . " AND user_id = " . $user_id;
 	return $ci->Submissionmodel->db->simple_query($query);
+}
+
+function ends_with($str, $sub) {
+	return preg_match('/\Q' . $sub . '\E$/', $str);
 }
