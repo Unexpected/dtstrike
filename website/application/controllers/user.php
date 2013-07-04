@@ -9,8 +9,9 @@ class User extends CI_Controller {
 
 		$this->load->model('Usermodel');
 		$this->load->model('Submissionmodel');
-		
+
 		$this->load->helper('submission');
+		$this->load->helper('file_system');
 	}
 
 	public function index()
@@ -65,8 +66,6 @@ class User extends CI_Controller {
 		log_message('debug', print_r($data, true));
 		// Check form
 		if (isset($data['send'])) {
-			// Lecture du fichier
-
 			// Sauvegarde
 			log_message('debug', print_r( $_FILES['uploadedfile'], true));
 
@@ -90,50 +89,50 @@ class User extends CI_Controller {
 
 			if (count($errors) == 0) {
 				log_message('debug', 'COPY SUBMISSION FILE');
-				// 				$submission_id = current_submission_id();
-				// 				$destination_folder = submission_directory($submission_id);
-				// 				$filename = basename($_FILES['uploadedfile']['name']);
-				// 				if (ends_with($filename, ".zip")) {
-				// 					$filename = "entry.zip";
-				// 				}
-				// 				if (ends_with($filename, ".tar.gz")) {
-				// 					$filename = "entry.tar.gz";
-				// 				}
-				// 				if (ends_with($filename, ".tgz")) {
-				// 					$filename = "entry.tgz";
-				// 				}
-				// 				if (ends_with($filename, ".tar.xz")) {
-				// 					$filename = "entry.tar.xz";
-				// 				}
-				// 				if (ends_with($filename, ".txz")) {
-				// 					$filename = "entry.txz";
-				// 				}
-				// 				if (ends_with($filename, ".tar.bz2")) {
-				// 					$filename = "entry.tar.bz2";
-				// 				}
-				// 				if (ends_with($filename, ".tbz")) {
-				// 					$filename = "entry.tbz";
-				// 				}
-				// 				$target_path = $destination_folder . '/' . $filename;
-				// 				delete_directory($destination_folder);
-				// 				if (!mkdir($destination_folder, 0775, true)) {
-				// 					update_current_submission_status(90);
-				// 					$errors[] = "Problem while creating submission directory.";
-				// 				} else {
-				// 					if (!move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
-				// 						update_current_submission_status(90);
-				// 						$errors[] = "Failed to move file from temporary to permanent " .
-				// 								"location.";
-				// 						update_current_submission_status(30);
-				// 					} else {
-				// 						chmod($destination_folder, 0775);
-				// 						chmod($target_path, 0664);
-				// 						if (!update_current_submission_status(20)) {
-				// 							$errors[] = "Failed to update the submission status in the " .
-				// 									"database.";
-				// 						}
-				// 					}
-				// 				}
+				$submission_id = current_submission_id();
+				$destination_folder = submission_directory($submission_id);
+				$filename = basename($_FILES['uploadedfile']['name']);
+				if (ends_with($filename, ".zip")) {
+					$filename = "entry.zip";
+				}
+				if (ends_with($filename, ".tar.gz")) {
+					$filename = "entry.tar.gz";
+				}
+				if (ends_with($filename, ".tgz")) {
+					$filename = "entry.tgz";
+				}
+				if (ends_with($filename, ".tar.xz")) {
+					$filename = "entry.tar.xz";
+				}
+				if (ends_with($filename, ".txz")) {
+					$filename = "entry.txz";
+				}
+				if (ends_with($filename, ".tar.bz2")) {
+					$filename = "entry.tar.bz2";
+				}
+				if (ends_with($filename, ".tbz")) {
+					$filename = "entry.tbz";
+				}
+				$target_path = $destination_folder . '/' . $filename;
+				delete_directory($destination_folder);
+				if (!mkdir($destination_folder, 0775, true)) {
+					update_current_submission_status(90);
+					$errors[] = "Problem while creating submission directory.";
+				} else {
+					if (!move_uploaded_file($_FILES['uploadedfile']['tmp_name'], $target_path)) {
+						update_current_submission_status(90);
+						$errors[] = "Failed to move file from temporary to permanent " .
+								"location.";
+						update_current_submission_status(30);
+					} else {
+						chmod($destination_folder, 0775);
+						chmod($target_path, 0664);
+						if (!update_current_submission_status(20)) {
+							$errors[] = "Failed to update the submission status in the " .
+									"database.";
+						}
+					}
+				}
 			}
 
 			if (count($errors) == 0) {
@@ -150,7 +149,7 @@ class User extends CI_Controller {
 			render($this, 'user/bot_upload', $data);
 		}
 	}
-	
+
 	private function upload_errors($errors) {
 		$post_max_size = intval(str_replace('M', '', ini_get('post_max_size'))) * 1024 * 1024;
 		$content_length = intval($_SERVER['CONTENT_LENGTH']);
