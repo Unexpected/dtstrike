@@ -1,6 +1,14 @@
-<?php echo validation_errors('<p class="error">', '</p>');?>
-
-<?php 
+<?php
+	// Errors
+	echo validation_errors('<p class="error">', '</p>');
+	if (isset($errors) && count($errors) > 0) {
+		echo '<p class="error">';
+		foreach ($errors as $error) {
+			echo $error.'<br/>';
+		}
+		echo '</p>';
+	}
+	
 	echo form_open('user/bot_upload', array('id' => 'botform', 'enctype' => 'multipart/form-data', 'class' => 'form-horizontal'));
 	echo form_fieldset('Choisissez le fichier ZIP contenant votre bot :');
 	

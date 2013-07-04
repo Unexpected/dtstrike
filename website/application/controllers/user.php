@@ -66,6 +66,8 @@ class User extends CI_Controller {
 		log_message('debug', print_r($data, true));
 		// Check form
 		if (isset($data['send'])) {
+			$errors = array();
+			
 			// Sauvegarde
 			log_message('debug', print_r( $_FILES['uploadedfile'], true));
 
@@ -76,7 +78,7 @@ class User extends CI_Controller {
 				if (has_recent_submission()) {
 					$errors[] = "Sorry your last submission was too recent.";
 				} else {
-					$errors = upload_errors($errors);
+					$errors = $this->upload_errors($errors);
 				}
 			}
 
