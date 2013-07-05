@@ -19,6 +19,7 @@ class User extends CI_Controller {
 		verify_user_logged($this, 'user');
 		
 		//TODO : Récupérer le classement du joueur
+		// $user_id = current_user_id();
 		// $data['place'] = "234ème";
 
 		$data['page_title'] = 'Mon compte';
@@ -30,9 +31,32 @@ class User extends CI_Controller {
 	{
 		verify_user_logged($this, 'user/bots');
 
+		$user_id = current_user_id();
+		$this->Submissionmodel->db->select('submission_id, version, status, language.name as "language_name", rank', false);
+		$this->Submissionmodel->db->from('submission');
+		$this->Submissionmodel->db->join('language', 'language.language_id = submission.language_id');
+		$this->Submissionmodel->db->order_by("submission_id", "desc");
+		$this->Submissionmodel->db->where('user_id', $user_id);
+
+		$query = $this->Submissionmodel->db->get();
+		if ($query->num_rows())  {
+			$bots = $query->result();
+		} else {
+			$bots = array();
+		}
+		$heading = array(
+			'ID',
+			'Version',
+			'Statut',
+			'Language',
+			'Rang'
+		);
+		$data['heading'] = $heading;
+		$data['bots'] = $bots;
+
 		$data['page_title'] = "Mes bots";
 		$data['page_icon'] = 'fighter-jet';
-		render($this, 'todo', $data);
+		render($this, 'user/bots', $data);
 	}
 
 	public function view($user_id)

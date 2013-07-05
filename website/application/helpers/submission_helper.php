@@ -1,16 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-function current_user_id() {
-	$ci =& get_instance();
-
-	$user_id = $ci->session->userdata('user_id');
-	if ( $user_id === FALSE ) {
-		return -1;
-	} else {
-		return $user_id;
-	}
-}
-
 function has_recent_submission() {
 	// Check if user has recent submission
 	$ci =& get_instance();
@@ -112,4 +101,20 @@ function update_current_submission_status($new_status) {
 
 function ends_with($str, $sub) {
 	return preg_match('/\Q' . $sub . '\E$/', $str);
+}
+
+function getStatusLabel($status) {
+/*
+ * 10: Created: entry record created in database.
+ * 20: Uploaded: Ready to be unzipped and compiled.
+ * 30: Compiling: worker is compiling and running tests
+ * 40: Runable: compiled successfully and passed test cases.  Ready to be run.
+ * 50: Download Error: error receiving submission zip file.
+ * 60: Unpack Error: error while unzipping submission file.
+ * 70: Compile Error: error while compiling submission.
+ * 80: Test Error: compiled successfully but failed test cases.
+ * 90: Upload Error: server failed to retrieve uploaded file correctly.
+ * 100: Inactivated: submission must be activated to conintue being chosen as a seed
+ *                   it can still be pulled in as an opponent
+ */
 }
