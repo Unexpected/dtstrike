@@ -1,14 +1,14 @@
 sealed abstract class Planet {
 
   val id: Int
-  var owner: Int
+  val owner: Int
   val shipsNumber: Int
   val coordinates: (Double, Double)
 }
 
 case class EconomicPlanet(
   val id: Int,
-  var owner: Int,
+  val owner: Int,
   val shipsNumber: Int,
   val coordinates: (Double, Double),
   val revenue : Int
@@ -16,7 +16,7 @@ case class EconomicPlanet(
 
 case class MilitaryPlanet(
   val id: Int,
-  var owner: Int,
+  val owner: Int,
   val shipsNumber: Int,
   val coordinates: (Double, Double)
 ) extends Planet
