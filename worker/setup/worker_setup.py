@@ -275,7 +275,7 @@ exit 0
 
 def setup_base_jail(options):
     """ Create and configure base jail """
-    run_cmd("schroot -c aic-base -- %s/setup/worker_setup.py --chroot-setup --api-url %s"
+    run_cmd("schroot -p -c aic-base -- %s/setup/worker_setup.py --chroot-setup --api-url %s"
             % (os.path.join(options.root_dir, options.local_repo),
                 options.api_url))
     create_jail_group(options)
@@ -374,7 +374,7 @@ def get_options(argv):
 
     chroot_base = {
         "install_utilities": False,
-        "install_pkg_languages": True,
+        "install_pkg_languages": False,
         "install_languages": False,
         "install_jailguard": False,
         "create_jails": False,
