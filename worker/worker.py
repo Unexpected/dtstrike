@@ -54,8 +54,8 @@ STATUS_COMPILE_ERROR = 70
 STATUS_TEST_ERROR = 80
 
 # get game from ants dir
-sys.path.append(os.path.join(server_info.get('repo_path', '..'), 'ants'))
-from ants import Ants
+#sys.path.append(os.path.join(server_info.get('repo_path', '..'), 'ants'))
+#from ants import Ants
 
 
 def uni_to_ascii(ustr):
@@ -442,7 +442,7 @@ class Worker:
         log.debug(options)
         options["map"] = self.get_test_map()
         options['capture_errors'] = True
-        game = Ants(options)
+        #game = Ants(options)
         if submission_id in self.download_dirs:
             bot_dir = self.download_dirs[submission_id]
         else:
@@ -497,7 +497,7 @@ class Worker:
             options["map"] = self.get_map(task['map_filename'])
             options["turns"] = task['max_turns']
             options["output_json"] = True
-            game = Ants(options)
+            #game = Ants(options)
             bots = []
             for submission_id in task["submissions"]:
                 submission_id = int(submission_id)
