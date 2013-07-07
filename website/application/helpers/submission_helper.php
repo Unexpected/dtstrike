@@ -103,18 +103,37 @@ function ends_with($str, $sub) {
 	return preg_match('/\Q' . $sub . '\E$/', $str);
 }
 
-function getStatusLabel($status) {
-/*
- * 10: Created: entry record created in database.
- * 20: Uploaded: Ready to be unzipped and compiled.
- * 30: Compiling: worker is compiling and running tests
- * 40: Runable: compiled successfully and passed test cases.  Ready to be run.
- * 50: Download Error: error receiving submission zip file.
- * 60: Unpack Error: error while unzipping submission file.
- * 70: Compile Error: error while compiling submission.
- * 80: Test Error: compiled successfully but failed test cases.
- * 90: Upload Error: server failed to retrieve uploaded file correctly.
- * 100: Inactivated: submission must be activated to conintue being chosen as a seed
- *                   it can still be pulled in as an opponent
- */
+function getStatusLabelDescription($status) {
+	switch ($status) {
+		case 10:
+			return array("Created", "Entry record created in database");
+			break;
+		case 20:
+			return array("Uploaded", "Ready to be unzipped and compiled.");
+			break;
+		case 30:
+			return array("Compiling", "Worker is compiling and running tests");
+			break;
+		case 40:
+			return array("Runable", "Compiled successfully and passed test cases. Ready to be run.");
+			break;
+		case 50:
+			return array("Download Error", "Error receiving submission zip file.");
+			break;
+		case 60:
+			return array("Unpack Error", "Error while unzipping submission file.");
+			break;
+		case 70:
+			return array("Compile Error", "Error while compiling submission.");
+			break;
+		case 80:
+			return array("Test Error", "Compiled successfully but failed test cases.");
+			break;
+		case 90:
+			return array("Upload Error", "Server failed to retrieve uploaded file correctly.");
+			break;
+		case 100:
+			return array("Inactivated", "Submission must be activated to continue being chosen as a seed it can still be pulled in as an opponent");
+			break;
+	}
 }
