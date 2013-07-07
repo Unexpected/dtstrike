@@ -1,5 +1,5 @@
 case class Fleet(
-  var owner: Int,
+  val owner: Int,
   val shipsNumber: Int,
   val sourcePlanetId: Int,
   val destinationPlanetId: Int,

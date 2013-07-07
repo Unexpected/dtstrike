@@ -193,7 +193,7 @@ def setup_base_chroot(options):
     base_chroot_dir = os.path.join(chroot_dir, "aic-base")
     if not os.path.exists(base_chroot_dir):
         os.makedirs(base_chroot_dir)
-        run_cmd("debootstrap --arch %s wheezy \
+        run_cmd("debootstrap --variant=buildd --arch %s wheezy \
                 %s %s" % (options.arch, base_chroot_dir, options.os_url))
         with CD(TEMPLATE_DIR):
             run_cmd("cp chroot_configs/chroot.d/aic-base /etc/schroot/chroot.d/")
@@ -205,11 +205,11 @@ def setup_base_chroot(options):
             run_cmd("cp -r chroot_configs/ai-jail /etc/schroot/ai-jail")
         deb_archives = "/var/cache/apt/archives/"
         run_cmd("cp {0}*.deb {1}{0}".format(deb_archives, base_chroot_dir))
-        run_cmd("schroot -c aic-base -- /bin/sh -c \"\
+        run_cmd("schroot -p -c aic-base -- /bin/sh -c \"\
                 DEBIANFRONTEND=noninteractive;\
                 apt-get update; apt-get upgrade -y\"")
-        run_cmd("schroot -c aic-base -- apt-get install -y python")
-    run_cmd("schroot -c aic-base -- %s/setup/worker_setup.py --chroot-base"
+        run_cmd("schroot -p -c aic-base -- apt-get install -y python")
+    run_cmd("schroot -p -c aic-base -- %s/setup/worker_setup.py --chroot-base"
             % (os.path.join(options.root_dir, options.local_repo),))
 
 def create_jail_group(options):
@@ -434,7 +434,7 @@ def get_options(argv):
 def main(argv=["worker_setup.py"]):
     """ Completely set everything up from a fresh ec2 instance """
     opts = get_options(argv)
-    opts.arch = 'i686'
+    opts.arch = 'i386'
     with Environ("DEBIAN_FRONTEND", "noninteractive"):
         if opts.update_system:
             run_cmd("apt-get update")

@@ -43,10 +43,6 @@ class Game private (val myId: Int) {
     planets.exists { _.owner == player } || fleets.exists(_.owner == player)
   }
 
-  def dropPlayer(player: Int) = {
-    planets.filter { _.owner == player }.foreach { _.owner = 0 }
-    fleets.filter { _.owner == player }.foreach { _.owner = 0 }
-  }
 
   def myPlanets = {
     planets.filter { _.owner == myId }
