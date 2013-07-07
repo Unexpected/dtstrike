@@ -18,7 +18,7 @@ TEMPLATE_DIR = os.path.dirname(os.path.abspath(__file__))
 def install_required_packages():
     """ This installs the packages that are required to run the worker scripts
     """
-    pkg_list = ["curl", "unzip", "python-software-properties"]
+    pkg_list = ["curl", "unzip", "python-software-properties", "sudo"]
     install_apt_packages(pkg_list)
 
 def install_utility_packages():
@@ -30,7 +30,7 @@ def install_utility_packages():
 def install_basic_languages():
     """ Install base set of submission languages,
         currently C, C++, Java, and Python """
-    pkg_list = ["gcc", "g++", "openjdk-6-jdk", "python-dev", "python3-dev",
+    pkg_list = ["gcc", "g++", "openjdk-7-jdk", "python-dev", "python3-dev",
                 "python-numpy", "python-scipy"]
     install_apt_packages(pkg_list)
 
@@ -133,7 +133,7 @@ def install_racket(download_base):
 
 def install_packaged_languages():
     install_basic_languages()
-    install_extra_distribution_languages()
+    #install_extra_distribution_languages()
 
 def install_all_languages(options):
     download_base = options.api_url +"langs"
@@ -383,7 +383,7 @@ def get_options(argv):
         }
     chroot_setup = {
         "install_utilities": False,
-        "install_languages": True,
+        "install_languages": False,
         "install_jailguard": True,
         "create_jails": False,
         "packages_only": True,
