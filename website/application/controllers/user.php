@@ -12,15 +12,28 @@ class User extends CI_Controller {
 
 		$this->load->helper('submission');
 		$this->load->helper('file_system');
+		$this->load->helper('rank');
 	}
 
 	public function index()
 	{
 		verify_user_logged($this, 'user');
 		
-		//TODO : Récupérer le classement du joueur
-		// $user_id = current_user_id();
-		// $data['place'] = "234ème";
+		// Récupérer le classement du joueur
+		$user_id = current_user_id();
+		$query = get_my_rank_query($user_id);
+
+		$result_id = $this->Submissionmodel->db->simple_query($query);
+		
+		if ($result_id === FALSE) {
+			$data['place'] = '';
+		} else {
+			$row = mysql_fetch_assoc($result_id);
+			if ($row) {
+				$rank = $row['rank'];
+				$data['place'] = $rank . ($rank == 1 ? 'er' : 'ème');
+			}
+		}
 
 		$data['page_title'] = 'Mon compte';
 		$data['page_icon'] = 'cogs';

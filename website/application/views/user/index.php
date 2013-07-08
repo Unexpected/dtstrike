@@ -1,6 +1,6 @@
 <p>
 <?php 
-	if (isset($place)) {
+	if (isset($place) && $place != '') {
 ?>
 Vous êtes actuellement classé <code><?php echo $place; ?></code> du classement général.
 <?php
