@@ -1,8 +1,5 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
-INSERT INTO `organization` (`org_id`, `name`) VALUES
-(1, 'CGI');
-
 -- Seb
 INSERT INTO `user` (`user_id`, `username`, `email`, `org_id`, `bio`, `country_code`, `created`, `shutdown_date`, `max_game_id`) VALUES
 (1, 'schmittse', 'sebastien.schmitt@cgi.com', 1, NULL, 'FR', '2013-06-26 08:17:26', NULL, NULL);

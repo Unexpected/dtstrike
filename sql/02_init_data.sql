@@ -273,3 +273,8 @@ INSERT INTO `roles` (`name`, `descr`) VALUES
 ('LEAGUE', 'Accès aux ligues'),
 ('TOURNAMENT', 'Accès aux tournois');
 UNLOCK TABLES;
+
+LOCK TABLES `organization` WRITE;
+INSERT INTO `organization` (`org_id`, `name`) VALUES
+(1, 'CGI');
+UNLOCK TABLES;
