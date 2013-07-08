@@ -45,6 +45,7 @@ class Game extends CI_Controller {
 	public function rank($page=0, $org_id=NULL, $country_id=NULL, $language_id=NULL)
 	{
 		//TODO : Gérer la pagination
+		$page_string = '';
     	$filtered = False;
 		$where = '';
 		if ($org_id !== NULL) {
