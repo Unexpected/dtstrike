@@ -8,6 +8,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+
+
 struct coordinates {
 	double x;
 	double y;
@@ -36,5 +38,44 @@ struct fleet {
 	int totalTripLength;
 	int turnsRemaining;
 };
+
+
+struct military_planets {
+	int size;
+	int array_size;
+	struct military_planet * list;
+};
+
+struct economic_planets {
+	int size;
+	int array_size;
+	struct economic_planet * list;
+};
+
+struct fleets {
+	int size;
+	int array_size;
+	struct fleet * list;
+};
+
+struct military_planets my_military_planets();
+struct military_planets enemy_military_planets();
+struct military_planets neutral_military_planets();
+
+struct economic_planets my_economic_planets();
+struct economic_planets enemy_economic_planets();
+struct economic_planets neutral_economic_planets();
+
+struct fleets my_fleets();
+struct fleets enemy_fleets();
+struct fleets neutral_fleets();
+
+int distance (struct coordinates src, struct coordinates dest);
+
+void issueOrder(int src, int dest, int numShips);
+
+void finishTurn();
+
+void parseLine(char *p);
 
 #endif /* GAME_H_ */
