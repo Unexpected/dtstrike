@@ -67,6 +67,34 @@ class Bootstrap {
 	{
 		return "\t</div>\n</div>\n";
 	}
+	
+	function nice_rank($rank, $rank_change) {
+		return $rank.' ('.$rank_change.')';
+	}
+	
+	function nice_user($user_id, $username) {
+		return '<a href="'.site_url("user/view/$user_id").'">'.$username.'</a>';
+	}
+	
+	function nice_country($country_code, $country_name, $flag) {
+		return $country_name;
+	}
+	
+	function nice_organization($org_id, $org_name) {
+		return $org_name;
+	}
+	
+	function nice_language($lang_id, $lang_name) {
+		return $lang_name;
+	}
+	
+	function nice_ago($timestamp) {
+		return $timestamp;
+	}
+
+	function nice_skill($skill, $mu, $sigma, $skill_change, $mu_change, $sigma_change) {
+		return $skill;
+	}
 
 }
 
