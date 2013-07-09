@@ -1,7 +1,4 @@
-import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Random;
 
 public class MySecondBot {
 	// The DoTurn function is where your code goes. The Game object
@@ -57,9 +54,7 @@ public class MySecondBot {
 	public static void main(String[] args) {
 
 		try {
-			fw = new FileWriter(new File("D:/Temp/bot"
-					+ new Random().nextInt(1000) + ".log"));
-			log("bot started", fw);
+			System.err.println("bot started");
 			String line = "";
 			String message = "";
 			int c;
@@ -82,28 +77,8 @@ public class MySecondBot {
 					break;
 				}
 			}
-			fw.flush();
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
-			try {
-				fw.write(e.toString());
-			} catch (IOException e1) {
-				e1.printStackTrace(System.err);
-			}
-		} finally {
-			if (fw != null) {
-				try {
-					fw.close();
-				} catch (IOException e) {
-					e.printStackTrace(System.err);
-				}
-			}
 		}
-	}
-
-	private static void log(String message, FileWriter fw) throws IOException {
-		fw.write(message);
-		fw.write("\n");
-		fw.flush();
 	}
 }
