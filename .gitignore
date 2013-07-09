@@ -9,3 +9,6 @@ bin
 /Bot/bin/MilitaryPlanet.class
 /website/application/logs/*.php
 /logs/*.php
+*.project
+*.settings
+*.buildpath
