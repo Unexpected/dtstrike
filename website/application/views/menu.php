@@ -20,7 +20,7 @@
 		$menu = array_merge($menu, array(array("Se connecter", site_url("auth/login"))));
 	} else {
 		$menu = array_merge($menu, array(array("Mon compte", site_url("user"))
-		, array("Mes bots", site_url("user/bots"))
+		, array("Mes IAs", site_url("user/bots"))
 		, array("Mes parties", site_url("game/mine"))));
 
 		if (verify_user_role($this, "league", TRUE)) {

@@ -6,6 +6,7 @@ class User extends CI_Controller {
 
 		$this->load->library('Form_validation');
 		$this->load->library('AuthLDAP');
+        $this->load->library('Bootstrap');
 
 		$this->load->model('Usermodel');
 		$this->load->model('Submissionmodel');
@@ -45,7 +46,7 @@ class User extends CI_Controller {
 		verify_user_logged($this, 'user/bots');
 
 		$user_id = current_user_id();
-		$this->Submissionmodel->db->select('submission_id, version, status, language.name as "language_name", rank', false);
+		$this->Submissionmodel->db->select('submission_id, version, status, language.language_id, language.name as "language_name", rank', false);
 		$this->Submissionmodel->db->from('submission');
 		$this->Submissionmodel->db->join('language', 'language.language_id = submission.language_id');
 		$this->Submissionmodel->db->order_by("submission_id", "desc");
@@ -67,7 +68,7 @@ class User extends CI_Controller {
 		$data['heading'] = $heading;
 		$data['bots'] = $bots;
 
-		$data['page_title'] = "Mes bots";
+		$data['page_title'] = "Mes IAs";
 		$data['page_icon'] = 'fighter-jet';
 		render($this, 'user/bots', $data);
 	}
@@ -183,13 +184,13 @@ class User extends CI_Controller {
 			if (count($errors) == 0) {
 				redirect('user');
 			} else {
-				$data['page_title'] = "Upload d'un bot";
+				$data['page_title'] = "Upload d'une IA";
 				$data['page_icon'] = 'fighter-jet';
 				$data['errors'] = $errors;
 				render($this, 'user/bot_upload', $data);
 			}
 		} else {
-			$data['page_title'] = "Upload d'un bot";
+			$data['page_title'] = "Upload d'une IA";
 			$data['page_icon'] = 'fighter-jet';
 			render($this, 'user/bot_upload', $data);
 		}
