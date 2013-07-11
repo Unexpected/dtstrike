@@ -44,7 +44,7 @@ class Game extends CI_Controller {
 	{
 		$data['page_title'] = 'Les kits de démarrage';
 		$data['page_icon'] = 'play-sign';
-		render($this, 'todo', $data);
+		render($this, 'game/kits', $data);
 	}
 
 	public function tuto()
