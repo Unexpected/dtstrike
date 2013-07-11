@@ -2,11 +2,15 @@
 	$menu = array(
 		array('Six Challenge', '', 'globe')
 		, array("Accueil", site_url("welcome"))
-		, array("Les règles du concours", site_url("game/rules"))
-		, array('Synthèse du concours', '', 'gamepad')
 		, array("Classement actuel", site_url("game/rank"))
 		, array("Dernières parties", site_url("game"))
-		, array("Les cartes officielles", site_url("game/maps"))
+		, array("Les règles du concours", site_url("game/rules"))
+		, array('Le concours', '', 'gamepad')
+		, array("Démarrage rapide", site_url("game/start"))
+		, array("Les kits de démarrage", site_url("game/kits"))
+		, array("Tutoriels et Stratégies", site_url("game/tuto"))
+		, array("Spécifications", site_url("game/specs"))
+		//, array("Les cartes officielles", site_url("game/maps"))
 	);
 	if (verify_user_role($this, "league", TRUE)) {
 		$menu = array_merge($menu, array(array("Ligues", site_url("league"))));

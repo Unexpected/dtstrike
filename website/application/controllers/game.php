@@ -33,6 +33,34 @@ class Game extends CI_Controller {
 		render($this, 'game/rules', $data);
 	}
 
+	public function start()
+	{
+		$data['page_title'] = 'Démarrage rapide';
+		$data['page_icon'] = 'play-sign';
+		render($this, 'todo', $data);
+	}
+
+	public function kits()
+	{
+		$data['page_title'] = 'Les kits de démarrage';
+		$data['page_icon'] = 'play-sign';
+		render($this, 'todo', $data);
+	}
+
+	public function tuto()
+	{
+		$data['page_title'] = 'Tutoriels et Stratégies';
+		$data['page_icon'] = 'play-sign';
+		render($this, 'todo', $data);
+	}
+
+	public function specs()
+	{
+		$data['page_title'] = 'Spécifications';
+		$data['page_icon'] = 'play-sign';
+		render($this, 'todo', $data);
+	}
+
 	public function view($game_id)
 	{
 		$data['replay_file'] = 'replays/replay_'.$game_id.'.js';
