@@ -1,5 +1,5 @@
 /**
- * CIG - SiX logo animation
+ * CGI - SiX logo animation
  * @author sebastien.schmitt@cgi.com
  */
 
