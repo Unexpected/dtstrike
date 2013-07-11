@@ -2,6 +2,7 @@
 	$menu = array(
 		array('Six Challenge', '', 'globe')
 		, array("Accueil", site_url("welcome"))
+		, array("Les règles du concours", site_url("game/rules"))
 		, array('Synthèse du concours', '', 'gamepad')
 		, array("Classement actuel", site_url("game/rank"))
 		, array("Dernières parties", site_url("game"))

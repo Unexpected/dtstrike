@@ -26,6 +26,13 @@ class Game extends CI_Controller {
 		render($this, 'game/game_list', $data);
 	}
 
+	public function rules()
+	{
+		$data['page_title'] = 'Les règles du concours';
+		$data['page_icon'] = 'book';
+		render($this, 'game/rules', $data);
+	}
+
 	public function view($game_id)
 	{
 		$data['replay_file'] = 'replays/replay_'.$game_id.'.js';
