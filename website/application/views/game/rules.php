@@ -1,29 +1,20 @@
-<h1>TODO</h1>
-
-<?php /*
 <ul>
-  <li>The final rankings will be determined using a computerized tournament
-    designed by the contest organizer. The official results will be final.
-    The ongoing rankings on the leaderboard are not official and may not
-    be representative of the final results.</li>
-  <li>You can only have one account. If you have effective control over more
-    than one account, even if the accounts are all nominally owned by other
-    people, you will be disqualified.</li>
-  <li>Your program may not take more than one second to make any
-    individual move. If you want to do intensive calculations, be sure to add
-    some code that checks the time at regular intervals so you don't go over
-    your one second quota. If your program violates its time quota, it will
-    be automatically suspended.</li>
-  <li>Entries which are deemed to violate the spirit of fair and sportsmanlike
-    competition will be disqualified without any opportunity for appeal.
-    In particular, memory scanning, intentionally losing games, and behavior
-    conditional on the opponent's identity are prohibited.</li>
-  <li>You may not write to files. You may however read from files within your
-    submission directory, which will be the current directory.</li>
-  <li>Use of multiple processes or threads is prohibited.</li>
-  <li>Any attempt to disrupt the normal operation of the contest software or
-    the contest servers will result in the immediate involvement of law
-    enforcement officials. Our policy is to always prosecute.</li>
-  <li>We reserve the right to change these rules at any time without notice.</li>
+	<li>Le classement final sera déterminé à l'aide d'un tournoi informatisé conçu 
+	par l'organisateur du concours. Les résultats officiels seront définitifs.</li>
+	<li>Vous ne pouvez avoir qu'un seul compte lié à votre compte Groupinfra.</li>
+	<li>Votre programme ne peut pas prendre plus d'une seconde pour prendre toute 
+	initiative individuelle. Si vous voulez faire des calculs intensifs, n'oubliez 
+	pas d'ajouter du code qui vérifie l'heure à intervalles réguliers de sorte 
+	que vous ne dépassiez pas votre quota d'une seconde. Si votre programme viole 
+	son quota de temps, il sera automatiquement suspendu.</li>
+	<li>Les entrées qui sont jugées contraire à l'esprit de concurrence loyale et 
+	sportive seront disqualifiés sans aucune possibilité de recours. En particulier, 
+	l'analyse de la mémoire, défaites intentionnellement, et le comportement 
+	conditionnel sur l'identité de l'adversaire sont interdits.</li>
+	<li>Vous ne pouvez pas écrire dans des fichiers. Vous pouvez cependant lire 
+	des fichiers dans le répertoire de soumission, qui sera le répertoire courant.</li>
+	<li>L'utilisation de plusieurs processus ou threads est interdite.</li>
+	<li>Toute tentative visant à perturber le fonctionnement normal du logiciel 
+	de concours ou les serveurs du concours se traduira par la suspension du compte.</li>
+	<li>Nous nous réservons le droit de modifier ces règles à tout moment sans préavis.</li>
 </ul>
-*/ ?>
