@@ -37,7 +37,7 @@ class Game extends CI_Controller {
 	{
 		$data['page_title'] = 'Démarrage rapide';
 		$data['page_icon'] = 'play-sign';
-		render($this, 'todo', $data);
+		render($this, 'game/start', $data);
 	}
 
 	public function kits()
@@ -51,14 +51,14 @@ class Game extends CI_Controller {
 	{
 		$data['page_title'] = 'Tutoriels et Stratégies';
 		$data['page_icon'] = 'play-sign';
-		render($this, 'todo', $data);
+		render($this, 'game/tuto', $data);
 	}
 
 	public function specs()
 	{
 		$data['page_title'] = 'Spécifications';
 		$data['page_icon'] = 'play-sign';
-		render($this, 'todo', $data);
+		render($this, 'game/specs', $data);
 	}
 
 	public function view($game_id)
