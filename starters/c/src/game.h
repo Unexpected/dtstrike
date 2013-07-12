@@ -42,19 +42,19 @@ struct fleet {
 
 struct military_planets {
 	int size;
-	int array_size;
+	int _array_size;
 	struct military_planet * list;
 };
 
 struct economic_planets {
 	int size;
-	int array_size;
+	int _array_size;
 	struct economic_planet * list;
 };
 
 struct fleets {
 	int size;
-	int array_size;
+	int _array_size;
 	struct fleet * list;
 };
 
@@ -76,6 +76,12 @@ void issueOrder(int src, int dest, int numShips);
 
 void finishTurn();
 
+void initTurn();
+
+void freeData();
+
 void parseLine(char *p);
+
+char **str_split (char *, const char *);
 
 #endif /* GAME_H_ */
