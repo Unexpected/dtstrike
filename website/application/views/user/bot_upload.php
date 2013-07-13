@@ -1,3 +1,21 @@
+<p>
+Vous devez uploader ici un fichier zip (ou équivalent) contenant :<br/>
+<ul>
+	<li>Tous les fichiers nécessaires à votre IA</li>
+	<li>Le fichier principal de votre IA nommé "MyBot" (attention à la casse)</li>
+</ul>
+</p>
+<table>
+<tr>
+	<td>Voici un exemple de contenu pour une IA écrite en <code>Java</code> :</td>
+	<td><img src="<?php echo base_url('static/images/bot_java.png') ?>" class="pull-right" /></td>
+</tr>
+<tr>
+	<td>Et un autre exemple d'une IA écrite en <code>JavaScript</code> :</td>
+	<td><img src="<?php echo base_url('static/images/bot_js.png') ?>" class="pull-right" /></td>
+</tr>
+</table>
+<p>&nbsp;</p>
 <?php
 	// Errors
 	echo validation_errors('<p class="error">', '</p>');

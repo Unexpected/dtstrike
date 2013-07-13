@@ -1,5 +1,5 @@
 /**
- * CIG - SiX logo animation
+ * CGI - SiX logo animation
  * @author sebastien.schmitt@cgi.com
  */
 
@@ -38,6 +38,11 @@ var SixLogo = {
 				this.backImageObj[i] = new Image();
 				this.backImageObj[i].src = document.getElementById('logo_back_'+(i+1)).src;
 			}
+
+			var val = localStorage.getItem("SixLogo.lastAngle");
+			if (val != null) {
+				this.lastAngle = JSON.parse(val);
+			}
 			
 			this.animate();
 		} catch (e) {
@@ -74,6 +79,9 @@ var SixLogo = {
 		
 		// Draw Front image
 		this.ctx.drawImage(this.frontImageObj, 0, 0);
+		
+		// Save state
+		localStorage.setItem("SixLogo.lastAngle", JSON.stringify(this.lastAngle));
 	
 		// request new frame
 		requestAnimFrame(function() {SixLogo.animate.apply(SixLogo);});

@@ -54,10 +54,8 @@ public class Engine {
 		int id = 1;
 
 		for (int i = 4; i < args.length; i++) {
-			// String pDir = getParameter("players.dir") + "/" + id + "/";
-			String pDir = getParameter("players.dir");
 			String pCommand = args[i];
-			Player p = new Player(id++, pDir, pCommand);
+			Player p = new Player(id++, pCommand);
 			players.add(p);
 			if (p.status != Status.STARTED) {
 				// Bot didn't start. We won't launch the game.
@@ -159,19 +157,7 @@ public class Engine {
 			System.err.println("Draw!");
 		}
 		// Save game Log
-		File logsFolder = new File(
-				engineParameters.getString("engine.output.folder"));
-		if (!logsFolder.exists()) {
-			logsFolder.mkdirs();
-		}
-		int gameId = logsFolder.listFiles().length + 1;
-		File gLog = new File(engineParameters.getString("engine.output.folder")
-				+ "/replay.js");
-		game.saveGameLogToFile(game.winner, gameId, gLog);
-	}
-
-	public static String getParameter(String paramName) {
-		return engineParameters.getString(paramName);
+		game.saveGameLogToFile(game.winner);
 	}
 
 	public static void main(String[] args) {
@@ -182,7 +168,6 @@ public class Engine {
 					.println("Usage : engine map_file_name max_turn_time max_num_turns log_filename player_one player_two [more_players]");
 			System.exit(1);
 		}
-		engineParameters = ResourceBundle.getBundle("six.challenge.engine");
 		Engine e = new Engine(args);
 		if (!e.errorAtStartup) {
 			e.play();

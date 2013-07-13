@@ -15,7 +15,22 @@
 	</target>
 	
 	<target name="jar" depends="clean, compile">
-		<jar destfile="dist/engine.jar" basedir="dist/build/classes" />
+		<jar destfile="dist/engine.jar" basedir="dist/build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="six.challenge.engine.Engine" />
+            </manifest>
+		</jar>
+	</target>
+	
+	<target name="zip" depends="jar">
+		<delete dir="dist/build" />
+		<copy todir="dist">
+			<fileset dir="scripts" />
+		</copy>
+		<!--<copy todir="dist/maps">
+			<fileset dir="maps" />
+		</copy>-->
+		<zip destfile="dist/engine.zip" basedir="dist"></zip>
 	</target>
 	
 	<target name="clean">
