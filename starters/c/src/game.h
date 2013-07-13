@@ -82,6 +82,6 @@ void freeData();
 
 void parseLine(char *p);
 
-char **str_split (char *, const char *);
+char **str_split (char * src, const char *separator);
 
 #endif /* GAME_H_ */

@@ -170,16 +170,17 @@ void parseLine(char *p) {
 		}
 	}
 }
-char **str_split(char *src, const char *ct) {
+char **str_split(char *src, const char *separator) {
 	char **tab = NULL;
 
-	if (src != NULL && ct != NULL) {
+	if (src != NULL && separator != NULL) {
 		int i;
 		char *cs = NULL;
 		size_t size = 1;
+		// protection de la donnee initial
 		char *s = strdup(src);
 
-		for (i = 0; (cs = strtok(s, ct)); i++) {
+		for (i = 0; (cs = strtok(s, separator)); i++) {
 			if (size <= i + 1) {
 				void *tmp = NULL;
 
