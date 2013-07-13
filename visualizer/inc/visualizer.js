@@ -389,29 +389,28 @@ var ParserUtils = {
     },
     
     parsePlanet: function(data) {
-    	console.log(data);
         data = data.split(',');
-		type = data[0];
-    	console.log('type='+type);
-		
-        if (type == "M") {
+        // (x,y,owner,numShips,growthRate)
+		if (data.length == 5) {
+			// Old data style
 			return {
-				type: type,
-				x: parseFloat(data[1]),
-				y: parseFloat(data[2]),
-				owner: parseInt(data[3]),
-				numShips: parseInt(data[4])
+				type: 'E',
+				x: parseFloat(data[0]),
+				y: parseFloat(data[1]),
+				owner: parseInt(data[2]),
+				numShips: parseInt(data[3]),
+				growthRate: parseInt(data[4])
 			};
-        } else if (type == 'E') {
+		} else {
 			return {
-				type: type,
+				type: data[0],
 				x: parseFloat(data[1]),
 				y: parseFloat(data[2]),
 				owner: parseInt(data[3]),
 				numShips: parseInt(data[4]),
 				growthRate: parseInt(data[5])
 			};
-        }
+		}
     },
     
     parsePlayer: function(data) {

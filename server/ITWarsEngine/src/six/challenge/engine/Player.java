@@ -1,19 +1,22 @@
 package six.challenge.engine;
 
+import java.io.File;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
 
-	public Player(int id, String command) {
+	public Player(int id, String dir, String command) {
 		this.id = id;
+		this.dir = new File(dir);
 		this.command = command;
 		start();
 	}
 
 	public int id;
 	public String command;
+	public File dir;
 	public Status status = Status.NOT_INITIALIZED;
 	public Process process;
 
@@ -28,7 +31,7 @@ public class Player {
 	 */
 	public void start() {
 		try {
-			process = Runtime.getRuntime().exec(command);
+			process = Runtime.getRuntime().exec(command, null, dir);
 			status = Status.STARTED;
 		} catch (Exception ex) {
 			kill(Status.CRASHED);

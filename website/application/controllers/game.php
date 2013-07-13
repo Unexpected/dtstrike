@@ -26,41 +26,6 @@ class Game extends CI_Controller {
 		render($this, 'game/game_list', $data);
 	}
 
-	public function rules()
-	{
-		$data['page_title'] = 'Les règles du concours';
-		$data['page_icon'] = 'book';
-		render($this, 'game/rules', $data);
-	}
-
-	public function start()
-	{
-		$data['page_title'] = 'Démarrage rapide';
-		$data['page_icon'] = 'play-sign';
-		render($this, 'game/start', $data);
-	}
-
-	public function kits()
-	{
-		$data['page_title'] = 'Les kits de démarrage';
-		$data['page_icon'] = 'play-sign';
-		render($this, 'game/kits', $data);
-	}
-
-	public function tuto()
-	{
-		$data['page_title'] = 'Tutoriels et Stratégies';
-		$data['page_icon'] = 'play-sign';
-		render($this, 'game/tuto', $data);
-	}
-
-	public function specs()
-	{
-		$data['page_title'] = 'Spécifications';
-		$data['page_icon'] = 'play-sign';
-		render($this, 'game/specs', $data);
-	}
-
 	public function view($game_id)
 	{
 		$data['replay_file'] = 'replays/replay_'.$game_id.'.js';

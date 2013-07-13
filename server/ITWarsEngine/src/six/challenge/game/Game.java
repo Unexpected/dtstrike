@@ -335,23 +335,39 @@ public class Game {
 		return parse(map);
 	}
 
-	public void saveGameLogToFile(int winnerId) {
-		System.out.print("var data=\"");
-		System.out.print("game_id=$$ID\\n");
-		System.out.print("winner=" + winnerId + "\\n");
-		System.out.print("map_id=" + mapName + "\\n");
-		System.out.print("draw=" + (winnerId == 0 ? 1 : 0) + "\\n");
-		System.out.print("timestamp=" + System.currentTimeMillis() + "\\n");
-		System.out.print("players=");
-		for (int i = 1; i <= numPlayers; i++) {
-			if (i > 1) {
-				System.out.print("|");
+	public void saveGameLogToFile(int winnerId, int gameId, File gLog) {
+
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(gLog);
+			fw.write("var data=\"");
+			fw.write("game_id=" + gameId + "\\n");
+			fw.write("winner=" + winnerId + "\\n");
+			fw.write("map_id=" + mapName + "\\n");
+			fw.write("draw=" + (winnerId == 0 ? 1 : 0) + "\\n");
+			fw.write("timestamp=" + System.currentTimeMillis() + "\\n");
+			fw.write("players=");
+			for (int i = 1; i <= numPlayers; i++) {
+				if (i > 1) {
+					fw.write("|");
+				}
+				fw.write(i + ":player" + i);
 			}
-			System.out.print(i + ":player" + i);
+			fw.write("\\n");
+			fw.write("playback_string=" + gameLog.toString());
+			fw.write("\\n\"");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (fw != null) {
+				try {
+					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		System.out.print("\\n");
-		System.out.print("playback_string=" + gameLog.toString());
-		System.out.print("\\n\"");
+
 	}
 
 	private int parse(String map) {

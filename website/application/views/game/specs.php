@@ -1,1 +1,0 @@
-<p>Mettre les spécifications</p>

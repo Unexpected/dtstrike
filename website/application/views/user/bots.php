@@ -10,11 +10,13 @@
 		echo '<tbody>';
 		echo '</tbody>';
 		foreach ($bots as $bot) {
+			$statusLabel = getStatusLabelDescription($bot->status);
+			
 			echo '<tr>';
 			echo '<td>'.$bot->submission_id.'</td>';
 			echo '<td>'.$bot->version.'</td>';
-			echo '<td>'.nice_status($bot->status).'</td>';
-			echo '<td>'.nice_language($bot->language_id, $bot->language_name).'</td>';
+			echo '<td><a title="'.$statusLabel[1].'">'.$statusLabel[0].'</a></td>';
+			echo '<td>'.$bot->language_name.'</td>';
 			echo '<td>'.$bot->rank.'</td>';
 			echo '</tr>';
 		}
@@ -23,7 +25,4 @@
 		echo '<span class="comment">Aucun</span>';
 	}
 ?>
-</p>
-<p>
-Vous pouvez également en <input type="button" value="uploader un nouveau" onclick="window.location='<?php echo site_url('user/bot_upload'); ?>'">.
 </p>
