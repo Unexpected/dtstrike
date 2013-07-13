@@ -1,11 +1,7 @@
-/Bot/bin
+/Bot/bin/*
 bin
-/Bot/bin/MyBot.class
-/Bot/bin/Planet.class
-/Bot/bin/.gitignore
-/Bot/bin/EconomicPlanet.class
-/Bot/bin/Fleet.class
-/Bot/bin/Game.class
-/Bot/bin/MilitaryPlanet.class
 /website/application/logs/*.php
 /logs/*.php
+*.project
+*.buildpath
+*.settings
