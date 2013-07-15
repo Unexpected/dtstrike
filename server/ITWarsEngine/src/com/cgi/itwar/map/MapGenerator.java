@@ -8,46 +8,31 @@ import java.util.Arrays;
 import java.util.Hashtable;
 
 /**
- * Map Generator
- * 
+ * <h1>Générateur de map symétriques</h1>
+ * <br>
+ * Les paramètres sont les suivants :<br>
+ * <ul>
+ *   <li>nbPlayers [4] : Nombre de joueurs sur la carte</li>
+ *   <li>gamerMilitary [1] : Nombre de planète militaire de base par joueur</li>
+ *   <li>gamerEconomic [1] : Nombre de planète économique de base par joueur</li>
+ *   <li>neutralMilitary [1] : Nombre de planète militaire neutre par joueur</li>
+ *   <li>neutralEconomic [3] : Nombre de planète économique neutre par joueur</li>
+ * </ul>
+ * Les 4 dernièrs paramètres correspondent aux nombres de colonies générées dans le 1er cadrant !<br>
+ * <br>
  * <pre>
- * The class generates Colonies in a Map
+ * Cette classe génère des maps pour de 2 à 4 joueurs de manière symétrique.
  * 
- * Initial parameters:
- * 	The number of players
- * 	The size of the Map (width and height, in pixels)
- * 	The displayed radius of each Colony
- * 	The number of starting Base and non-Base(normal) Colonies
- * 	The number of neutral Base and non-Base(normal) Colonies 
- * 
- * It splits the map into individual quadrants, two per player.
- * 
- *  |---------------------------------|---------------------------------|
- *  |  primary quadrant of player #0  | secondary quadrant of player #0 |
- *  |---------------------------------|---------------------------------|
- *  | secondary quadrant of player #1 |  primary quadrant of player #1  |
- *  |---------------------------------|---------------------------------|
- *  |  primary quadrant of player #2  | secondary quadrant of player #2 |
- *  |---------------------------------|---------------------------------|
- *  | secondary quadrant of player #3 |  primary quadrant of player #3  |
- *  |---------------------------------|---------------------------------|
- *  |      ... etc ...                |      ... etc ...                |
- *  |---------------------------------|---------------------------------|
- *  
- *  Bases and Colonies are disposed according to the rules below:
- *  	First Base Colony of each player is placed in the player's primary quadrant
- *  	First non-Base Colony of each player is placed in the player's primary quadrant 
- *  	Other player Colonies are placed randomly (see rules on random placement) on one of the player's quadrants
- *  	Neutral Colonies are placed randomly (see rules on random placement) on any quadrant
- *  
- *  Random placement follows the rules below:
- *  	A quadrant is chosen randomly among the quadrants that have the minimum of colonies of all the candidate quadrants
- *  	The colony is placed in a quadrant at least at a 2*radius distance from the quadrant's edges
- *  	The colony is placed in a quadrant at least at a 3*radius distance from any other colony in the same quadrant
- * 
+ * La génération est faite comme suit :
+ *   - Découpage du plateau (640 x 640) en 1 "part"
+ *     Cette part correspond à un angle de 360° / Nb de joueurs.
+ *   - Génération aléatoire des bases pour 1 joueurs et les neutres dans ce cadrant.
+ *   - Duplication du cadrant par rotation pour générer les autres joueurs.
  * </pre>
+ * FIXME : La détection de proximité des "bords" pour une colonie ne prend pas en compte la bordure de fin de la "part".
  * 
- * @author vergosd
+ * @author Dimitri Vergos
+ * @author Sébastien Schmitt
  * 
  */
 public class MapGenerator {
@@ -68,7 +53,7 @@ public class MapGenerator {
 	private ArrayList<Quadrant> quadrants = new ArrayList<Quadrant>();
 
 
-	private MapGenerator(boolean debug, int pNbGamers, int pBasesPerGamer, int pColoniesPerGamer, int pNeutralBases,	int pNeutralColonies) {
+	private MapGenerator(boolean debug, int pNbGamers, int pBasesPerGamer, int pColoniesPerGamer, int pneutralMilitary,	int pneutralEconomic) {
 		long debut = System.currentTimeMillis();
 		this.debug = debug;
 		if (debug) {
@@ -77,8 +62,8 @@ public class MapGenerator {
 			System.out.println("  pNbGamers="+pNbGamers);
 			System.out.println("  pBasesPerGamer="+pBasesPerGamer);
 			System.out.println("  pColoniesPerGamer="+pColoniesPerGamer);
-			System.out.println("  pNeutralBases="+pNbGamers);
-			System.out.println("  pNeutralColonies="+pNeutralColonies);
+			System.out.println("  pneutralMilitary="+pNbGamers);
+			System.out.println("  pneutralEconomic="+pneutralEconomic);
 			System.out.println("");
 		}
 		/* Initialize variables */
@@ -121,10 +106,10 @@ public class MapGenerator {
 			quadrant.tryPutColony(false, 0);
 		}
 		/* Populate Quadrant with neutral colonies */
-		for (int i = 0; i < pNeutralBases; i++) {
+		for (int i = 0; i < pneutralMilitary; i++) {
 			quadrant.tryPutColony(true, Colony.NEUTRAL_PLAYER);
 		}
-		for (int i = 0; i < pNeutralColonies; i++) {
+		for (int i = 0; i < pneutralEconomic; i++) {
 			quadrant.tryPutColony(false, Colony.NEUTRAL_PLAYER);
 		}
 		quadrants.add(quadrant);
@@ -199,10 +184,10 @@ public class MapGenerator {
 		MapGenerator map=new MapGenerator(
 				options.containsKey("debug"),
 				options.get("nbPlayers"), 
-				options.get("gamerBases"),
-				options.get("gamerColonies"),
-				options.get("neutralBases"),
-				options.get("neutralColonies")
+				options.get("gamerMilitary"),
+				options.get("gamerEconomic"),
+				options.get("neutralMilitary"),
+				options.get("neutralEconomic")
 				);
 		ArrayList<Colony> colonies=map.getColonies();
 		
@@ -258,10 +243,10 @@ public class MapGenerator {
 		//System.out.println("    -debug : Print debug informations");
 		//System.out.println("    -replay : To get output in 'replay' mode");
 		System.out.println("    -nbPlayers <nb> [4] : Define number of players on the map");
-		System.out.println("    -gamerBases <nb> [1] : The number of starting Base and non-Base(normal) Colonies");
-		System.out.println("    -gamerColonies <nb> [1] : The number of starting non-Base(normal) Colonies");
-		System.out.println("    -neutralBases <nb> [1] : The number of neutral Base and non-Base(normal) Colonies");
-		System.out.println("    -neutralColonies <nb> [3] : The number of neutral non-Base(normal) Colonies");
+		System.out.println("    -gamerMilitary <nb> [1] : The number of starting Base and non-Base(normal) Colonies");
+		System.out.println("    -gamerEconomic <nb> [1] : The number of starting non-Base(normal) Colonies");
+		System.out.println("    -neutralMilitary <nb> [1] : The number of neutral Base and non-Base(normal) Colonies");
+		System.out.println("    -neutralEconomic <nb> [3] : The number of neutral non-Base(normal) Colonies");
 		System.out.println("");
 		System.out.println("nbPlayers should be > "+MIN_PLAYER+" and < "+MAX_PLAYER);
 	}
@@ -281,10 +266,10 @@ public class MapGenerator {
 						|| "debug".equals(key)) {
 					ret.put(key, Integer.valueOf(1));
 				} else if ("nbPlayers".equals(key)
-						|| "gamerBases".equals(key)
-						|| "gamerColonies".equals(key)
-						|| "neutralBases".equals(key)
-						|| "neutralColonies".equals(key)) {
+						|| "gamerMilitary".equals(key)
+						|| "gamerEconomic".equals(key)
+						|| "neutralMilitary".equals(key)
+						|| "neutralEconomic".equals(key)) {
 					// Get next arg
 					i++;
 					Integer val = Integer.valueOf(args[i]);
@@ -302,22 +287,22 @@ public class MapGenerator {
 		} else {
 			nbPlayers = ret.get("nbPlayers");
 		}
-		if (!ret.containsKey("gamerBases")) {
-			ret.put("gamerBases", 1);
+		if (!ret.containsKey("gamerMilitary")) {
+			ret.put("gamerMilitary", 1);
 		}
-		if (!ret.containsKey("gamerColonies")) {
-			ret.put("gamerColonies", 1);
+		if (!ret.containsKey("gamerEconomic")) {
+			ret.put("gamerEconomic", 1);
 		}
-		if (!ret.containsKey("neutralBases")) {
-			ret.put("neutralBases", 1);
+		if (!ret.containsKey("neutralMilitary")) {
+			ret.put("neutralMilitary", 1);
 		}
-		if (!ret.containsKey("neutralColonies")) {
+		if (!ret.containsKey("neutralEconomic")) {
 			if (nbPlayers == 2) {
-				ret.put("neutralColonies", 4);
+				ret.put("neutralEconomic", 4);
 			} else if (nbPlayers == 3) {
-				ret.put("neutralColonies", 4);
+				ret.put("neutralEconomic", 4);
 			} else {
-				ret.put("neutralColonies", 3);
+				ret.put("neutralEconomic", 3);
 			}
 		}
 		
