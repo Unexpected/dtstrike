@@ -1,7 +1,8 @@
 /Bot/bin/*
 bin
+dist
 /website/application/logs/*.php
 /logs/*.php
 *.project
-*.buildpath
 *.settings
+*.buildpath
