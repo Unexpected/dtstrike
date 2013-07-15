@@ -25,19 +25,26 @@ public class Quadrant {
 		boolean invalid = true;
 		long t = System.currentTimeMillis();
 		do {
-			x = getRandom(-1*map.getQuadrantWidth(), map.getQuadrantWidth());
-			y = getRandom(-1*map.getQuadrantHeight(), map.getQuadrantHeight());
-			if (map.debug) System.out.println("Trying " + x + "," + y + " into " + this);
+			x = getRandom(map.quadrantMinX, map.quadrantMaxX);
+			y = getRandom(map.quadrantMinY, map.quadrantMaxY);
+			double alpha = Math.atan(y / x);
+			if (alpha < 0) alpha += Math.PI/2;
+			if (x < 0) alpha += Math.PI/2;
+			if (y < 0) alpha += Math.PI/2;
+			if (map.debug) System.out.println("Trying " + x + "," + y + ", " + alpha + " into " + this);
 			
 			// Check rapport au bord
-			if ((map.getQuadrantWidth() - x) < map.minDistanceFromEdge || (map.getQuadrantHeight() - y) < map.minDistanceFromEdge) {
+			if (Math.abs(map.quadrantMaxX - x) < map.minDistanceFromEdge || Math.abs(map.quadrantMaxY - y) < map.minDistanceFromEdge) {
 				// Trop proche du bord
-				if (map.debug) System.out.println("  >> Map edge reject !");
+				if (map.debug) {
+					System.out.println("  >> Map edge reject with threshold of " + map.minDistanceFromEdge);
+					System.out.println("      x : "+map.quadrantMaxX+" - "+x+" = " + Math.abs(map.quadrantMaxX - x));
+					System.out.println("      y : "+map.quadrantMaxY+" - "+y+" = " + Math.abs(map.quadrantMaxY - y));
+				}
 				continue;
 			}
 			
 			// Check si le point est dans la cadrant
-			double alpha = Math.atan(x / y);
 			if (alpha > map.quadrantAngle) {
 				// Hors du quandrant
 				if (map.debug) System.out.println("  >> Out of Quandrant with "+alpha+"° > "+map.quadrantAngle+"° !");
@@ -52,9 +59,9 @@ public class Quadrant {
 					// Check si on est pas trop pret de la colony
 					if (Math.abs(colony.y - y) < map.minDistanceFromColony || Math.abs(colony.x - x) < map.minDistanceFromColony) {
 						if (map.debug) {
-							System.out.println("  Colony was too close of "+colony);
-							System.out.println("    x : "+colony.x+" / "+x);
-							System.out.println("    y : "+colony.y+" / "+y);
+							System.out.println("  >> Colony was too close of "+colony + " with threshold of " + map.minDistanceFromColony);
+							System.out.println("      x : "+colony.x+" - "+x+" = " + Math.abs(colony.x - x));
+							System.out.println("      y : "+colony.y+" - "+y+" = " + Math.abs(colony.y - y));
 						}
 						posValid = false;
 						break;
@@ -64,8 +71,9 @@ public class Quadrant {
 					invalid = false;
 				}
 			}
-			if (invalid && (System.currentTimeMillis() - t > MapGenerator.TIMEOUT)) {
-				throw new RuntimeException("Can't place colony in " + this);
+			if (invalid && (System.currentTimeMillis() - t > map.timeout)) {
+				throw new RuntimeException("Can't place colony in " + this
+						+ " in less than " + map.timeout + "ms.");
 			}
 		} while (invalid);
 		
@@ -75,7 +83,7 @@ public class Quadrant {
 	}
 	
 	private double getRandom(double min, double max) {
-		return min + (Math.random() * ((max - min) + 1));
+		return min + (Math.random() * (max - min));
 	}
 
 	public int getNbOfColonies() {

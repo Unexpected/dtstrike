@@ -58,16 +58,21 @@ public class MapGenerator {
 	public final double minDistanceFromColony;
 	public final double minDistanceFromEdge;
 	public final boolean debug;
-	public final static int TIMEOUT = 2000;
+	public int timeout = 1000;
 
 	public final double quadrantAngle;
+	public final double quadrantMinX;
+	public final double quadrantMaxX;
+	public final double quadrantMinY;
+	public final double quadrantMaxY;
 	private ArrayList<Quadrant> quadrants = new ArrayList<Quadrant>();
 
 
-	public MapGenerator(boolean debug, int pNbGamers, int pBasesPerGamer, int pColoniesPerGamer, int pNeutralBases,	int pNeutralColonies) {
+	private MapGenerator(boolean debug, int pNbGamers, int pBasesPerGamer, int pColoniesPerGamer, int pNeutralBases,	int pNeutralColonies) {
 		long debut = System.currentTimeMillis();
 		this.debug = debug;
 		if (debug) {
+			this.timeout = 5000;
 			System.out.println("Building MapGenerator");
 			System.out.println("  pNbGamers="+pNbGamers);
 			System.out.println("  pBasesPerGamer="+pBasesPerGamer);
@@ -78,21 +83,32 @@ public class MapGenerator {
 		}
 		/* Initialize variables */
 		this.nbGamers = pNbGamers;
-		minDistanceFromColony = 1.5 * colonyRadius;
+		minDistanceFromColony = 1.8 * colonyRadius;
 		minDistanceFromEdge = 1 * colonyRadius;
 
 		/* Check validity */
 		if (nbGamers < 2) throw new RuntimeException("Number of gamers must be at least 2.");
 		if (pBasesPerGamer < 1) throw new RuntimeException("Each participant must have at least one base at start.");
 		if (pColoniesPerGamer < 1) throw new RuntimeException("Each participant must have at least one colony at start.");
-//		int minHeight = minDistanceFromEdge * 2 * nbGamers;
-//		if (mapHeight < minHeight) throw new RuntimeException("Map height should be at least " + minHeight + ".");
-//		int minWidth = minDistanceFromEdge * 2 * 2;
-//		if (mapWidth < minWidth) throw new RuntimeException("Map width should be at least " + minWidth + ".");
 
 		/* Initialize First quadrant */
-		quadrantAngle = 360d/nbGamers;
-		if (debug) System.out.println("Angle calculé pour les quadrants : "+quadrantAngle);
+		quadrantAngle = 2*Math.PI/nbGamers;
+		quadrantMaxX = mapWidth / 2;
+		double minX = (mapWidth / 2);
+		final double halfPi = (Math.PI / 2);
+		double angle = quadrantAngle;
+		while (angle >= halfPi) {
+			angle -= halfPi;
+			minX -= (mapWidth / 2);
+		}
+		quadrantMinX = -1 * Math.tan(angle) * (mapWidth / 2) + minX;
+		quadrantMinY = 0;
+		quadrantMaxY = mapHeight / 2;
+		if (debug) {
+			System.out.println("Angle calculé pour les quadrants : "+quadrantAngle);
+			System.out.println("Dim X : "+quadrantMinX+" < X < "+quadrantMaxX);
+			System.out.println("Dim Y : "+quadrantMinY+" < Y < "+quadrantMaxY);
+		}
 		Quadrant quadrant = new Quadrant(0, this);
 
 		if (debug) System.out.println("");
@@ -134,27 +150,18 @@ public class MapGenerator {
 		if (debug) System.out.println("Map built in " + (System.currentTimeMillis() - debut) + "ms.");
 	}
 
-	public double getQuadrantWidth() {
-		return mapWidth / 2;
-	}
-
-	public double getQuadrantHeight() {
-		return mapHeight / 2;
-	}
-
 	public ArrayList<Colony> getColonies() {
 		ArrayList<Colony> colonies = new ArrayList<Colony>();
 		for (int i = 0; i < quadrants.size(); i++) {
 			Quadrant quadrant = quadrants.get(i);
 			for (Colony colony : quadrant.getColonies()) {
-				colonies.add(new Colony(colony.x + getQuadrantWidth(), colony.y + getQuadrantHeight(), colony.gamer, colony.isBase, this.mapWidth, this.mapHeight));
+				colonies.add(new Colony(colony.x + quadrantMaxX, colony.y + quadrantMaxY, colony.gamer, colony.isBase, this.mapWidth, this.mapHeight));
 			}
 		}
 		return colonies;
 	}
 	
-	private Point2D rotationPoint(Point2D ptDepart, double angleRotation) {
-		double angleRadian = Math.PI*angleRotation/180d;
+	private Point2D rotationPoint(Point2D ptDepart, double angleRadian) {
 		double sina = Math.sin(angleRadian);
 		double cosa = Math.cos(angleRadian);
 		if (angleRadian == -1*Math.PI) sina = 0; // Fix round error (with 180° rotation)
@@ -198,12 +205,8 @@ public class MapGenerator {
 				options.get("neutralColonies")
 				);
 		ArrayList<Colony> colonies=map.getColonies();
-		if (map.debug) {
-			System.out.println("Got "+colonies.size()+" colonies:");
-			for (Colony colony : colonies) {
-				System.out.println(colony);
-			}
-		} else if (options.containsKey("replay")) {
+		
+		if (options.containsKey("replay")) {
 			// Replay ouput
 			StringBuilder sb = new StringBuilder();
 			sb.append("var data=\"game_id=4\\nwinner=1\\nmap_id=map1.txt\\ndraw=0\\ntimestamp=1371808248769\\nplayers=");
@@ -233,6 +236,13 @@ public class MapGenerator {
 			} else {
 				System.out.println(sb.toString());
 			}
+		}
+		
+		if (map.debug) {
+			System.out.println("Got "+colonies.size()+" colonies:");
+			for (Colony colony : colonies) {
+				System.out.println(colony);
+			}
 		} else {
 			// Live ouput
 			for (Colony colony : colonies) {
@@ -241,22 +251,22 @@ public class MapGenerator {
 		}
 	}
 	
-	public static void usage() {
+	private static void usage() {
 		System.out.println("Usage : java Test <option>");
 		System.out.println("  Available options (all nb are in Integer format) :");
 		System.out.println("    -help : Display this help screen");
 		//System.out.println("    -debug : Print debug informations");
 		//System.out.println("    -replay : To get output in 'replay' mode");
 		System.out.println("    -nbPlayers <nb> [4] : Define number of players on the map");
-		System.out.println("    -gamerBases <nb> [2] : The number of starting Base and non-Base(normal) Colonies");
-		System.out.println("    -gamerColonies <nb> [3] : The number of starting non-Base(normal) Colonies");
-		System.out.println("    -neutralBases <nb> [4] : The number of neutral Base and non-Base(normal) Colonies");
-		System.out.println("    -neutralColonies <nb> [16] : The number of neutral non-Base(normal) Colonies");
+		System.out.println("    -gamerBases <nb> [1] : The number of starting Base and non-Base(normal) Colonies");
+		System.out.println("    -gamerColonies <nb> [1] : The number of starting non-Base(normal) Colonies");
+		System.out.println("    -neutralBases <nb> [1] : The number of neutral Base and non-Base(normal) Colonies");
+		System.out.println("    -neutralColonies <nb> [3] : The number of neutral non-Base(normal) Colonies");
 		System.out.println("");
 		System.out.println("nbPlayers should be > "+MIN_PLAYER+" and < "+MAX_PLAYER);
 	}
 
-	public static Hashtable<String, Integer> parseOptions(String[] args) {
+	private static Hashtable<String, Integer> parseOptions(String[] args) {
 		Hashtable<String, Integer> ret = new Hashtable<String, Integer>();
 		if (args != null && args.length != 0) {
 			// parse args
@@ -271,9 +281,6 @@ public class MapGenerator {
 						|| "debug".equals(key)) {
 					ret.put(key, Integer.valueOf(1));
 				} else if ("nbPlayers".equals(key)
-						|| "mapHeight".equals(key)
-						|| "mapWidth".equals(key)
-						|| "colonyRadius".equals(key)
 						|| "gamerBases".equals(key)
 						|| "gamerColonies".equals(key)
 						|| "neutralBases".equals(key)
@@ -296,31 +303,21 @@ public class MapGenerator {
 			nbPlayers = ret.get("nbPlayers");
 		}
 		if (!ret.containsKey("gamerBases")) {
-			if (nbPlayers == 2) {
-				ret.put("gamerBases", 1);
-			} else {
-				ret.put("gamerBases", 2);
-			}
+			ret.put("gamerBases", 1);
 		}
 		if (!ret.containsKey("gamerColonies")) {
-			if (nbPlayers == 2) {
-				ret.put("gamerColonies", 1);
-			} else {
-				ret.put("gamerColonies", 3);
-			}
+			ret.put("gamerColonies", 1);
 		}
 		if (!ret.containsKey("neutralBases")) {
-			if (nbPlayers == 2) {
-				ret.put("neutralBases", 1);
-			} else {
-				ret.put("neutralBases", nbPlayers);
-			}
+			ret.put("neutralBases", 1);
 		}
 		if (!ret.containsKey("neutralColonies")) {
 			if (nbPlayers == 2) {
-				ret.put("neutralColonies", nbPlayers*3);
+				ret.put("neutralColonies", 4);
+			} else if (nbPlayers == 3) {
+				ret.put("neutralColonies", 4);
 			} else {
-				ret.put("neutralColonies", nbPlayers*4);
+				ret.put("neutralColonies", 3);
 			}
 		}
 		
