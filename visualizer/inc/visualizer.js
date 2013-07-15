@@ -526,13 +526,13 @@ function bindActionsAndEvents() {
 		
 	// Add onclick event on timeline
 	$('#feedline').click(function(event) {
-		var canvas = document.getElementById('feedline');
-	    var widthFactor = canvas.width / Math.max(200, Visualizer.moves.length);
+		var canvas = $('#feedline');
+	    var widthFactor = canvas.width() / Math.max(200, Visualizer.moves.length);
 		
-		var x = event.pageX - canvas.offsetLeft;
+		var x = event.pageX - canvas.offset().left;
 		
 		Visualizer.stop();
-		Visualizer.setFrame((x / widthFactor + 1));
+		Visualizer.setFrame(parseInt((x / widthFactor) + 1));
 		Visualizer.drawFrame(Visualizer.frame);
 		
 		return false;
