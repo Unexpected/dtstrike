@@ -14,7 +14,7 @@
 		</copy>
 	</target>
 	
-	<target name="jar" depends="clean, compile">
+	<target name="jar" depends="compile">
 		<jar destfile="dist/engine.jar" basedir="dist/build/classes">
             <manifest>
                 <attribute name="Main-Class" value="six.challenge.engine.Engine" />
