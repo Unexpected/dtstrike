@@ -224,6 +224,6 @@ exports.game = {
 		//process.stdout.flush();
 	},
 	'log' : function(msg) {
-		fs.writeSync(process.stdout.fd, msg + '\n');
+		fs.writeSync(process.stderr.fd, msg + '\n');
 	}
 };
