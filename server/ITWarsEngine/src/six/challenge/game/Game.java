@@ -107,6 +107,8 @@ public class Game {
 		}
 		if (livePlayers == 1) {
 			winner = possibleWinner;
+		} else if (livePlayers == 0) {
+			winner = 0;
 		}
 	}
 
