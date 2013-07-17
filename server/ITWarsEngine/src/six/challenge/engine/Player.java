@@ -1,5 +1,8 @@
 package six.challenge.engine;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,25 @@ public class Player {
 		try {
 			process = Runtime.getRuntime().exec(command);
 			status = Status.STARTED;
+			
+			// Get errors logs
+			new Thread() {
+				public void run() {
+					try {
+						BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+						String line = "";
+						try {
+							while((line = reader.readLine()) != null) {
+								System.err.println("BOT #"+id+" ERR: "+line);
+							}
+						} finally {
+							reader.close();
+						}
+					} catch(IOException ioe) {
+						//ioe.printStackTrace(System.err);
+					}
+				}
+			}.start();
 		} catch (Exception ex) {
 			kill(Status.CRASHED);
 			System.err.println("Error: player " + id + " crashed at startup. ");
@@ -57,7 +79,7 @@ public class Player {
 			OutputStreamWriter osw = new OutputStreamWriter(
 					process.getOutputStream());
 			osw.write(text);
-			osw.flush();
+			osw.close();
 		} catch (Exception ex) {
 			kill(Status.CRASHED);
 			System.err.println("Error: player " + id

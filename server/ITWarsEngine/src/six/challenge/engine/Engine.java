@@ -173,5 +173,6 @@ public class Engine {
 			e.play();
 			e.end();
 		}
+		System.exit(0);
 	}
 }
