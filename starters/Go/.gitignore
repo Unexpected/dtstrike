@@ -1,0 +1,7 @@
+/bin/*
+/pkg/*
+*.log
+*.project
+*.settings
+*.buildpath
+*.exe
