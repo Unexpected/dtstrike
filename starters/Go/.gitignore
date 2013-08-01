@@ -5,3 +5,5 @@
 *.settings
 *.buildpath
 *.exe
+*.out
+/src/launcher/*.out

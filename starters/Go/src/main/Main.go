@@ -40,34 +40,6 @@ func main() {
 	// setup the world
 	game := *state.New(*debugFlag, debugLogger, bout)
 
-	launcher.ProcessInputLoop(bio, bout, game, debugLogger)
+	launcher.ProcessInputLoop(bio, bout, game)
 
 }
-
-/*
-func ProcessInputLoop(bio *bufio.Reader, bout *bufio.Writer, game state.GameState) {
-
-	for !stop {
-		line, err := bio.ReadString('\n')
-		if err != nil || strings.HasPrefix(line, "stop") {
-			// end of the game , say goodbye
-			bot.DoEnd(&game, line)
-			stop = true
-		} else if strings.HasPrefix(line, "go") {
-			id, err := strconv.Atoi(strings.Replace(strings.Replace(strings.Split(line, " ")[1], "\r", "", 1), "\n", "", 1)) // parse ID
-			handleError("Parse UserID", err)
-
-			// here should have GameState ready so we can start
-			bot.DoTurn(&game, id)
-			bout.WriteString(fmt.Sprintf("go\n"))
-			bout.Flush()
-
-			// do some cleaning
-			bot.DoBetweenTurn(&game, id)
-		} else {
-			// here parse GameState
-			game.ParseMapLine(line)
-		}
-	}
-}
-*/
