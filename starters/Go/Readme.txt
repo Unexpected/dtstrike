@@ -1,6 +1,6 @@
 
 GO starter Package by Kevin Lansard
-Done with goeclipse : 
+Done with goeclipse : https://code.google.com/p/goclipse/
 
 Your starting point for improving this startup bot is by modifying 
 src\goAndStart\MyFirstBot.go
@@ -15,7 +15,5 @@ Do not forget to set the GOPATH value (in env.cmd on windows and/or in eclipse)
 As i know you won't be a lot to read this... please contact me for help and strategy sharing.
 
 if you need pointer in how to develop with GO, here are some good starting point :
-
-
-
-
+- http://golang.org/
+- https://code.google.com/p/go-wiki/wiki/Projects
