@@ -374,7 +374,7 @@ def get_options(argv):
 
     chroot_base = {
         "install_utilities": False,
-        "install_pkg_languages": False,
+        "install_pkg_languages": True,
         "install_languages": False,
         "install_jailguard": False,
         "create_jails": False,
