@@ -131,7 +131,7 @@ class GameAPIClient:
 
     def get_map(self, map_filename):
         try:
-            url = '%s/map/%s' % (self.base_url, map_filename)
+            url = '%s/maps/%s' % (self.base_url, map_filename)
             log.info("Downloading map %s" % url)
             data = urllib.urlopen(url).read()
             log.debug(data)
