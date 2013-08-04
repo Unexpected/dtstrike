@@ -352,7 +352,7 @@ def get_options(argv):
         "install_required": True,
         "install_utilities": True,
         "install_languages": False,
-        "install_pkg_languages": False,
+        "install_pkg_languages": True,
         "install_jailguard": False,
         "packages_only": False,
         "username": "root",
