@@ -33,22 +33,24 @@ public class Player {
 		try {
 			process = Runtime.getRuntime().exec(command);
 			status = Status.STARTED;
-			
+
 			// Get errors logs
 			new Thread() {
 				public void run() {
 					try {
-						BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+						BufferedReader reader = new BufferedReader(
+								new InputStreamReader(process.getErrorStream()));
 						String line = "";
 						try {
-							while((line = reader.readLine()) != null) {
-								System.err.println("BOT #"+id+" ERR: "+line);
+							while ((line = reader.readLine()) != null) {
+								System.err.println("BOT #" + id + " ERR: "
+										+ line);
 							}
 						} finally {
 							reader.close();
 						}
-					} catch(IOException ioe) {
-						//ioe.printStackTrace(System.err);
+					} catch (IOException ioe) {
+						// ioe.printStackTrace(System.err);
 					}
 				}
 			}.start();
@@ -79,7 +81,7 @@ public class Player {
 			OutputStreamWriter osw = new OutputStreamWriter(
 					process.getOutputStream());
 			osw.write(text);
-			osw.close();
+			osw.flush();
 		} catch (Exception ex) {
 			kill(Status.CRASHED);
 			System.err.println("Error: player " + id
