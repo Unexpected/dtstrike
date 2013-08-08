@@ -1,0 +1,9 @@
+/bin/*
+/pkg/*
+*.log
+*.project
+*.settings
+*.buildpath
+*.exe
+*.out
+/src/launcher/*.out

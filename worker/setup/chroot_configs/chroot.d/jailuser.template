@@ -3,5 +3,7 @@ description=Jail chroot for ai-contest
 directory=/srv/chroot/{jailname}/root
 users={jailname}
 type=directory
-script-config=ai-jail/config
+setup.copyfiles=ai-jail/copyfiles
+setup.fstab=ai-jail/fstab
+setup.nssdatabases=ai-jail/nssdatabases
 
