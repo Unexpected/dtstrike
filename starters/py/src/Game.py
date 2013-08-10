@@ -8,7 +8,7 @@ from sys import stdout
 
 class Game(object):
     '''
-    classdocs
+    Class handling communication to the DTStrike server ans providing the basics methods to play.
     '''
 
 
@@ -275,7 +275,7 @@ class Game(object):
         for line in lines:
             line = line.split("#")[0] # remove comments?!
             tokens = line.split(" ")
-            if (len(tokens) != 0):
+            if (len(tokens) > 1): #remove empty strings
                 if (tokens[0] == "M"):
                     if (len(tokens) != 5):
                         return 1
