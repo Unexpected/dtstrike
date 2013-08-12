@@ -41,7 +41,7 @@ function game_result_error ($message) {
 
 if ($gamedata == null) {
     game_result_error("Did not recieve post data for game result as proper json.");
-}   
+}
 
 // always return received hash so worker can move on to next task
 echo json_encode(array( "hash" => $json_hash ));
@@ -212,9 +212,11 @@ if (array_key_exists('error', $gamedata)) {
                         $gamedata->matchup_id)."\n".mysql_error());
     }
 
-    $memcache->delete("lock:game_insert");
-    api_log(sprintf("Took %d seconds to insert game %d", time() - $start_time,
-        $game_id));
+    if ($memcache) {
+	    $memcache->delete("lock:game_insert");
+	    api_log(sprintf("Took %d seconds to insert game %d", time() - $start_time,
+	        $game_id));
+    }
 
     // update game data with meta data
     $gamedata->playernames = array();
