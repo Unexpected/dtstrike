@@ -17,7 +17,12 @@ $server_info = array(
     "replay_path" => $config['replay_dir'],
     "api_create_key" => $config['api_create_key'],
     "api_log" => $config['api_log'],
-    "game_result_errors" => $config['game_result_errors']
+    "game_result_errors" => $config['game_result_errors'],
+	"game_options" => array(
+        "turns" => 1000,
+        "loadtime" => 3000,
+        "turntime" => 1000
+	)
 );
 
 ?>
