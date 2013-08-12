@@ -4,7 +4,7 @@
 
 require_once('api_functions.php');
 require_once('server_info.php');
-$skills_dir = $server_info["repo_path"] . "/manager/PHPSkills/Skills/";
+$skills_dir = $server_info["repo_path"] . "PHPSkills/Skills/";
 require_once($skills_dir.'TrueSkill/FactorGraphTrueSkillCalculator.php');
 require_once($skills_dir.'GameInfo.php');
 require_once($skills_dir.'Player.php');
