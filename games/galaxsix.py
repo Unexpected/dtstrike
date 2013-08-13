@@ -124,7 +124,7 @@ class GalaxSix(Game):
             except ValueError:
                 invalid.append((line,'invalid data - source target and ships must be integer'))
                 continue
-
+	    data = [source_id, target_id, num_ships]
             # this order can be parsed
             valid.append(data)
 
@@ -160,26 +160,26 @@ class GalaxSix(Game):
 		invalid.append((line,'source planet not military'))
 		continue
 			
-	    if source_planet.num_ships < order[2]:
+	    if source_planet.num_ships < int(order[2]):
                 ignored.append((line,'not enough ships on source planet'))
                 continue
 
             # this order is valid!
             valid.append(order)
-
-        return valid, ignored, invalid
+	    valid_orders.append(line)
+        return valid, valid_orders, ignored, invalid
 
     def do_orders(self):
         """ Create fleets for each player order
 	"""
-	for player in self.players:
-	    for order in self.orders[player]:
+	for orders in self.orders:
+	    for order in orders:
 		source_id = order[0]
 		target_id = order[1]
 		num_ships = order[2]
 		distance = self.distance(source_id, target_id)
 		p = self.planets[source_id] 
-		self.fleets.append(Fleet(p.owner, num_ships, source_id, target_it, distance, distance))
+		self.fleets.append(Fleet(p.owner, num_ships, source_id, target_id, distance, distance))
 
     def do_timestep(self):
 	""" All Economic planets will produce ships
@@ -210,11 +210,11 @@ class GalaxSix(Game):
         battleships[p.owner] = p.num_ships
         for f in self.fleets:
             if f.destination_planet == p.id and f.turns_remaining == 0:
-	        if not p.owner in battleships:
+	        if not f.owner in battleships:
 		    battleships[p.owner] = 0
 		    battleships[p.owner] += f.num_ships
 		else:
-		    remaining_fleets.append(f);
+		    remaining_fleets.append(f)
 
 	self.fleets = remaining_fleets;
 
@@ -366,9 +366,10 @@ class GalaxSix(Game):
         result = []
 	for planet in self.planets: 
 	    result.append(str(planet))
-	    for fleet in self.fleets: 
-		result.append(str(fleet))
-        return '\n'.join(' '.join(map(str,s)) for s in result)
+	for fleet in self.fleets: 
+	    result.append(str(fleet))
+        state = '\n'.join(''.join(map(str,s)) for s in result)
+	return state + '\n'
 
     def get_player_start(self, player=None):
         """ Get game parameters visible to players
@@ -381,9 +382,12 @@ class GalaxSix(Game):
         result.append(['turntime', self.turntime])
         result.append(['turns', self.turns])
         result.append([]) # newline
-	for row in self.map_text:
-	    result.append(row)
-        return '\n'.join(' '.join(map(str,s)) for s in result)
+        for planet in self.planets:
+            result.append(str(planet))
+        for fleet in self.fleets:
+            result.append(str(fleet))
+        state = '\n'.join(''.join(map(str,s)) for s in result)
+        return state + '\n'
 
     def get_player_state(self, player):
         """ Get state changes visible to player
@@ -411,8 +415,8 @@ class GalaxSix(Game):
     def do_moves(self, player, moves):
         """ Called by engine to give latest player orders """
         valid, ignored, invalid = self.parse_orders(player, moves)
-        valid, ignored, invalid = self.validate_orders(player, moves, valid, ignored, invalid)
-        self.orders[player] = valid
+        orders, valid, ignored, invalid = self.validate_orders(player, moves, valid, ignored, invalid)
+        self.orders[player] = orders
         return valid, ['%s # %s' % ignore for ignore in ignored], ['%s # %s' % error for error in invalid]
 
     def get_scores(self, player=None):
@@ -436,7 +440,7 @@ class GalaxSix(Game):
         stats['climb?'] = []
         stats['max_score'] = {}
         for player in range(self.num_players):
-            stats['max_score'][player] = max_score
+            stats['max_score'][player] = self.score
 #                stats['min_score_%s' % player] = {}
 #                        stats['min_score_%s' % player][opponent] = min_score
             stats['climb?'].append(0)
@@ -502,8 +506,8 @@ class EconomicPlanet(Planet):
 	Planet.__init__(self, id, x, y, owner, num_ships)
 	self.growth_rate = int(growth_rate)
 
-	def __str__(self):
-	    return "E %f %f %d %d %d" % (self.x, self.y, self.owner, self.num_ships, self.growth_rate)
+    def __str__(self):
+	return "E %f %f %d %d %d" % (self.x, self.y, self.owner, self.num_ships, self.growth_rate)
 
 class MilitaryPlanet(Planet): 
     def __init__(self, id, x, y, owner, num_ships):
