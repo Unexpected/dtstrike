@@ -123,16 +123,16 @@ public abstract class AbstractSystemInputParser extends AbstractSystemInputReade
             switch (updateToken) {
                 case M:
                 	id++;
-                    int mx = scanner.nextInt();
-                    int my = scanner.nextInt();
+                	double mx = scanner.nextDouble();
+                	double my = scanner.nextDouble();
 					int mowner = scanner.nextInt();
 					int mnumShips = scanner.nextInt();
                     addMilitaryPlanet(id, mowner, mnumShips, mx, my);
                 break;
                 case E:
                 	id++;
-                    int ex = scanner.nextInt();
-                    int ey = scanner.nextInt();
+                	double ex = scanner.nextDouble();
+                	double ey = scanner.nextDouble();
 					int eowner = scanner.nextInt();
 					int enumShips = scanner.nextInt();
 					int economicValue = scanner.nextInt();
