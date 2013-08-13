@@ -1,22 +1,43 @@
+import java.io.IOException;
 
-public class MyBot {
-	// The DoTurn function is where your code goes. The Game object
-	// contains the state of the game, including information about all planets
-	// and fleets that currently exist. Inside this function, you issue orders
-	// using the game.issueOrder() function. For example, to send 10 ships from
-	// planet 3 to planet 8, you would say game.issueOrder(3, 8, 10).
-	//
-	// There is already a basic strategy in place here. You can use it as a
-	// starting point, or you can throw it out entirely and replace it with
-	// your own.
 
-	public static void doTurn(Game game) {
+public class MyBot extends Bot {
+    /**
+     * Main method executed by the game engine for starting the bot.
+     * 
+     * @param args command line arguments
+     * 
+     * @throws IOException if an I/O error occurs
+     */
+    public static void main(String[] args) throws IOException {
+        new MyBot().readSystemInput();
+    }
+
+	/**
+	 * The DoTurn function is where your code goes.<br/>
+	 * The Game object contains the state of the game, 
+	 * including information about all planets and fleets that currently exist.<br/>
+	 * Inside this function, you issue orders using the {@link Game#issueOrder} functions.<br/>
+	 * For example, to send 10 ships from planet 3 to planet 8, you would say 
+	 * <code>game.issueOrder(3, 8, 10).</code>
+	 * 
+	 * <p>There is already a basic strategy in place here.<br/>
+	 * You can use it as a starting point, or you can throw it out 
+	 * entirely and replace it with your own.</p>
+	 * 
+	 * @param game the Game instance
+	 */
+    @Override
+    public void doTurn() {
+        Game game = getGame();
+        
 		// (1) If we currently have a fleet in flight, just do nothing.
 		for (Fleet f : game.getMyFleets()) {
 			if (game.getPlanet(f.sourcePlanet) instanceof MilitaryPlanet) {
 				return;
 			}
 		}
+		
 		// (2) Find my strongest military planet.
 		Planet source = null;
 		int sourceShips = Integer.MIN_VALUE;
@@ -44,37 +65,6 @@ public class MyBot {
 		if (source != null && dest != null) {
 			int numShips = source.numShips / 2;
 			game.issueOrder(source, dest, numShips);
-		}
-	}
-
-	public static void main(String[] args) {
-
-		try {
-			System.err.println("bot started");
-			String line = "";
-			String message = "";
-			int c;
-			while ((c = System.in.read()) >= 0) {
-				switch (c) {
-				case '\n':
-					if (line.startsWith("go")) {
-						Game game = new Game(message, (Integer.parseInt(line
-								.split(" ")[1])));
-						doTurn(game);
-						game.finishTurn();
-						message = "";
-					} else {
-						message += line + "\n";
-					}
-					line = "";
-					break;
-				default:
-					line += (char) c;
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
 		}
 	}
 }
