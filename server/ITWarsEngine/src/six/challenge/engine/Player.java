@@ -19,6 +19,7 @@ public class Player {
 	public String command;
 	public Status status = Status.NOT_INITIALIZED;
 	public Process process;
+	public List<String> orders;
 
 	public boolean hasPlayed = false;
 
@@ -90,10 +91,10 @@ public class Player {
 		}
 	}
 
-	public List<String> getOrders() {
+	public void getIncomingOrders() {
 		// Get orders from each player
 		StringBuilder orderStream = new StringBuilder();
-		List<String> orders = new ArrayList<String>();
+		List<String> incomingOrders = new ArrayList<String>();
 		try {
 			while (process.getInputStream().available() > 0) {
 				char c = (char) process.getInputStream().read();
@@ -106,9 +107,9 @@ public class Player {
 					order = order.toLowerCase().trim();
 					if (order.equals("go")) {
 						hasPlayed = true;
-						return orders;
+						break;
 					} else if (!"".equals(order)) {
-						orders.add(order);
+						incomingOrders.add(order);
 					}
 					orderStream = new StringBuilder();
 				}
@@ -119,6 +120,6 @@ public class Player {
 					+ " crashed when getting orders. ");
 			ex.printStackTrace(System.err);
 		}
-		return orders;
+		this.orders.addAll(incomingOrders);
 	}
 }

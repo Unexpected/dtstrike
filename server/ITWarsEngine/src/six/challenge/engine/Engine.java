@@ -2,11 +2,13 @@ package six.challenge.engine;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import six.challenge.engine.Player.Status;
-import six.challenge.game.Game;
+import six.challenge.game.galaxsix.GalaxSix;
 
 public class Engine {
 
@@ -23,7 +25,7 @@ public class Engine {
 	/**
 	 * Maximum time allowed to bots for a turn in milliseconds
 	 */
-	private int turnTime;
+	private int turntime;
 
 	/**
 	 * Maximum turn number
@@ -46,7 +48,7 @@ public class Engine {
 
 	public Engine(String[] args) {
 		mapFile = args[0];
-		turnTime = Integer.parseInt(args[1]);
+		turntime = Integer.parseInt(args[1]);
 		turns = Integer.parseInt(args[2]);
 		logFile = args[3];
 
@@ -63,8 +65,12 @@ public class Engine {
 				break;
 			}
 		}
+		Map<String, String> options = new HashMap<String, String>();
+		options.put("turns", String.valueOf(turns));
+		options.put("turntime", String.valueOf(turntime));
+		options.put("loadtime", String.valueOf(3 * turntime));
 		if (!errorAtStartup) {
-			game = new Game(new File(mapFile), turnTime, turns, logFile);
+			game = new GalaxSix(new File(mapFile), options, logFile);
 			if (game.errorAtStartup) {
 				errorAtStartup = true;
 			}
@@ -79,14 +85,24 @@ public class Engine {
 
 	public void play() {
 		// Players are ready to rumble
+		game.startGame();
 		for (Player p : players) {
 			p.status = Status.PLAYING;
 		}
 
-		int turn = 1;
+		int turn = 0;
+		// Load turn
+		for (Player p : players) {
+			if (game.isAlive(p.id)) {
+				// We send initialization only to living players
+				String startMessage = game.getPlayerStart(p.id) + "ready\n";
+				p.sendMessage(startMessage);
+			}
+		}
+
 		// As long as there is no winner and that we have some turns left,
 		// we'll play
-		while (game.winner == -1 && turn <= turns) {
+		while (!game.isGameOver() && turn <= turns) {
 			for (Player p : players) {
 				if (p.status != Status.PLAYING) {
 					// We don't care about stopped players
@@ -94,15 +110,15 @@ public class Engine {
 				}
 				if (game.isAlive(p.id)) {
 					// We send data only to living players
-					String playerView = game.playerView(p.id) + "go " + p.id
-							+ "\n";
+					String playerView = game.getPlayerState(p.id) + "go "
+							+ p.id + "\n";
 					p.sendMessage(playerView);
 					p.hasPlayed = false;
 					game.writeLogMessage("engine > player" + p.id + ": "
 							+ playerView);
 				} else if (!game.isAlive(p.id)) {
 					if (p.status == Status.PLAYING) {
-						game.dropPlayer(p.id);
+						game.killPlayer(p.id);
 						p.kill(Status.LOST);
 					}
 				}
@@ -111,18 +127,17 @@ public class Engine {
 			boolean everyoneHasPlayed = false;
 			// Loops until every player has finished is turn or turn time is
 			// over
+			for (Player p : players) {
+				p.orders = new ArrayList<String>();
+			}
 			while (!everyoneHasPlayed
-					&& (System.currentTimeMillis() - currentTurnTime) < turnTime) {
+					&& (System.currentTimeMillis() - currentTurnTime) < turntime) {
 				// For each player that hasn't played
 				for (Player p : players) {
 					if (p.status != Status.PLAYING || p.hasPlayed) {
 						continue;
 					}
-					for (String order : p.getOrders()) {
-						game.issueOrder(p.id, order);
-						game.writeLogMessage("player" + p.id + " > engine: "
-								+ order);
-					}
+					p.getIncomingOrders();
 				}
 				everyoneHasPlayed = true;
 				for (Player p : players) {
@@ -135,12 +150,17 @@ public class Engine {
 				if (p.status == Status.PLAYING && !p.hasPlayed) {
 					System.err.println("Warning: player " + p.id
 							+ " timed out.");
-					game.dropPlayer(p.id);
+					game.killPlayer(p.id);
 					p.kill(Status.TIMEOUT);
 				}
 			}
+			for (Player p : players) {
+				if (game.isAlive(p.id)) {
+					game.doMoves(p.id, p.orders);
+				}
+			}
 			System.err.println("Turn " + turn++);
-			game.doTimeStep();
+			game.finishTurn();
 		}
 	}
 

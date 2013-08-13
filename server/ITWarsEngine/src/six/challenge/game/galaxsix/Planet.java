@@ -1,4 +1,4 @@
-package six.challenge.game;
+package six.challenge.game.galaxsix;
 public class Planet {
 
 	public int id;

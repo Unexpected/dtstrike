@@ -1,4 +1,4 @@
-package six.challenge.game;
+package six.challenge.game.galaxsix;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -16,24 +15,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class Game {
+import six.challenge.engine.Game;
 
-	public static final String GAMES_FOLDER = "D:/Perso/DTStrike/games/";
+public class GalaxSix extends Game {
 
-	public int winner;
-	public StringBuffer gameLog = new StringBuffer();
-	public String mapName;
-	public int numPlayers;
-	public boolean errorAtStartup = false;
-
-	public List<Planet> planets;
-	public List<Fleet> fleets;
-	public Map<Integer, Set<EconomicPlanet>> playersEconomicPlanets;
-	public Map<Integer, Set<MilitaryPlanet>> playersMilitaryPlanets;
-
-	public BufferedWriter logWriter;
-
-	public Game(File mapFile, int turnTime, int turns, String logFile) {
+	public GalaxSix(File mapFile, Map<String, String> options, String logFile) {
 		this.winner = -1;
 		this.mapName = mapFile.getName();
 		new File(logFile).delete();
@@ -55,6 +41,15 @@ public class Game {
 			errorAtStartup = true;
 		}
 	}
+
+	public int winner;
+	public StringBuffer gameLog = new StringBuffer();
+	public String mapName;
+	public int numPlayers;
+	public boolean errorAtStartup = false;
+
+	public List<Planet> planets;
+	public List<Fleet> fleets;
 
 	/**
 	 * A player is alive if he owns at least one military planet or one fleet.
@@ -82,7 +77,7 @@ public class Game {
 	 * @param id
 	 *            player id to drop
 	 */
-	public void dropPlayer(int id) {
+	public void killPlayer(int id) {
 		for (Planet p : planets) {
 			if (p.owner == id) {
 				p.owner = 0;
@@ -93,23 +88,6 @@ public class Game {
 				f.destroy();
 			}
 		}
-		checkWinner();
-	}
-
-	public void checkWinner() {
-		int livePlayers = 0;
-		int possibleWinner = -1;
-		for (int i = 0; i < numPlayers; i++) {
-			if (isAlive(i + 1)) {
-				livePlayers++;
-				possibleWinner = i + 1;
-			}
-		}
-		if (livePlayers == 1) {
-			winner = possibleWinner;
-		} else if (livePlayers == 0) {
-			winner = 0;
-		}
 	}
 
 	/**
@@ -118,7 +96,7 @@ public class Game {
 	 * @param paramInt
 	 * @return
 	 */
-	public String playerView(int paramInt) {
+	public String getPlayerState(int paramInt) {
 		StringBuilder sb = new StringBuilder();
 		Locale.setDefault(new Locale("en"));
 		for (Planet p : planets) {
@@ -138,50 +116,7 @@ public class Game {
 		return sb.toString();
 	}
 
-	public void writeLogMessage(String message) {
-		if (this.logWriter == null) {
-			// No log file
-			return;
-		}
-		try {
-			this.logWriter.write(message);
-			this.logWriter.newLine();
-			this.logWriter.flush();
-		} catch (Exception ex) {
-		}
-	}
-
-	public int issueOrder(int id, String order) {
-		String[] orderParts = order.split(" ");
-		int sourcePlanet = Integer.parseInt(orderParts[0]);
-		int destPlanet = Integer.parseInt(orderParts[1]);
-		int k = Integer.parseInt(orderParts[2]);
-		return issueOrder(id, sourcePlanet, destPlanet, k);
-	}
-
-	public int issueOrder(int id, int sourcePlanet, int destPlanet, int numShips) {
-		if (numShips == 0) {
-			return 0;
-		}
-		Planet localPlanet = (Planet) this.planets.get(sourcePlanet);
-		if ((localPlanet.owner != id) || (numShips > localPlanet.numShips)
-				|| (numShips < 0)) {
-			writeLogMessage("dropping player " + id + ". source.owner = "
-					+ localPlanet.owner + ", player = " + id + ", numShips = "
-					+ numShips + ", source.numShips = " + localPlanet.numShips);
-			dropPlayer(id);
-			return -1;
-		}
-		localPlanet.numShips -= numShips;
-		int distance = distance(sourcePlanet, destPlanet);
-		Fleet localFleet = new Fleet(localPlanet.owner, numShips, sourcePlanet,
-				destPlanet, distance, distance);
-
-		this.fleets.add(localFleet);
-		return 0;
-	}
-
-	public int distance(int sourcePlanet, int destPlanet) {
+	private int distance(int sourcePlanet, int destPlanet) {
 		Planet localPlanet1 = planets.get(sourcePlanet);
 		Planet localPlanet2 = planets.get(destPlanet);
 		double d1 = localPlanet1.x - localPlanet2.x;
@@ -189,7 +124,7 @@ public class Game {
 		return (int) Math.ceil(Math.sqrt(d1 * d1 + d2 * d2));
 	}
 
-	public Planet getClosestPlanet(Planet origin,
+	private Planet getClosestPlanet(Planet origin,
 			Set<? extends Planet> destinations) {
 		Planet destination = null;
 		int distance = Integer.MAX_VALUE;
@@ -202,55 +137,6 @@ public class Game {
 			}
 		}
 		return destination;
-	}
-
-	public void doTimeStep() {
-		for (Planet p : planets) {
-			if (p instanceof EconomicPlanet && p.owner > 0) {
-				if (playersMilitaryPlanets.get(p.owner).size() > 0) {
-					Planet dest = getClosestPlanet(p,
-							playersMilitaryPlanets.get(p.owner));
-					if (dest != null) {
-						int distance = distance(p.id, dest.id);
-						fleets.add(new Fleet(p.owner,
-								((EconomicPlanet) p).revenue, p.id, dest.id,
-								distance, distance));
-					}
-				}
-			}
-		}
-
-		// for (Planet p : planets) {
-		// if (p instanceof MilitaryPlanet && p.owner != 0) {
-		// p.numShips += revenue[p.owner];
-		// }
-		// }
-
-		for (Fleet f : fleets) {
-			f.doTimeStep();
-		}
-
-		for (Planet p : planets) {
-			fight(p);
-		}
-
-		int k = 0;
-		for (Planet p : planets) {
-			if (k++ > 0)
-				gameLog.append(",");
-			gameLog.append(p.owner).append(".").append(p.numShips);
-		}
-
-		for (Fleet f : fleets) {
-			if (k++ > 0)
-				gameLog.append(",");
-			gameLog.append(f.owner).append(".").append(f.numShips).append(".")
-					.append(f.sourcePlanet).append(".")
-					.append(f.destinationPlanet).append(".")
-					.append(f.totalTripLength).append(".")
-					.append(f.turnsRemaining);
-		}
-		gameLog.append(":");
 	}
 
 	private void fight(Planet p) {
@@ -303,23 +189,6 @@ public class Game {
 		} else {
 			// Biggest fleet is new owner (maybe doesn't change)
 			p.numShips = maxShips - secondShips;
-			if (p.owner != maxOwner) {
-				if (p instanceof MilitaryPlanet) {
-					if (p.owner != 0) {
-						playersMilitaryPlanets.get(p.owner).remove(
-								(MilitaryPlanet) p);
-					}
-					playersMilitaryPlanets.get(maxOwner)
-							.add((MilitaryPlanet) p);
-				} else {
-					if (p.owner != 0) {
-						playersEconomicPlanets.get(p.owner).remove(
-								(EconomicPlanet) p);
-					}
-					playersEconomicPlanets.get(maxOwner)
-							.add((EconomicPlanet) p);
-				}
-			}
 			p.owner = maxOwner;
 		}
 	}
@@ -359,8 +228,6 @@ public class Game {
 	private int parse(String map) {
 		planets = new ArrayList<Planet>();
 		fleets = new ArrayList<Fleet>();
-		playersEconomicPlanets = new HashMap<Integer, Set<EconomicPlanet>>();
-		playersMilitaryPlanets = new HashMap<Integer, Set<MilitaryPlanet>>();
 
 		String[] lines = map.split("\n");
 		for (int i = 0; i < lines.length; i++) {
@@ -385,13 +252,6 @@ public class Game {
 						MilitaryPlanet p = new MilitaryPlanet(planets.size(),
 								owner, numShips, x, y);
 						planets.add(p);
-						if (owner != 0) {
-							if (playersMilitaryPlanets.get(owner) == null) {
-								playersMilitaryPlanets.put(owner,
-										new HashSet<MilitaryPlanet>());
-							}
-							playersMilitaryPlanets.get(owner).add(p);
-						}
 						if (this.gameLog.length() > 0) {
 							gameLog.append(":");
 						}
@@ -411,13 +271,6 @@ public class Game {
 						EconomicPlanet p = new EconomicPlanet(planets.size(),
 								owner, numShips, economicValue, x, y);
 						planets.add(p);
-						if (owner != 0) {
-							if (playersEconomicPlanets.get(owner) == null) {
-								playersEconomicPlanets.put(owner,
-										new HashSet<EconomicPlanet>());
-							}
-							playersEconomicPlanets.get(owner).add(p);
-						}
 
 						if (this.gameLog.length() > 0) {
 							this.gameLog.append(":");
@@ -447,5 +300,152 @@ public class Game {
 		}
 		gameLog.append("|");
 		return 0;
+	}
+
+	@Override
+	public void startGame() {
+		// Nothing to do
+	}
+
+	@Override
+	public String getPlayerStart(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getScores() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void startTurn() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private Set<MilitaryPlanet> getMilitaryPlanets(int id) {
+		Set<MilitaryPlanet> mPlanets = new HashSet<MilitaryPlanet>();
+		for (Planet p : planets) {
+			if (p instanceof MilitaryPlanet && p.owner == id) {
+				mPlanets.add((MilitaryPlanet) p);
+			}
+		}
+		return mPlanets;
+	}
+
+	@Override
+	public void finishTurn() {
+		for (Planet p : planets) {
+			if (p instanceof EconomicPlanet && p.owner > 0) {
+				Set<MilitaryPlanet> mPlanets = getMilitaryPlanets(p.id);
+				if (mPlanets.size() > 0) {
+					Planet dest = getClosestPlanet(p, mPlanets);
+					if (dest != null) {
+						int distance = distance(p.id, dest.id);
+						fleets.add(new Fleet(p.owner,
+								((EconomicPlanet) p).revenue, p.id, dest.id,
+								distance, distance));
+					}
+				}
+			}
+		}
+
+		for (Fleet f : fleets) {
+			f.doTimeStep();
+		}
+
+		for (Planet p : planets) {
+			fight(p);
+		}
+
+		int k = 0;
+		for (Planet p : planets) {
+			if (k++ > 0)
+				gameLog.append(",");
+			gameLog.append(p.owner).append(".").append(p.numShips);
+		}
+
+		for (Fleet f : fleets) {
+			if (k++ > 0)
+				gameLog.append(",");
+			gameLog.append(f.owner).append(".").append(f.numShips).append(".")
+					.append(f.sourcePlanet).append(".")
+					.append(f.destinationPlanet).append(".")
+					.append(f.totalTripLength).append(".")
+					.append(f.turnsRemaining);
+		}
+		gameLog.append(":");
+	}
+
+	@Override
+	public void finishGame() {
+		// TODO We could send data to bots for testing purpose
+	}
+
+	@Override
+	public boolean isGameOver() {
+		int livePlayers = 0;
+		int possibleWinner = -1;
+		for (int i = 0; i < numPlayers; i++) {
+			if (isAlive(i + 1)) {
+				livePlayers++;
+				possibleWinner = i + 1;
+			}
+		}
+		if (livePlayers == 1) {
+			winner = possibleWinner;
+			return true;
+		} else if (livePlayers == 0) {
+			winner = 0;
+		}
+		return false;
+	}
+
+	@Override
+	public void doMoves(int id, List<String> orders) {
+		for (String order : orders) {
+			try {
+				String[] orderParts = order.split(" ");
+				int sourcePlanet = Integer.parseInt(orderParts[0]);
+				int destPlanet = Integer.parseInt(orderParts[1]);
+				int numShips = Integer.parseInt(orderParts[2]);
+
+				if (numShips == 0) {
+					continue;
+				}
+				Planet localPlanet = (Planet) this.planets.get(sourcePlanet);
+				if (localPlanet.owner != id) {
+					writeLogMessage("invalid order - planet doesn't belong to player "
+							+ id + ": " + order + "\n");
+					continue;
+				}
+				if (numShips > localPlanet.numShips || numShips < 0) {
+					writeLogMessage("invalid order - numShips must be positive and lower or equal to available ships "
+							+ order + "\n");
+					continue;
+				}
+				if (localPlanet instanceof EconomicPlanet) {
+					writeLogMessage("invalid order - source planet must be a military planet"
+							+ order + "\n");
+					continue;
+				}
+				localPlanet.numShips -= numShips;
+				int distance = distance(sourcePlanet, destPlanet);
+				Fleet localFleet = new Fleet(localPlanet.owner, numShips,
+						sourcePlanet, destPlanet, distance, distance);
+				this.fleets.add(localFleet);
+			} catch (Exception e) {
+				writeLogMessage("invalid order for player " + id + ": " + order
+						+ "\n" + e.getMessage());
+			}
+		}
 	}
 }
