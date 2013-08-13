@@ -3,7 +3,6 @@ var fs = require('fs');
 exports.game = {
 	'bot' : null,
 	'currentTurn' : -1,
-	'myID' : -1,
 	'orders' : [],
 	'planets' : [],
 	'fleets' : [],
@@ -26,7 +25,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner == this.myID) {
+			if (p.owner == 1) {
 				result.push(p);
 			}
 		}
@@ -37,7 +36,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner == this.myID && p.type == 'M') {
+			if (p.owner == 1 && p.type == 'M') {
 				result.push(p);
 			}
 		}
@@ -59,7 +58,18 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner != 0 && p.owner != this.myID) {
+			if (p.owner != 0 && p.owner != 1) {
+				result.push(p);
+			}
+		}
+		return result;
+	},
+
+	'ennemyPlanets' : function(playerID) {
+		var result = [];
+		for ( var i = 0, len = this.planets.length; i < len; ++i) {
+			var p = this.planets[i];
+			if (p.owner != 0 && p.owner == playerID) {
 				result.push(p);
 			}
 		}
@@ -70,7 +80,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner != this.myID) {
+			if (p.owner != 1) {
 				result.push(p);
 			}
 		}
@@ -81,7 +91,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
 			var fleet = this.fleets[i];
-			if (fleet.owner == this.myID) {
+			if (fleet.owner == 1) {
 				result.push(fleet);
 			}
 		}
@@ -91,7 +101,17 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
 			var fleet = this.fleets[i];
-			if (fleet.owner != this.myID) {
+			if (fleet.owner != 1) {
+				result.push(fleet);
+			}
+		}
+		return result;
+	},
+	'enemyFleets' : function(playerID) {
+		var result = [];
+		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
+			var fleet = this.fleets[i];
+			if (fleet.owner != playerID) {
 				result.push(fleet);
 			}
 		}
@@ -155,8 +175,10 @@ exports.game = {
 		line = line.trim().split(' ');
 		
 		if(line[0] === 'go') {
-			this.myID = parseInt(line[1]);
 			this.bot.onTurn();
+			return;
+		} else if(line[0] === 'ready') {
+			this.bot.onReady();
 			return;
 		} else if(line[0] === 'end') {
 			this.bot.onEnd();

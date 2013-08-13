@@ -2,7 +2,7 @@ var game = require('./Game').game;
 
 var bot = {
     'onReady': function() {
-    	war.finishTurn();
+    	game.finishTurn();
     },
     'onTurn': function() {
 		// (1) If we currently have a fleet in flight, just do nothing.
