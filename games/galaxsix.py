@@ -27,7 +27,8 @@ class GalaxSix(Game):
 	self.fleets = []
         self.turn = 0
 	self.players = dict()
-		
+	self.replay_history = []
+
         self.parse_map(self.map_text)
 
         # used to calculate the turn when the winner took the lead
@@ -92,6 +93,8 @@ class GalaxSix(Game):
 
 	del self.players[0]    
 	self.num_players = len(self.players)
+	self.replay_data = [str(p) for p in self.planets]
+
 		
     def parse_orders(self, player, lines):
         """ Parse orders from the given player
@@ -347,6 +350,11 @@ class GalaxSix(Game):
                 self.score_history[i].append(s)
 
         self.calc_significant_turns()
+	if self.turn > 0:
+	    planets_history = [('%d %d' % (p.owner,p.num_ships)) for p in self.planets]
+	    fleets_history = [('%d %d %d %d %d %d' % (f.owner, f.num_ships, f.source_planet, f.destination_planet, f.total_trip_length, f.remaining_turns)) for f in self.fleets]
+	    turn_history = ','.join(planets_history) + ',' + ','.join(fleets_history)
+	    self.replay_history.append(turn_history)
 
     def calc_significant_turns(self):
         ranking_bots = [sorted(self.score, reverse=True).index(x) for x in self.score]
@@ -465,7 +473,8 @@ class GalaxSix(Game):
 
         # map
         replay['map'] = {}
-        replay['map']['data'] = self.get_state()
+        replay['map']['data'] = self.replay_data
+	replay['map']['history'] = self.replay_history
 
         # scores
         replay['scores'] = self.score_history
