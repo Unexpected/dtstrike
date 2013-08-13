@@ -262,7 +262,7 @@ class GalaxSix(Game):
 		
     def remaining_players(self):
         """ Return the players still alive """
-        return [p for p in range(self.num_players) if self.is_alive(p)]
+        return [p+1 for p in range(self.num_players) if self.is_alive(p+1)]
 
     def get_scores(self, player=None):
         """ Gets the scores of all players
@@ -294,7 +294,8 @@ class GalaxSix(Game):
         if len(self.remaining_players()) == 1:
             self.cutoff = 'lone survivor'
             return True
-        return False
+        self.cutoff = 'limit turn'
+	return False
 
     def kill_player(self, player):
         """ Used by engine to signal that a player is out of the game """
