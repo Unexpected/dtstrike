@@ -192,7 +192,7 @@ exports.game = {
 				}
 				this.planets.push({
 					'type' : 'M',
-					'id' : this.planets.length,
+					'id' : this.planets.length+1,
 					'x' : parseInt(line[1]),
 					'y' : parseInt(line[2]),
 					'owner' : parseInt(line[3]),
@@ -204,7 +204,7 @@ exports.game = {
 				}
 				this.planets.push({
 					'type' : 'E',
-					'id' : this.planets.length,
+					'id' : this.planets.length+1,
 					'x' : parseInt(line[1]),
 					'y' : parseInt(line[2]),
 					'owner' : parseInt(line[3]),
