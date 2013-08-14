@@ -6,7 +6,7 @@
 	</target>
 	
 	<target name="compile" depends="init" >
-		<javac destdir="dist/build/classes" debug="true" srcdir="src" includeantruntime="false" />
+		<javac destdir="dist/build/classes" debug="true" srcdir="src" includeantruntime="false" encoding="iso-8859-1" />
 		<copy todir="dist/build/classes">
 			<fileset dir="src">
 				<include name="**/*.properties" />
@@ -30,6 +30,7 @@
 		<!--<copy todir="dist/maps">
 			<fileset dir="maps" />
 		</copy>-->
+		<delete file="dist/engine.zip" />
 		<zip destfile="dist/engine.zip" basedir="dist"></zip>
 	</target>
 	
