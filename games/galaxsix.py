@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 from random import randrange, choice, shuffle, randint, seed, random
-from math import sqrt
+from math import sqrt,ceil
 from collections import deque, defaultdict
 
 from fractions import Fraction
 import operator
 from game import Game
-from copy import deepcopy
+from copy import copy
 try:
     from sys import maxint
 except ImportError:
@@ -46,11 +46,9 @@ class GalaxSix(Game):
 
         # used to give a different ordering of players to each player
         #   initialized to ensure that each player thinks they are player 0
-        self.switch = [[None]*self.num_players + list(range(-5,0)) for i in range(self.num_players)]
-        for i in range(self.num_players):
-            self.switch[i][i] = 0
+        self.switch = [([0] + list(range(1, 1 + self.num_players))[self.num_players-i:] + list(range(1, 1 + self.num_players))[:self.num_players-i]) for i in range(self.num_players)]
 
-        # the engine may kill players before the game starts and this is needed to prevent errors
+	# the engine may kill players before the game starts and this is needed to prevent errors
         self.orders = [[] for i in range(self.num_players)]
 
     def distance(self, pid_1, pid_2):
@@ -59,7 +57,7 @@ class GalaxSix(Game):
 	p2 = self.planets[pid_2]
         d_row = abs(p1.x - p2.x)
         d_col = abs(p1.y - p2.y)
-        return d_row**2 + d_col**2
+        return ceil(sqrt(d_row**2 + d_col**2))
 
     def parse_map(self, map_text):
         """ Parse the map_text into a more friendly data structure 
@@ -283,7 +281,11 @@ class GalaxSix(Game):
             Used by engine for ending bot states
         """
         s = self.switch[player]
-        return [None if i not in s else data[s.index(i)] for i in range(max(len(data),self.num_players))]
+        result = []
+	for i in range(1, 1 + self.num_players): 
+	    switched_index = s[i]
+	    result.append(data[switched_index - 1])
+	return result
 
     def game_over(self):
         """ Determine if the game is over
@@ -367,16 +369,22 @@ class GalaxSix(Game):
             self.winning_turn = self.turn
         self.winning_bot = winning_bot
 
-    def get_state(self):
+    def get_state(self, player=None):
         """ Get all state changes
 
             Used by engine for streaming playback
         """
         result = []
-	for planet in self.planets: 
-	    result.append(str(planet))
+	for planet in self.planets:
+	    if player == None:
+		result.append(str(planet))
+	    else:
+		result.append(planet.str_to(self.switch[player]))
 	for fleet in self.fleets: 
-	    result.append(str(fleet))
+	    if player == None:
+		result.append(str(fleet))
+	    else:
+		result.append(fleet.str_to(self.switch[player]))
         state = '\n'.join(''.join(map(str,s)) for s in result)
 	return state + '\n'
 
@@ -403,7 +411,7 @@ class GalaxSix(Game):
 
             Every player sees everything in this game
         """
-	return self.get_state()
+	return self.get_state(player)
 
     def is_alive(self, player):
         """ Determine if player is still alive
@@ -502,6 +510,11 @@ class Fleet:
 	self.turns_remaining -= 1
 	if self.turns_remaining < 0:
 	    self.turns_remaining = 0
+
+    def str_to(self, player_switch):
+        f = copy(self)
+        f.owner = player_switch[f.owner]
+        return str(f)
 	
 class Planet:
     def __init__(self, id, x, y, owner, num_ships):
@@ -519,9 +532,20 @@ class EconomicPlanet(Planet):
     def __str__(self):
 	return "E %f %f %d %d %d" % (self.x, self.y, self.owner, self.num_ships, self.growth_rate)
 
+    def str_to(self, player_switch):
+        p = copy(self)
+        p.owner = player_switch[p.owner]
+        return str(p)
+
 class MilitaryPlanet(Planet): 
     def __init__(self, id, x, y, owner, num_ships):
 	Planet.__init__(self, id, x, y, owner, num_ships)
 
     def __str__(self):
 	return "M %f %f %d %d" % (self.x, self.y, self.owner, self.num_ships)
+
+    def str_to(self, player_switch):
+	p = copy(self)
+	p.owner = player_switch[p.owner]
+	return str(p)
+	
