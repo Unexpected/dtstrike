@@ -10,7 +10,6 @@ var Visualizer = {
 	game_id: -1,
 	game_time: -1,
 	map_id: '',
-	winner: -1,
     players: [],
     planets: [],
     moves: [],
@@ -26,25 +25,29 @@ var Visualizer = {
 	  M_planet_size: 40
     },
     
-    setup: function(data) {
+    setup: function() {
         // Setup Context
         this.canvas = document.getElementById('display');
         this.ctx = this.canvas.getContext('2d');
         this.ctx.textAlign = 'center';
         
-        if (!data) {
-        	alert('Erreur lors du chargement');
-        	return;
-        }
-        
-        // Parse data
-        this.parseData(data);
-        
         // Calculated configs
         this.config.unit_to_pixel = (this.canvas.height - this.config.display_margin * 2) / 24;
-        
-        // Draw first frame
-        this.drawFrame(0);        
+    },
+    
+    init: function() {
+    	if (this.game_id > -1) {
+            // Draw first frame
+            this.drawFrame(0);
+            
+            hookButtons();
+            bindActionsAndEvents();
+            initStaticData();
+    	    
+            // Start playing
+    	    this.start();
+    	    this.drawChart();
+    	}
     },
     
     unitToPixel: function(unit) {
@@ -314,32 +317,64 @@ var Visualizer = {
       this.frame = Math.max(0,Math.min(this.moves.length-1, targetFrame));
     },
     
-    parseData: function(input) {
-        input = input.split(/\n/);
-        
-        if(input.length == 1) {
-        	this.parsePlaybackData(input[0]);
-        } else {
-        	data = "";
-            for(var i = 0; i < input.length; i++) {
-                var value = input[i].split('=');
-                switch(value[0]) {
-					case "game_id": this.game_id = value[1]; break;
-					case "winner": this.winner = value[1]; break;
-					case "map_id": this.map_id = value[1]; break;
-					case "timestamp": this.game_time = value[1]; break;
-                    case "players": this.players = value[1].split('|').map(ParserUtils.parsePlayer); break;
-                    case "playback_string": this.parsePlaybackData(value[1]); break;
-                }
-            }
-        }
+    parseDataFromFile: function(input) {
+    	var gameResult = $.parseJSON(input);
+
+    	this.parseData(gameResult);
     },
     
-    parsePlaybackData: function(input) {
-    	var data = input.split('|');
+    parseDataFromUrl: function(url) {
+    	var that = this;
+    	$.ajax({
+    		url: url,
+    	    dataType: 'json',
+    		cache: false,
+    		beforeSend: function(xhr) {
+    			$("#players").html("Fetching remote replay ...");
+    		},
+    		success: function(data) {
+    			try {
+        			$("#players").html("Loading");
+        			that.parseData(data);
+    			} catch (e) {
+        			$("#players").html("Error parsing result");
+    			}
+        	},
+    		error: function() {
+    			$("#players").html("Error loading remote replay :(");
+    		}
+    	});
+    },
+    
+    parseData: function(gameResult) {
+    	this.game_id = gameResult.game_id;
+    	//this.map_id = gameResult.;
+    	this.game_time = gameResult.date;
+
+    	var status = gameResult.status;
+    	var playernames = gameResult.playernames;
+    	var submission_ids = gameResult.submission_ids;
+    	var user_ids = gameResult.user_ids;
+    	
+    	var playersNbr = gameResult.replaydata.players;
+    	this.players = new Array();
+    	for (var i=0; i<playersNbr; i++) {
+    		this.players[i] = {
+	            id: parseInt(user_ids[i]),
+	            submission_id: parseInt(submission_ids[i]),
+	            name: playernames[i],
+	            status: status[i]
+	        };
+    	}
+    	
+        this.parsePlaybackData(gameResult.replaydata);
         
+        this.init();
+    },
+    
+    parsePlaybackData: function(replaydata) {
         // planets: [(x,y,owner,numShips,growthRate)]
-        this.planets = data[0].split(':').map(ParserUtils.parsePlanet);
+        this.planets = replaydata.map.data.map(ParserUtils.parsePlanet);
         
         // insert planets as first move
         this.moves.push({
@@ -352,12 +387,11 @@ var Visualizer = {
 
         // turns: [(owner,numShips)] 
         // ++ [(owner,numShips,sourcePlanet,destinationPlanet,totalTripLength,turnsRemaining)]
-        if(data.length < 2){ 
+        if (replaydata.turns < 2) { 
           return; // No turns.
-        } 
-        var turns = data[1].split(':').slice(0,-1);
-        for(var i = 0; i < turns.length; i++) {
-            var turn = turns[i].split(',');
+        }
+        for(var i=0; i<replaydata.turns; i++) {
+            var turn = replaydata.map.history[i].split(',');
             var move = {};
             
             move.planets = turn.slice(0, this.planets.length).map(ParserUtils.parsePlanetState);
@@ -389,7 +423,7 @@ var ParserUtils = {
     },
     
     parsePlanet: function(data) {
-        data = data.split(',');
+        data = data.split(' ');
 		type = data[0];
 		
         if (type == "M") {
@@ -412,17 +446,8 @@ var ParserUtils = {
         }
     },
     
-    parsePlayer: function(data) {
-        data = data.split(':');
-        // (id,name)
-        return {
-            id: parseInt(data[0]),
-            name: data[1]
-        };
-    },
-    
     parsePlanetState: function(data) {
-        data = data.split('.');
+        data = data.split(' ');
         // (owner,numShips)
         return {
             owner: parseInt(data[0]),
@@ -437,7 +462,7 @@ function initStaticData() {
 	var playersHtml = '';
     for (var i = 0; i < Visualizer.players.length; i++) {
 		playersHtml += '<a style="color: '+ Visualizer.config.teamColor[i+1] +'"';
-		if (Visualizer.winner == Visualizer.players[i].id) {
+		if ('survived' == Visualizer.players[i].status) {
 			playersHtml += ' class="winner"';
 		} else {
 			playersHtml += ' class="looser"';
@@ -520,7 +545,7 @@ function bindActionsAndEvents() {
     
     // Update turn counter after redraw
     $('#display').bind('drawn', function(){
-      $('#turnCounter').text(Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length);
+    	$('#turnCounter').text(Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length);
     });
 		
 	// Add onclick event on timeline
@@ -539,12 +564,5 @@ function bindActionsAndEvents() {
 }
 
 (function($) {
-    Visualizer.setup(data);
-    
-    hookButtons();
-    bindActionsAndEvents();
-    initStaticData();
-    
-    Visualizer.start();
-	Visualizer.drawChart();
+	Visualizer.setup();
 })(window.jQuery);
