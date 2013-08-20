@@ -394,7 +394,7 @@ var Visualizer = {
         if (replaydata.turns < 2) { 
           return; // No turns.
         }
-        for(var i=0; i<replaydata.turns; i++) {
+        for(var i=0; i<replaydata.map.history.length; i++) {
             var turn = replaydata.map.history[i].split(',');
             var move = {};
             
