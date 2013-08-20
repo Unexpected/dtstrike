@@ -122,21 +122,19 @@ public abstract class AbstractSystemInputParser extends AbstractSystemInputReade
             int id = 0;
             switch (updateToken) {
                 case M:
-                	id++;
                 	double mx = scanner.nextDouble();
                 	double my = scanner.nextDouble();
 					int mowner = scanner.nextInt();
 					int mnumShips = scanner.nextInt();
-                    addMilitaryPlanet(id, mowner, mnumShips, mx, my);
+                    addMilitaryPlanet(id++, mowner, mnumShips, mx, my);
                 break;
                 case E:
-                	id++;
                 	double ex = scanner.nextDouble();
                 	double ey = scanner.nextDouble();
 					int eowner = scanner.nextInt();
 					int enumShips = scanner.nextInt();
 					int economicValue = scanner.nextInt();
-                    addEconomicPlanet(id, eowner, enumShips, economicValue, ex, ey);
+                    addEconomicPlanet(id++, eowner, enumShips, economicValue, ex, ey);
                 break;
                 case F:
 					int fowner = scanner.nextInt();
