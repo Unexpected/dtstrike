@@ -63,7 +63,8 @@ class Game extends CI_Controller {
 
 	public function view($game_id)
 	{
-		$data['replay_file'] = 'replays/replay_'.$game_id.'.js';
+		// FIXME : Get replay directory from submission_id
+		$data['replay_file'] = '0/0/69.replaygz';
 		
 		$data['page_title'] = "Visualisation";
 		$data['page_icon'] = 'play-circle';

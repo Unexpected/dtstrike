@@ -338,10 +338,14 @@ var Visualizer = {
         			that.parseData(data);
     			} catch (e) {
         			$("#players").html("Error parsing result");
+        			if (window.console && console.error) console.error(e);
     			}
         	},
-    		error: function() {
+    		error: function(jqXHR, textStatus, errorThrown) {
     			$("#players").html("Error loading remote replay :(");
+    			if (window.console && console.error) {
+    				console.error(jqXHR);
+    			}
     		}
     	});
     },
