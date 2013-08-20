@@ -105,6 +105,7 @@ public abstract class AbstractSystemInputParser extends AbstractSystemInputReade
      */
     public void parseUpdate(List<String> input) {
         beforeUpdate();
+		int id = 0;
         for (String line : input) {
             line = removeComment(line);
             if (line.isEmpty()) {
@@ -119,7 +120,6 @@ public abstract class AbstractSystemInputParser extends AbstractSystemInputReade
                 continue;
             }
             UpdateToken updateToken = UpdateToken.valueOf(token);
-            int id = 0;
             switch (updateToken) {
                 case M:
                 	double mx = scanner.nextDouble();
