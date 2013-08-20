@@ -410,7 +410,7 @@ var Visualizer = {
 
 var ParserUtils = {
     parseFleet: function(data) {
-        data = data.split('.');
+        data = data.split(' ');
         // (owner,numShips,sourcePlanet,destinationPlanet,totalTripLength,turnsRemaining)
         return {
             owner: parseInt(data[0]),
