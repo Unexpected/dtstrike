@@ -57,7 +57,7 @@ class GalaxSix(Game):
 	p2 = self.planets[pid_2]
         d_row = abs(p1.x - p2.x)
         d_col = abs(p1.y - p2.y)
-        return ceil(sqrt(d_row**2 + d_col**2))
+	return ceil(sqrt(d_row**2 + d_col**2))
 
     def parse_map(self, map_text):
         """ Parse the map_text into a more friendly data structure 
@@ -69,6 +69,7 @@ class GalaxSix(Game):
 		E 10.563623 5.157520 2 39 2
 	"""
 
+	id = 0
         for line in map_text.split('\n'):
             line = line.strip()
             # ignore blank lines and comments
@@ -77,17 +78,16 @@ class GalaxSix(Game):
 	    line = line.split("#")[0]
             key, value = line.split(' ', 1)
 	    p = value.split(' ')
-	    id = 1
             if key == 'E':
                 self.planets.append(EconomicPlanet(id, p[0], p[1], p[2], p[3], p[4]))
             elif key == 'M':
                 self.planets.append(MilitaryPlanet(id, p[0], p[1], p[2], p[3]))
-	    id += 1
+	    id = id + 1
  
-	    for p in self.planets:
-	        if not p.owner in self.players:
-		    self.players[p.owner] = []
-		    self.players[p.owner].append(p)
+	for p in self.planets:
+	    if not p.owner in self.players:
+		self.players[p.owner] = []
+		self.players[p.owner].append(p)
 
 	del self.players[0]    
 	self.num_players = len(self.players)
@@ -144,7 +144,7 @@ class GalaxSix(Game):
 
             try:
 		if self.planets[source_id].owner != player:
-		    invalid.append((line,'planet not belonging to player'))
+		    invalid.append((line,'planet %d (%s) not belonging to player %d' % (source_id, str(self.planets[source_id]),player)))
 		    continue
             except IndexError:
                 invalid.append((line,'invalid source planet'))
@@ -179,8 +179,10 @@ class GalaxSix(Game):
 		target_id = order[1]
 		num_ships = order[2]
 		distance = self.distance(source_id, target_id)
-		p = self.planets[source_id] 
-		self.fleets.append(Fleet(p.owner, num_ships, source_id, target_id, distance, distance))
+		p = self.planets[source_id]
+		f = Fleet(p.owner, num_ships, source_id, target_id, distance, distance)
+		self.planets[source_id].num_ships = self.planets[source_id].num_ships - num_ships
+		self.fleets.append(f)
 
     def do_timestep(self):
 	""" All Economic planets will produce ships
@@ -197,34 +199,35 @@ class GalaxSix(Game):
 			if (self.distance(m.id, p.id) < distance):
 			    distance = self.distance(m.id, p.id)
 			    target = m
-			    self.fleets.append(Fleet(p.owner, p.growth_rate, p.id, target.id, distance, distance))
-
+		    self.fleets.append(Fleet(p.owner, p.growth_rate, p.id, target.id, distance, distance))
 	for f in self.fleets:
 	    f.do_timestep();
-
 	for p in self.planets:
 	    self.do_fight(p);
 
     def do_fight(self, p):
         battleships = dict();
         remaining_fleets = []
+	battle_fleets = 0
         battleships[p.owner] = p.num_ships
         for f in self.fleets:
             if f.destination_planet == p.id and f.turns_remaining == 0:
-	        if not f.owner in battleships:
-		    battleships[p.owner] = 0
-		    battleships[p.owner] += f.num_ships
-		else:
-		    remaining_fleets.append(f)
+	        battle_fleets = battle_fleets + 1
+		if not f.owner in battleships:
+		    battleships[f.owner] = 0
+		battleships[f.owner] = battleships[f.owner] + f.num_ships
+	    else:
+		remaining_fleets.append(f)
 
 	self.fleets = remaining_fleets;
-
-	if len(battleships) == 0:
+	if battle_fleets == 0:
 	    # No fight
 	    return
-	elif len(battleships) == 1:
+
+	if len(battleships) == 1:
 	    # Only one player - No fight
 	    p.num_ships = battleships[p.owner]
+	    self.planets[p.id] = p
 	    return
 
 	max_ships = -1
@@ -246,7 +249,7 @@ class GalaxSix(Game):
 	    p.owner = max_owner
 	#else:	
 	    # Mutually assured destruction --> Owner doesn't change, ships are 0
-		
+	self.planets[p.id] = p
     # Common functions for all games
 
     def is_rank_stabilized(self):
@@ -354,8 +357,11 @@ class GalaxSix(Game):
         self.calc_significant_turns()
 	if self.turn > 0:
 	    planets_history = [('%d %d' % (p.owner,p.num_ships)) for p in self.planets]
-	    fleets_history = [('%d %d %d %d %d %d' % (f.owner, f.num_ships, f.source_planet, f.destination_planet, f.total_trip_length, f.remaining_turns)) for f in self.fleets]
-	    turn_history = ','.join(planets_history) + ',' + ','.join(fleets_history)
+	    fleets_history = [('%d %d %d %d %d %d' % (f.owner, f.num_ships, f.source_planet, f.destination_planet, f.total_trip_length, f.turns_remaining)) for f in self.fleets]
+	    turn_history = ','.join(planets_history)
+	    if len(self.fleets) > 0:
+		turn_history = turn_history + ',' + ','.join(fleets_history)
+	    print('*** turn %d : %s' % (self.turn, turn_history))
 	    self.replay_history.append(turn_history)
 
     def calc_significant_turns(self):
@@ -400,9 +406,15 @@ class GalaxSix(Game):
         result.append(['turns', self.turns])
         result.append([]) # newline
         for planet in self.planets:
-            result.append(str(planet))
+            if player == None:
+                result.append(str(planet))
+            else:
+                result.append(planet.str_to(self.switch[player]))
         for fleet in self.fleets:
-            result.append(str(fleet))
+            if player == None:
+                result.append(str(fleet))
+            else:
+                result.append(fleet.str_to(self.switch[player]))
         state = '\n'.join(''.join(map(str,s)) for s in result)
         return state + '\n'
 
@@ -431,8 +443,9 @@ class GalaxSix(Game):
 
     def do_moves(self, player, moves):
         """ Called by engine to give latest player orders """
-        valid, ignored, invalid = self.parse_orders(player, moves)
-        orders, valid, ignored, invalid = self.validate_orders(player, moves, valid, ignored, invalid)
+        p = player + 1 # players id start at 0 in engine
+	valid, ignored, invalid = self.parse_orders(p, moves)
+        orders, valid, ignored, invalid = self.validate_orders(p, moves, valid, ignored, invalid)
         self.orders[player] = orders
         return valid, ['%s # %s' % ignore for ignore in ignored], ['%s # %s' % error for error in invalid]
 
@@ -507,7 +520,7 @@ class Fleet:
 	return "F %d %d %d %d %d %d" % (self.owner, self.num_ships, self.source_planet, self.destination_planet, self.total_trip_length, self.turns_remaining)
 
     def do_timestep(self):
-	self.turns_remaining -= 1
+	self.turns_remaining = self.turns_remaining - 1
 	if self.turns_remaining < 0:
 	    self.turns_remaining = 0
 
