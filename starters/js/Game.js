@@ -2,7 +2,8 @@ var fs = require('fs');
 
 exports.game = {
 	'bot' : null,
-	'currentTurn' : -1,
+	'currentTurn' : 0,
+	'turnEnded': true,
 	'orders' : [],
 	'planets' : [],
 	'fleets' : [],
@@ -148,14 +149,20 @@ exports.game = {
 	 */
 	'start' : function(botInput) {
 		this.bot = botInput;
-		this.planets = [];
-		this.fleets = [];
 
 		var partialline = "";
 		process.stdin.resume();
 		process.stdin.setEncoding('utf8');
 		var thisoutside = this;
 		process.stdin.on('data', function(chunk) {
+			if (this.turnEnded) {
+				// Reset gama data on turn start
+				this.currentTurn++;
+				this.planets = [];
+				this.fleets = [];
+				this.turnEnded = false;
+			}
+			
 			var lines = chunk.split("\n");
 			lines[0] = partialline + lines[0];
 			partialline = "";
@@ -243,7 +250,7 @@ exports.game = {
 		}
 		this.orders = [];
 		fs.writeSync(process.stdout.fd, 'go\n');
-		//process.stdout.flush();
+		this.turnEnded = true;
 	},
 	'log' : function(msg) {
 		fs.writeSync(process.stderr.fd, msg + '\n');
