@@ -3,8 +3,9 @@
 class Game extends CI_Controller {
     function __construct() {
         parent::__construct();
-        
+
         $this->load->model('Gamemodel');
+        $this->load->model('Game_playermodel');
         $this->load->model('Submissionmodel');
 
         $this->load->library('table');
@@ -70,6 +71,7 @@ class Game extends CI_Controller {
 
 		// Get game data
 		$game = $this->Gamemodel->getOne('game_id', $game_id);
+		$data['errors'] = $this->Game_playermodel->getGamePlayerLogs($game_id, current_user_id());
 		
 		// Get replay path
 		$game_id = intval($game_id);

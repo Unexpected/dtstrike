@@ -28,6 +28,13 @@
         </p>
     </div>
   </div> <!-- end of #container -->
+  
+  <!-- Errors display -->
+  <?php
+  	foreach ($errors as $error) {
+		echo $error;
+	}
+  ?>
 
   <link rel="stylesheet" href="<?php echo base_url("visualizer/inc/style.css?v=1") ?>">
   <script type="text/javascript" src="<?php echo base_url("visualizer/inc/visualizer.js?v=1") ?>"></script>
@@ -37,3 +44,4 @@
 	echo "	Visualizer.parseDataFromUrl(dataUrl);\n";
   ?>
   </script>
+  
