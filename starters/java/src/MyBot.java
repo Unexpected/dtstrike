@@ -32,7 +32,7 @@ public class MyBot extends Bot {
         Game game = getGame();
         
 		// (1) If we currently have a fleet in flight, just do nothing.
-		for (Fleet f : game.getMyFleets()) {
+		for (Fleet f : game.getMyMilitaryFleets()) {
 			if (game.getPlanet(f.sourcePlanet) instanceof MilitaryPlanet) {
 				return;
 			}

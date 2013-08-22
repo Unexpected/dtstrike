@@ -6,7 +6,7 @@ public class Fleet {
 	public int totalTripLength;
 	public int turnsRemaining;
 
-	public Fleet(int owner, int numEngineers, int sourceDept, int destDept,
+	protected Fleet(int owner, int numEngineers, int sourceDept, int destDept,
 			int tripLength, int turnsRemaining) {
 		this.owner = owner;
 		this.numShips = numEngineers;
@@ -14,15 +14,6 @@ public class Fleet {
 		this.destinationPlanet = destDept;
 		this.totalTripLength = tripLength;
 		this.turnsRemaining = turnsRemaining;
-	}
-
-	public Fleet(int owner, int numEngineers) {
-		this.owner = owner;
-		this.numShips = numEngineers;
-		this.sourcePlanet = -1;
-		this.destinationPlanet = -1;
-		this.totalTripLength = -1;
-		this.turnsRemaining = -1;
 	}
 
 	public void destroy() {

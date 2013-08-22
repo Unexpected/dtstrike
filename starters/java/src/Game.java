@@ -314,6 +314,21 @@ public class Game {
 	}
 
 	/**
+	 * Return a list of all the <b>military</b> fleets owned by the current player.
+	 * 
+	 * @return the fleet list
+	 */
+	public List<Fleet> getMyMilitaryFleets() {
+		List<Fleet> r = new ArrayList<Fleet>();
+		for (Fleet f : fleets) {
+			if (f.owner == 1 && f instanceof MilitaryFleet) {
+				r.add(f);
+			}
+		}
+		return r;
+	}
+
+	/**
 	 * Return a list of all the fleets owned by enemy players.
 	 * 
 	 * @return the fleet list
@@ -322,6 +337,21 @@ public class Game {
 		List<Fleet> r = new ArrayList<Fleet>();
 		for (Fleet f : fleets) {
 			if (f.owner != 1) {
+				r.add(f);
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * Return a list of all the <b>military</b> fleets owned by enemy players.
+	 * 
+	 * @return the fleet list
+	 */
+	public List<Fleet> getEnemyMilitaryFleets() {
+		List<Fleet> r = new ArrayList<Fleet>();
+		for (Fleet f : fleets) {
+			if (f.owner != 1 && f instanceof MilitaryFleet) {
 				r.add(f);
 			}
 		}

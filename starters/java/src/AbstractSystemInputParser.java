@@ -22,12 +22,13 @@ public abstract class AbstractSystemInputParser extends AbstractSystemInputReade
     }
     
     private enum UpdateToken {
-        M, E, F;
+        M, E, F, R;
         
         private static final Pattern PATTERN = compilePattern(UpdateToken.class);
     }
     
-    private static Pattern compilePattern(Class<? extends Enum> clazz) {
+    @SuppressWarnings("rawtypes")
+	private static Pattern compilePattern(Class<? extends Enum> clazz) {
         StringBuilder builder = new StringBuilder("(");
         for (Enum enumConstant : clazz.getEnumConstants()) {
             if (enumConstant.ordinal() > 0) {
@@ -137,14 +138,15 @@ public abstract class AbstractSystemInputParser extends AbstractSystemInputReade
                     addEconomicPlanet(id++, eowner, enumShips, economicValue, ex, ey);
                 break;
                 case F:
+                case R:
 					int fowner = scanner.nextInt();
 					int fnumShips = scanner.nextInt();
 					int fsourceDept = scanner.nextInt();
 					int fdestDept = scanner.nextInt();
 					int ftripLength = scanner.nextInt();
 					int fturnsRemaining = scanner.nextInt();
-                	addFleet(fowner, fnumShips, fsourceDept, fdestDept, ftripLength, fturnsRemaining);
-                break;
+                	addFleet(fowner, fnumShips, fsourceDept, fdestDept, ftripLength, fturnsRemaining, (updateToken == UpdateToken.F));
+            	break;
             }
             scanner.close();
         }
@@ -175,8 +177,9 @@ public abstract class AbstractSystemInputParser extends AbstractSystemInputReade
      * @param destDept destination planet id
      * @param tripLength 
      * @param turnsRemaining 
+     * @param military is military fleet
      */
-    public abstract void addFleet(int owner, int numShips, int sourceDept, int destDept, int tripLength, int turnsRemaining);
+    public abstract void addFleet(int owner, int numShips, int sourceDept, int destDept, int tripLength, int turnsRemaining, boolean military);
     
     /**
      * Adds new military planet.

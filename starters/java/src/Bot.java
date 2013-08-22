@@ -45,8 +45,12 @@ public abstract class Bot extends AbstractSystemInputParser {
      * {@inheritDoc}
      */
     @Override
-    public void addFleet(int owner, int numShips, int sourceDept, int destDept, int tripLength, int turnsRemaining) {
-        game.addFleet(new Fleet(owner, numShips, sourceDept, destDept, tripLength, turnsRemaining));
+    public void addFleet(int owner, int numShips, int sourceDept, int destDept, int tripLength, int turnsRemaining, boolean military) {
+    	if (military) {
+    		game.addFleet(new MilitaryFleet(owner, numShips, sourceDept, destDept, tripLength, turnsRemaining));
+    	} else {
+    		game.addFleet(new EconomicFleet(owner, numShips, sourceDept, destDept, tripLength, turnsRemaining));
+    	}
     }
     
     /**

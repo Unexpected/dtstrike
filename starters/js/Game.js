@@ -98,11 +98,31 @@ exports.game = {
 		}
 		return result;
 	},
+	'myMilitaryFleets' : function() {
+		var result = [];
+		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
+			var fleet = this.fleets[i];
+			if (fleet.owner == 1 && fleet.type == 'M') {
+				result.push(fleet);
+			}
+		}
+		return result;
+	},
 	'enemyFleets' : function() {
 		var result = [];
 		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
 			var fleet = this.fleets[i];
 			if (fleet.owner != 1) {
+				result.push(fleet);
+			}
+		}
+		return result;
+	},
+	'enemyMilitaryFleets' : function() {
+		var result = [];
+		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
+			var fleet = this.fleets[i];
+			if (fleet.owner != 1 && fleet.type == 'M') {
 				result.push(fleet);
 			}
 		}
@@ -223,6 +243,20 @@ exports.game = {
 					return 1;
 				}
 				this.fleets.push({
+					'type' : 'M',
+					'owner' : parseInt(line[1]),
+					'numShips' : parseInt(line[2]),
+					'sourcePlanet' : parseInt(line[3]),
+					'destinationPlanet' : parseInt(line[4]),
+					'totalTripLength' : parseInt(line[5]),
+					'turnsRemaining' : parseInt(line[6])
+				});
+			} else if (line[0] == "R") {
+				if (line.length != 7) {
+					return 1;
+				}
+				this.fleets.push({
+					'type' : 'E',
 					'owner' : parseInt(line[1]),
 					'numShips' : parseInt(line[2]),
 					'sourcePlanet' : parseInt(line[3]),

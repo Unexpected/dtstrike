@@ -6,7 +6,7 @@ var bot = {
     },
     'onTurn': function() {
 		// (1) If we currently have a fleet in flight, just do nothing.
-		if (game.myFleets.length >= 1) {
+		if (game.myMilitaryFleets().length >= 1) {
 			return;
 		}
 		
