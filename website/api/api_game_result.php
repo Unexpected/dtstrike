@@ -238,7 +238,7 @@ if (array_key_exists('error', $gamedata)) {
             $gamedata->user_ids[] = $meta_row["user_id"];
             $gamedata->challenge_rank[] = $meta_row["rank"];
             $gamedata->challenge_skill[] = $meta_row["skill"];
-            $country_ids[] = $meta_row["country_id"];
+            $country_ids[] = $meta_row["country_code"];
             $org_ids[] = $meta_row["org_id"];
             $language_ids[] = $meta_row["language_id"];
             if ($meta_row["rank"] < $high_rank) {
