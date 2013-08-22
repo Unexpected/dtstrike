@@ -70,8 +70,12 @@ class Game extends CI_Controller {
 		}
 
 		// Get game data
-		$game = $this->Gamemodel->getOne('game_id', $game_id);
-		$data['errors'] = $this->Game_playermodel->getGamePlayerLogs($game_id, current_user_id());
+		$user_id = current_user_id();
+		if (verify_user_role($this, "admin", TRUE)) {
+			$user_id = NULL;
+		}
+		$data['game'] = $this->Gamemodel->getOne('game_id', $game_id);
+		$data['errors'] = $this->Game_playermodel->getGamePlayerLogs($game_id, $user_id);
 		
 		// Get replay path
 		$game_id = intval($game_id);
