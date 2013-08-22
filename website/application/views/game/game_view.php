@@ -33,7 +33,7 @@
   <script type="text/javascript" src="<?php echo base_url("visualizer/inc/visualizer.js?v=1") ?>"></script>
   <script type="text/javascript">
   <?php
- 	echo "	var dataUrl = '".base_url('replays/'.$replay_file)."';\n";
+ 	echo "	var dataUrl = '".base_url($replay_file)."';\n";
 	echo "	Visualizer.parseDataFromUrl(dataUrl);\n";
   ?>
   </script>
