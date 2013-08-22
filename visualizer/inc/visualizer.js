@@ -415,14 +415,15 @@ var Visualizer = {
 var ParserUtils = {
     parseFleet: function(data) {
         data = data.split(' ');
-        // (owner,numShips,sourcePlanet,destinationPlanet,totalTripLength,turnsRemaining)
+        // (type owner numShips sourcePlanet destinationPlanet totalTripLength turnsRemaining)
         return {
-            owner: parseInt(data[0]),
-            numShips: parseInt(data[1]),
-            source: Visualizer.planets[data[2]],
-            destination: Visualizer.planets[data[3]],
-            tripLength: parseInt(data[4]),
-            progress: parseInt(data[4] - data[5])
+			type: data[0],
+            owner: parseInt(data[1]),
+            numShips: parseInt(data[2]),
+            source: Visualizer.planets[data[3]],
+            destination: Visualizer.planets[data[4]],
+            tripLength: parseInt(data[5]),
+            progress: parseInt(data[5] - data[6])
         };
     },
     
