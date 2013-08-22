@@ -104,6 +104,33 @@ Class Basemodel extends CI_Model {
 		return array();
 	}
 
+	
+	/**
+	 * Retourne un élément dans une table.
+	 * Permet de lire une entrée par son ID
+	 *
+	 * @param string $idField
+	 * @param string $idValue
+	 * @return $query->result()
+	 */
+	function getOne($idField, $idValue) {
+		$this->db->where($idField, $idValue);
+		$this->db->limit(1);
+		$query = $this->db->get($this->getTableName());
+
+		if ($query->num_rows()) {
+			$ret = array();
+			if ($this->resultAsArray) {
+				$ret = $query->result_array();
+			} else {
+				$ret = $query->result();
+			}
+			
+			return $ret[0];
+		}
+		return null;
+	}
+
 	/**
 	 * Count dans une table.
 	 *

@@ -19,6 +19,19 @@ if ( ! function_exists('current_user_id')) {
 	}
 }
 
+if ( ! function_exists('current_user_name')) {
+	function current_user_name() {
+		$ci =& get_instance();
+	
+		$user_name = $ci->session->userdata('username');
+		if ( $user_name === FALSE ) {
+			return "";
+		} else {
+			return $user_name;
+		}
+	}
+}
+
 if ( ! function_exists('get_user_roles')) {
 	function get_user_roles($context) {
 		return $context->session->userdata('roles');

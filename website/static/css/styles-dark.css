@@ -423,12 +423,17 @@ select {
 	color: #333333;
 }
 
+legend {
+	color: inherit;
+}
+
 .logo {
 	width: 100px;
 	height: 100px;
 	display: inline-block;
 }
 
-legend {
-	color: inherit;
+.game_table em {
+	font-style: italic;
+	color: #aaa;
 }

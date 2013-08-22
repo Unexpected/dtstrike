@@ -157,3 +157,8 @@ section {
 	height: 100px;
 	display: inline-block;
 }
+
+.game_table em {
+	font-style: italic;
+	color: #aaa;
+}

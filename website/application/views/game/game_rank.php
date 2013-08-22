@@ -1,5 +1,8 @@
 <p>
 <?php
+// echo '<pre>';
+// print_r($rankings);
+// echo '</pre>';
 	if (is_array($rankings) && count($rankings) > 0) {
 		echo '<table class="table table-striped table-hover table-condensed">';
 		echo '<thead><tr>';
@@ -23,29 +26,29 @@
 			echo "<tr class=\"$oddity\">";
 			$rank = $row["rank"];
 			if ($row["rank"]) {
-			    $table .= "<td class=\"number\">".nice_rank($row["rank"], $row["rank_change"])."</td>";
+			    echo "<td class=\"number\">".nice_rank($row["rank"], $row["rank_change"])."</td>";
 			} else {
-			    $table .= "<td class=\"number\"><span title=\"best submission's last rank\">(&gt;\")&gt;</span></td>";
+			    echo "<td class=\"number\"><span title=\"best submission's last rank\">(&gt;\")&gt;</span></td>";
 			}
 			
-			$table .= "<td class=\"username\">".nice_user($row["user_id"], $row["username"])."</td>";
-			$table .= "<td class=\"country\">".nice_country($row["country_code"], $row["country"], $row["flag_filename"])."</td>";
-			$table .= "<td class=\"org\">".nice_organization($row["org_id"], $row["org_name"])."</td>";
+			echo "<td class=\"username\">".nice_user($row["user_id"], $row["username"])."</td>";
+			echo "<td class=\"country\">".nice_country($row["country_code"], $row["country"], $row["flag_filename"])."</td>";
+			echo "<td class=\"org\">".nice_organization($row["org_id"], $row["org_name"])."</td>";
 			
 			$programming_language = htmlentities($row["programming_language"], ENT_COMPAT, 'UTF-8');
 			$programming_language_link = urlencode($row["programming_language"]);
-			$table .= "<td>".nice_language($row["language_id"], $row["programming_language"])."</td>";
+			echo "<td>".nice_language($row["language_id"], $row["programming_language"])."</td>";
 			
 			$version = $row["version"];
 			$age = nice_ago($row["timestamp"]);
-			$table .= "<td class=\"number\"><span title=\"$age\">$version</span></td>";
+			echo "<td class=\"number\"><span title=\"$age\">$version</span></td>";
 			
 			$skill = nice_skill($row['skill'],$row['mu'],$row['sigma'],
 			    $row['skill_change'],$row['mu_change'],$row['sigma_change']);
-			$table .= "<td class=\"number\">$skill</td>";
+			echo "<td class=\"number\">$skill</td>";
 			
-			$table .= "<td class=\"number\">".$row["game_count"]."</td>";
-			$table .= "<td class=\"number\">".$row["game_rate"]."</td>";
+			echo "<td class=\"number\">".$row["game_count"]."</td>";
+			echo "<td class=\"number\">".$row["game_rate"]."</td>";
 			echo '</tr>';
 		}
 		echo '</table>';
