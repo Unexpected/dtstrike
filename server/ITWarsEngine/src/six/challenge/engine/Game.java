@@ -2,14 +2,16 @@ package six.challenge.engine;
 
 import java.io.BufferedWriter;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Game {
 
 	public int winner;
 	public StringBuffer gameLog = new StringBuffer();
 	public String mapName;
-	public int numPlayers;
 	public boolean errorAtStartup = false;
+
+	private Map<String, String> options;
 
 	public BufferedWriter logWriter;
 
@@ -34,22 +36,6 @@ public abstract class Game {
 	 *            player id to drop
 	 */
 	public abstract void killPlayer(int id);
-
-	public void checkWinner() {
-		int livePlayers = 0;
-		int possibleWinner = -1;
-		for (int i = 0; i < numPlayers; i++) {
-			if (isAlive(i + 1)) {
-				livePlayers++;
-				possibleWinner = i + 1;
-			}
-		}
-		if (livePlayers == 1) {
-			winner = possibleWinner;
-		} else if (livePlayers == 0) {
-			winner = 0;
-		}
-	}
 
 	/**
 	 * Returns a view of the start situation for a player
@@ -121,22 +107,11 @@ public abstract class Game {
 	 */
 	public abstract boolean isGameOver();
 
-	public void saveGameLogToFile(int winnerId) {
-		System.out.print("var data=\"");
-		System.out.print("game_id=$$ID\\n");
-		System.out.print("winner=" + winnerId + "\\n");
-		System.out.print("map_id=" + mapName + "\\n");
-		System.out.print("draw=" + (winnerId == 0 ? 1 : 0) + "\\n");
-		System.out.print("timestamp=" + System.currentTimeMillis() + "\\n");
-		System.out.print("players=");
-		for (int i = 1; i <= numPlayers; i++) {
-			if (i > 1) {
-				System.out.print("|");
-			}
-			System.out.print(i + ":player" + i);
-		}
-		System.out.print("\\n");
-		System.out.print("playback_string=" + gameLog.toString());
-		System.out.print("\\n\"");
+	public Map<String, String> getOptions() {
+		return options;
+	}
+
+	public void setOptions(Map<String, String> options) {
+		this.options = options;
 	}
 }

@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -19,9 +20,12 @@ import six.challenge.engine.Game;
 
 public class GalaxSix extends Game {
 
-	public GalaxSix(File mapFile, Map<String, String> options, String logFile) {
+	public GalaxSix(File mapFile, Map<String, String> options, int numPlayers,
+			String logFile) {
 		this.winner = -1;
 		this.mapName = mapFile.getName();
+		this.numPlayers = numPlayers;
+		setOptions(options);
 		new File(logFile).delete();
 		try {
 			this.logWriter = new BufferedWriter(new FileWriter(logFile, true));
@@ -91,27 +95,29 @@ public class GalaxSix extends Game {
 	}
 
 	/**
-	 * Returns a view of the current situation
+	 * Returns a view of the current situation for player playerId
 	 * 
-	 * @param paramInt
+	 * @param playerId
 	 * @return
 	 */
-	public String getPlayerState(int paramInt) {
+	public String getPlayerState(int playerId) {
 		StringBuilder sb = new StringBuilder();
 		Locale.setDefault(new Locale("en"));
+		Map<Integer, Integer> pSwitch = playerSwitch.get(playerId);
 		for (Planet p : planets) {
 			if (p instanceof MilitaryPlanet) {
-				sb.append(String.format("M %f %f %d %d\n", p.x, p.y, p.owner,
-						p.numShips));
+				sb.append(String.format("M %f %f %d %d\n", p.x, p.y,
+						pSwitch.get(p.owner), p.numShips));
 			} else if (p instanceof EconomicPlanet) {
 				sb.append(String.format("E %f %f %d %d %d\n", p.x, p.y,
-						p.owner, p.numShips, ((EconomicPlanet) p).revenue));
+						pSwitch.get(p.owner), p.numShips,
+						((EconomicPlanet) p).revenue));
 			}
 		}
 		for (Fleet f : fleets) {
-			sb.append(String.format("F %d %d %d %d %d %d\n", f.owner,
-					f.numShips, f.sourcePlanet, f.destinationPlanet,
-					f.totalTripLength, f.turnsRemaining));
+			sb.append(String.format("%s %d %d %d %d %d %d\n", f.military ? "F"
+					: "R", pSwitch.get(f.owner), f.numShips, f.sourcePlanet,
+					f.destinationPlanet, f.totalTripLength, f.turnsRemaining));
 		}
 		return sb.toString();
 	}
@@ -279,19 +285,6 @@ public class GalaxSix extends Game {
 								.append(y).append(",").append(owner)
 								.append(",").append(numShips).append(",")
 								.append(economicValue);
-					} else if (line[0].equals("F")) {
-						if (line.length != 7) {
-							return 1;
-						}
-						int owner = Integer.parseInt(line[1]);
-						int numShips = Integer.parseInt(line[2]);
-						int sourceDept = Integer.parseInt(line[3]);
-						int destDept = Integer.parseInt(line[4]);
-						int tripLength = Integer.parseInt(line[5]);
-						int turnsRemaining = Integer.parseInt(line[6]);
-						Fleet fleet = new Fleet(owner, numShips, sourceDept,
-								destDept, tripLength, turnsRemaining);
-						this.fleets.add(fleet);
 					} else {
 						return 1;
 					}
@@ -302,15 +295,40 @@ public class GalaxSix extends Game {
 		return 0;
 	}
 
+	/**
+	 * Everyone thinks he's the number one
+	 */
+	private Map<Integer, Map<Integer, Integer>> playerSwitch = new HashMap<Integer, Map<Integer, Integer>>();
+
 	@Override
 	public void startGame() {
-		// Nothing to do
+		for (int numPlayer = 1; numPlayer < numPlayers + 1; numPlayer++) {
+			Map<Integer, Integer> sw = new HashMap<Integer, Integer>();
+			// 1 : 1:1, 2:2, 3:3
+			// 2 : 1:3, 2:1; 3:2
+			// 3 : 1:2, 2:3; 3:1
+			for (int otherPlayer = 1; otherPlayer < numPlayers + 1; otherPlayer++) {
+				int decalage = numPlayer - 1;
+				int otherPlayerSwitched = otherPlayer - decalage;
+				if (otherPlayerSwitched < 1) {
+					otherPlayerSwitched += numPlayers;
+				}
+				sw.put(otherPlayer, otherPlayerSwitched);
+			}
+			// Neutral player is always neutral
+			sw.put(0, 0);
+			playerSwitch.put(numPlayer, sw);
+		}
 	}
 
 	@Override
 	public String getPlayerStart(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		String startMessage = "";
+		for (Entry<String, String> e : getOptions().entrySet()) {
+			startMessage += "*" + e.getKey() + ":" + e.getValue() + "\n";
+		}
+		startMessage += getPlayerState(id);
+		return startMessage;
 	}
 
 	@Override
@@ -345,14 +363,14 @@ public class GalaxSix extends Game {
 	public void finishTurn() {
 		for (Planet p : planets) {
 			if (p instanceof EconomicPlanet && p.owner > 0) {
-				Set<MilitaryPlanet> mPlanets = getMilitaryPlanets(p.id);
+				Set<MilitaryPlanet> mPlanets = getMilitaryPlanets(p.owner);
 				if (mPlanets.size() > 0) {
 					Planet dest = getClosestPlanet(p, mPlanets);
 					if (dest != null) {
 						int distance = distance(p.id, dest.id);
 						fleets.add(new Fleet(p.owner,
 								((EconomicPlanet) p).revenue, p.id, dest.id,
-								distance, distance));
+								distance, distance, false));
 					}
 				}
 			}
@@ -440,7 +458,7 @@ public class GalaxSix extends Game {
 				localPlanet.numShips -= numShips;
 				int distance = distance(sourcePlanet, destPlanet);
 				Fleet localFleet = new Fleet(localPlanet.owner, numShips,
-						sourcePlanet, destPlanet, distance, distance);
+						sourcePlanet, destPlanet, distance, distance, true);
 				this.fleets.add(localFleet);
 			} catch (Exception e) {
 				writeLogMessage("invalid order for player " + id + ": " + order
