@@ -18,7 +18,7 @@ done
 for i in {1..27..2}; do
 	cp /root/entry_js.zip 0/$i/entry.zip
 done
-for i in {2..22..2}; do
+for i in {2..28..2}; do
 	cp /root/entry_java.zip 0/$i/entry.zip
 done
 chown -R www-data:www-data *
