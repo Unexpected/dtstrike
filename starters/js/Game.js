@@ -140,8 +140,20 @@ exports.game = {
 	},
 
 	'distance' : function(sourcePlanet, destinationPlanet) {
-		var source = planets[sourcePlanet];
-		var destination = planets[destinationPlanet];
+		var source = null;
+		var destination = null;
+		if (sourcePlanet instanceof Object) {
+			source = sourcePlanet;
+		} else {
+			source = this.planets[sourcePlanet];
+		}
+		if (destinationPlanet instanceof Object) {
+			destination = destinationPlanet;
+		} else {
+			destination = this.planets[destinationPlanet];
+		}
+		if (source == null || destination == null) return Number.MAX_VALUE;
+		
 		var dx = source.x - destination.x;
 		var dy = source.y - destination.y;
 		return Math.ceil(Math.sqrt(dx * dx + dy * dy));
