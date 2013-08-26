@@ -201,14 +201,26 @@ exports.game = {
 	'processLine' : function(line) {
 		line = line.trim().split(' ');
 		
-		if(line[0] === 'go') {
-			this.bot.onTurn();
-			return;
-		} else if(line[0] === 'ready') {
+		if (line[0] === 'ready') {
 			this.bot.onReady();
+			if (!this.turnEnded) {
+				// Failsafe if bot forgot to send 'go'
+				this.finishTurn();
+			}
 			return;
-		} else if(line[0] === 'end') {
+		} else if (line[0] === 'go') {
+			this.bot.onTurn();
+			if (!this.turnEnded) {
+				// Failsafe if bot forgot to send 'go'
+				this.finishTurn();
+			}
+			return;
+		} else if (line[0] === 'end') {
 			this.bot.onEnd();
+			if (!this.turnEnded) {
+				// Failsafe if bot forgot to send 'go'
+				this.finishTurn();
+			}
 			return;
 		}
 		
