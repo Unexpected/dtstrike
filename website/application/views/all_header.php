@@ -5,6 +5,7 @@
 	<title>Six Challenge</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/bootstrap.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/font-awesome.css") ?>" />
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-common.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-dark.css") ?>" id="skin" />
 	<script type="text/javascript" src="<?php echo base_url("static/js/base64.js") ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url("static/js/jquery-2.0.2.js") ?>"></script>

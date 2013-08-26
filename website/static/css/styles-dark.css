@@ -423,12 +423,7 @@ select {
 	color: #333333;
 }
 
-.logo {
-	width: 100px;
-	height: 100px;
-	display: inline-block;
-}
-
 legend {
 	color: inherit;
 }
+

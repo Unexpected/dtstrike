@@ -70,11 +70,11 @@ public class Engine {
 		options.put("turntime", String.valueOf(turntime));
 		options.put("loadtime", String.valueOf(3 * turntime));
 		if (!errorAtStartup) {
-			game = new GalaxSix(new File(mapFile), options, logFile);
+			game = new GalaxSix(new File(mapFile), options, players.size(),
+					logFile);
 			if (game.errorAtStartup) {
 				errorAtStartup = true;
 			}
-			game.numPlayers = players.size();
 		}
 		if (errorAtStartup) {
 			for (Player p : players) {
@@ -99,10 +99,18 @@ public class Engine {
 				p.sendMessage(startMessage);
 			}
 		}
+		try {
+			Thread.sleep(Integer.parseInt(game.getOptions().get("loadtime")));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		// As long as there is no winner and that we have some turns left,
 		// we'll play
 		while (!game.isGameOver() && turn <= turns) {
+			game.startTurn();
 			for (Player p : players) {
 				if (p.status != Status.PLAYING) {
 					// We don't care about stopped players
@@ -110,8 +118,7 @@ public class Engine {
 				}
 				if (game.isAlive(p.id)) {
 					// We send data only to living players
-					String playerView = game.getPlayerState(p.id) + "go "
-							+ p.id + "\n";
+					String playerView = game.getPlayerState(p.id) + "go\n";
 					p.sendMessage(playerView);
 					p.hasPlayed = false;
 					game.writeLogMessage("engine > player" + p.id + ": "
@@ -159,8 +166,8 @@ public class Engine {
 					game.doMoves(p.id, p.orders);
 				}
 			}
-			System.err.println("Turn " + turn++);
 			game.finishTurn();
+			turn++;
 		}
 	}
 
@@ -177,7 +184,7 @@ public class Engine {
 			System.err.println("Draw!");
 		}
 		// Save game Log
-		game.saveGameLogToFile(game.winner);
+		// game.saveGameLogToFile(game.winner);
 	}
 
 	public static void main(String[] args) {
