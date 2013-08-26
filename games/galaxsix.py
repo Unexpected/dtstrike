@@ -50,6 +50,7 @@ class GalaxSix(Game):
 
 	# the engine may kill players before the game starts and this is needed to prevent errors
         self.orders = [[] for i in range(self.num_players)]
+	self.game_finished = False
 
     def distance(self, pid_1, pid_2):
         """ Returns distance between x and y squared """
@@ -155,15 +156,22 @@ class GalaxSix(Game):
             except IndexError:
                 invalid.append((line,'invalid target planet'))
                 continue
-					
+
 	    source_planet = self.planets[source_id]
 	    if not isinstance(source_planet, MilitaryPlanet):
 		invalid.append((line,'source planet not military'))
 		continue
-			
-	    if source_planet.num_ships < int(order[2]):
+
+	    if self.planets_ships[source_planet.id] < order[2]:
                 ignored.append((line,'not enough ships on source planet'))
                 continue
+
+	    if order[2] <= 0:
+		ignored.append((line,'num_ships should be a positive integer'))
+                continue
+
+	    # valid order -> decrement ships on planet to check sum of all orders
+	    self.planets_ships[source_planet.id] = self.planets_ships[source_planet.id] - order[2]
 
             # this order is valid!
             valid.append(order)
@@ -180,7 +188,7 @@ class GalaxSix(Game):
 		num_ships = order[2]
 		distance = self.distance(source_id, target_id)
 		p = self.planets[source_id]
-		f = Fleet(p.owner, num_ships, source_id, target_id, distance, distance)
+		f = Fleet(p.owner, num_ships, source_id, target_id, distance, distance, 'F')
 		self.planets[source_id].num_ships = self.planets[source_id].num_ships - num_ships
 		self.fleets.append(f)
 
@@ -199,7 +207,7 @@ class GalaxSix(Game):
 			if (self.distance(m.id, p.id) < distance):
 			    distance = self.distance(m.id, p.id)
 			    target = m
-		    self.fleets.append(Fleet(p.owner, p.growth_rate, p.id, target.id, distance, distance))
+		    self.fleets.append(Fleet(p.owner, p.growth_rate, p.id, target.id, distance, distance, 'R'))
 	for f in self.fleets:
 	    f.do_timestep();
 	for p in self.planets:
@@ -266,7 +274,7 @@ class GalaxSix(Game):
 		
     def remaining_players(self):
         """ Return the players still alive """
-        return [p+1 for p in range(self.num_players) if self.is_alive(p+1)]
+        return [p+1 for p in range(self.num_players) if self.is_alive(p)]
 
     def get_scores(self, player=None):
         """ Gets the scores of all players
@@ -307,12 +315,13 @@ class GalaxSix(Game):
 
     def kill_player(self, player):
         """ Used by engine to signal that a player is out of the game """
+	player_number = player + 1
 	for p in self.planets:
-	    if p.owner == player:
+	    if p.owner == player_number:
 		p.owner = 0
 
 	for f in self.fleets:
-	    if f.owner == player:
+	    if f.owner == player_number:
 		f.owner = 0
 		f.num_ships = 0
 		f.turns_remaining = 0
@@ -333,9 +342,14 @@ class GalaxSix(Game):
         if self.cutoff is None:
             self.cutoff = 'turn limit reached'
 
+	self.game_finished = True
+
     def start_turn(self):
         """ Called by engine at the start of the turn """
         self.turn += 1
+	self.planets_ships = dict()
+	for p in self.planets:
+	    self.planets_ships[p.id] = p.num_ships
 
     def finish_turn(self):
         """ Called by engine at the end of the turn """
@@ -357,11 +371,10 @@ class GalaxSix(Game):
         self.calc_significant_turns()
 	if self.turn > 0:
 	    planets_history = [('%d %d' % (p.owner,p.num_ships)) for p in self.planets]
-	    fleets_history = [('%d %d %d %d %d %d' % (f.owner, f.num_ships, f.source_planet, f.destination_planet, f.total_trip_length, f.turns_remaining)) for f in self.fleets]
+	    fleets_history = [('%s %d %d %d %d %d %d' % (f.type, f.owner, f.num_ships, f.source_planet, f.destination_planet, f.total_trip_length, f.turns_remaining)) for f in self.fleets]
 	    turn_history = ','.join(planets_history)
 	    if len(self.fleets) > 0:
 		turn_history = turn_history + ',' + ','.join(fleets_history)
-	    print('*** turn %d : %s' % (self.turn, turn_history))
 	    self.replay_history.append(turn_history)
 
     def calc_significant_turns(self):
@@ -400,37 +413,28 @@ class GalaxSix(Game):
             Used by engine to send bots startup info on turn 0
         """
         result = []
-        result.append(['turn', 0])
-        result.append(['loadtime', self.loadtime])
-        result.append(['turntime', self.turntime])
-        result.append(['turns', self.turns])
-        result.append([]) # newline
-        for planet in self.planets:
-            if player == None:
-                result.append(str(planet))
-            else:
-                result.append(planet.str_to(self.switch[player]))
-        for fleet in self.fleets:
-            if player == None:
-                result.append(str(fleet))
-            else:
-                result.append(fleet.str_to(self.switch[player]))
-        state = '\n'.join(''.join(map(str,s)) for s in result)
-        return state + '\n'
+        result.append('*loadtime:%d' % self.loadtime)
+        result.append('*turntime:%d' % self.turntime)
+        result.append('*turns:%d' % self.turns)
+        return '\n'.join(result) + '\n'
 
     def get_player_state(self, player):
         """ Get state changes visible to player
 
             Every player sees everything in this game
         """
+        if (self.game_finished):
+            return ''
+
 	return self.get_state(player)
 
     def is_alive(self, player):
         """ Determine if player is still alive
             Used by engine to determine players still in the game
         """
+	player_number = player + 1
 	for p in self.planets: 
-	    if p.owner == player:
+	    if p.owner == player_number:
 		return True
         return False
 
@@ -507,17 +511,18 @@ class GalaxSix(Game):
         return replay
 
 class Fleet:
-    def __init__(self, owner, num_ships, source_planet, destination_planet, total_trip_length, turns_remaining):
+    def __init__(self, owner, num_ships, source_planet, destination_planet, total_trip_length, turns_remaining, type):
 	self.owner = owner
 	self.num_ships = num_ships
 	self.source_planet = source_planet
 	self.destination_planet = destination_planet
 	self.total_trip_length = total_trip_length
 	self.turns_remaining = turns_remaining
+	self.type = type
 		
     def __str__(self): 
 	### F for fleet, owner, num_ships, source planet id, target planet id, total_trip_length, remaining_turns ###
-	return "F %d %d %d %d %d %d" % (self.owner, self.num_ships, self.source_planet, self.destination_planet, self.total_trip_length, self.turns_remaining)
+	return "%s %d %d %d %d %d %d" % (self.type, self.owner, self.num_ships, self.source_planet, self.destination_planet, self.total_trip_length, self.turns_remaining)
 
     def do_timestep(self):
 	self.turns_remaining = self.turns_remaining - 1
