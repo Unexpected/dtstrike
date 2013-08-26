@@ -175,12 +175,12 @@ exports.game = {
 		process.stdin.setEncoding('utf8');
 		var thisoutside = this;
 		process.stdin.on('data', function(chunk) {
-			if (this.turnEnded) {
+			if (thisoutside.turnEnded) {
 				// Reset gama data on turn start
-				this.currentTurn++;
-				this.planets = [];
-				this.fleets = [];
-				this.turnEnded = false;
+				thisoutside.currentTurn++;
+				thisoutside.planets = [];
+				thisoutside.fleets = [];
+				thisoutside.turnEnded = false;
 			}
 			
 			var lines = chunk.split("\n");
