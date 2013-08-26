@@ -4,6 +4,7 @@
 		<li>Le bot est instancié une seule fois par le serveur</li>
 		<li>Le bot et le serveur communiquent sur l'entrée et la sortie standard</li>
 		<li>Les communications sont au format texte (voir détail plus bas)</li>
+		<li>Tous les messages (serveur -> bot et bot -> serveur) doivent finir par un saut de ligne de type unix : '\n'. Ainsi, si les règles stipulent que le serveur envoie le message "go",  le serveur enverra "go\n" au bot. </li>
 	</ul>
 </p>
 <h3>Tour de chauffe</h3>
@@ -77,5 +78,41 @@ Les règles suivantes s'appliquent aux <b>flottes</b> : <br/>
 </ul>
 </p>
 <h3>Tours de jeu - Réponse des bots</h3>
-TODO : format des ordres
-
+<p>
+A chaque tour de jeu, les bots envoient leurs ordres au serveur dans le format suivant : <br/> 
+source_planet destination_planet num_ships<br/>
+source_planet destination_planet num_ships<br/>
+...
+source_planet destination_planet num_ships<br/>
+go<br/>
+<br/>
+Les règles suivantes s'appliquent aux <b>ordres des joueurs</b> : <br/>
+<ul>
+	<li>Les joueurs envoient autant d'ordre qu'ils le désirent à chaque tour</li>
+	<li>Une fois tous les ordres envoyés, le message "go" doit être envoyé au serveur</li>
+	<li>source_planet : identifiant de la planète source, entier. exemple : 3</li>
+	<li>destination_planet : identifiant de la planète de destination, entier. exemple : 8</li>
+	<li>num_ships : nombre de vaisseaux à envoyer de la planète source vers la planète de destination, entier strictement positif. exemple : 50</li>
+	<li>L'ID de planète source doit correspondre à une planète militaire du joueur courant</li>
+	<li>Le nombre de vaisseaux de la planète doit être supérieur ou égal à la somme des vaisseaux qui vont être envoyés depuis cette planète sur l'ensemble des ordres du tour</li>
+</p>
+<h3>Tour de fin</h3>
+<p>
+A son dernier tour de jeu, le bot reçoit un message du format suivant :<br/>
+end<br/>
+players num_players<br/>
+score score_player_1 score_player_2 ... score_player_N<br/>
+status status_player_1  status_player_2 ... status_player_N<br/>
+playerturns turns_player_1 turns_player_2 ... turns_player_N<br/>
+go<br/>
+<br/>
+Les règles suivantes s'appliquent au tour de fin :<br/>
+<ul>
+	<li>Le message de fin commence par end. Il signifie la fin de partie, le bot peut terminer ses opérations en cours et s'arrêter proprement. (S'il ne le fait pas, il sera tué sauvagement par le système). </li>
+	<li>A la suite du message de fin, le serveur envoie des statistiques qui peuvent être utilisées par le bot lors de la phase de développement. Une fois uploadé sur le serveur, les bots ne sont pas autorisées à renvoyer / stocker des informations. Il n'est donc pas utile de traiter les informations postérieures au message end dans les versions de bots uploadées sur le site. </li>
+	<li>players : nombre de joueurs ayant participé au match. Exemple : players 4</li>
+	<li>score : liste des scores des joueurs. Exemple score 4 0 1 0</li>
+	<li>status : liste des statuts des joueurs en fin de partie. Exemple : survived eliminated survived crashed</li>
+	<li>playerturns : liste des nombre de tours ou les joueurs ont participé. Exemple playerturns 1000 259 1000 1</li>
+</ul>
+</p>
