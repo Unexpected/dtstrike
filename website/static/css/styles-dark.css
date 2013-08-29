@@ -103,10 +103,12 @@ section {
 
 a,
 a:focus,
-a:hover,
+a:hover {
+        color: #BF0000;
+}
 .navbar h1 a,
 .nav-header {
-	color: inherit;
+        color: inherit;
 }
 
 .nav-list > li > a {

@@ -13,8 +13,6 @@ try:
 except ImportError:
     from sys import maxsize as maxint
 	
-STAYING_ALIVE_BONUS = 2
-
 class GalaxSix(Game):
     def __init__(self, options=None):
         # setup options
@@ -271,7 +269,10 @@ class GalaxSix(Game):
 
     def military_planets_for_player(self, player):
 	return [p for p in self.planets if isinstance(p, MilitaryPlanet) and p.owner == player]
-		
+	
+    def eco_planets_for_player(self, player):
+        return [p for p in self.planets if isinstance(p, EconomicPlanet) and p.owner == player]
+	
     def remaining_players(self):
         """ Return the players still alive """
         return [p+1 for p in range(self.num_players) if self.is_alive(p)]
@@ -333,8 +334,6 @@ class GalaxSix(Game):
         """ Called by engine at the end of the game """
         # survivors get a bonus
         players = self.remaining_players()
-	for player in range(self.num_players):
-	    self.score[player] += STAYING_ALIVE_BONUS
 
         self.calc_significant_turns()
         
@@ -355,6 +354,9 @@ class GalaxSix(Game):
         """ Called by engine at the end of the turn """
         self.do_orders()
 	self.do_timestep()
+
+	for player in range(self.num_players):
+	    self.score[player] = len(self.eco_planets_for_player(player + 1))
 
         # record score in score history
         for i, s in enumerate(self.score):
@@ -452,13 +454,6 @@ class GalaxSix(Game):
         orders, valid, ignored, invalid = self.validate_orders(p, moves, valid, ignored, invalid)
         self.orders[player] = orders
         return valid, ['%s # %s' % ignore for ignore in ignored], ['%s # %s' % error for error in invalid]
-
-    def get_scores(self, player=None):
-        """ Gets the scores of all players
-
-            Used by engine for ranking
-        """
-        return self.score
 
     def get_stats(self):
         """ Get current ant counts

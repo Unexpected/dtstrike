@@ -180,6 +180,11 @@ class User extends CI_Controller {
 					}
 				}
 			}
+			
+			// TODO : Ajouter la désactivation des anciens matchup
+			//SELECT * FROM matchup m, matchup_player mp WHERE m.matchup_id = mp.matchup_id AND EXISTS (SELECT * FROM submission s WHERE s.submission_id = mp.submission_id AND s.latest = 0)
+			// DELETE FROM matchup_player mp WHERE EXISTS (SELECT * FROM submission s WHERE s.submission_id = mp.submission_id AND s.latest = 0)
+			// DELETE FROM matchup m WHERE NOT EXISTS (SELECT 1 FROM matchup_player mp WHERE m.matchup_id = mp.matchup_id)
 
 			if (count($errors) == 0) {
 				redirect('user');
