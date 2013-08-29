@@ -7,8 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -17,14 +19,14 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import six.challenge.engine.Game;
+import six.challenge.engine.Player;
 
 public class GalaxSix extends Game {
 
-	public GalaxSix(File mapFile, Map<String, String> options, int numPlayers,
-			String logFile) {
-		this.winner = -1;
+	public GalaxSix(File mapFile, Map<String, String> options,
+			List<Player> players, String logFile) {
 		this.mapName = mapFile.getName();
-		this.numPlayers = numPlayers;
+		this.players = players;
 		setOptions(options);
 		new File(logFile).delete();
 		try {
@@ -46,14 +48,19 @@ public class GalaxSix extends Game {
 		}
 	}
 
-	public int winner;
-	public StringBuffer gameLog = new StringBuffer();
 	public String mapName;
-	public int numPlayers;
+	private List<Player> players;
 	public boolean errorAtStartup = false;
 
 	public List<Planet> planets;
 	public List<Fleet> fleets;
+
+	private List<List<Integer>> scoreHistory;
+	private List<String> initialMap;
+	private List<List<String>> dataHistory;
+	private List<Integer> playerTurns;
+	private int turn;
+	private String cutoff;
 
 	/**
 	 * A player is alive if he owns at least one military planet or one fleet.
@@ -64,7 +71,7 @@ public class GalaxSix extends Game {
 	 */
 	public boolean isAlive(int id) {
 		for (Planet p : planets) {
-			if (p instanceof MilitaryPlanet && p.owner == id)
+			if (p.owner == id)
 				return true;
 		}
 		for (Fleet f : fleets) {
@@ -212,30 +219,11 @@ public class GalaxSix extends Game {
 		return parse(map);
 	}
 
-	public void saveGameLogToFile(int winnerId) {
-		System.out.print("var data=\"");
-		System.out.print("game_id=$$ID\\n");
-		System.out.print("winner=" + winnerId + "\\n");
-		System.out.print("map_id=" + mapName + "\\n");
-		System.out.print("draw=" + (winnerId == 0 ? 1 : 0) + "\\n");
-		System.out.print("timestamp=" + System.currentTimeMillis() + "\\n");
-		System.out.print("players=");
-		for (int i = 1; i <= numPlayers; i++) {
-			if (i > 1) {
-				System.out.print("|");
-			}
-			System.out.print(i + ":player" + i);
-		}
-		System.out.print("\\n");
-		System.out.print("playback_string=" + gameLog.toString());
-		System.out.print("\\n\"");
-	}
-
 	private int parse(String map) {
 		planets = new ArrayList<Planet>();
 		fleets = new ArrayList<Fleet>();
 
-		String[] lines = map.split("\n");
+		String[] lines = map.split("\r\n");
 		for (int i = 0; i < lines.length; i++) {
 			String str = lines[i];
 
@@ -258,12 +246,6 @@ public class GalaxSix extends Game {
 						MilitaryPlanet p = new MilitaryPlanet(planets.size(),
 								owner, numShips, x, y);
 						planets.add(p);
-						if (this.gameLog.length() > 0) {
-							gameLog.append(":");
-						}
-						gameLog.append("M,").append(x).append(",").append(y)
-								.append(",").append(owner).append(",")
-								.append(numShips).append(",0");
 					} else if (line[0].equals("E")) {
 						if (line.length != 6) {
 							return 1;
@@ -278,20 +260,16 @@ public class GalaxSix extends Game {
 								owner, numShips, economicValue, x, y);
 						planets.add(p);
 
-						if (this.gameLog.length() > 0) {
-							this.gameLog.append(":");
-						}
-						this.gameLog.append("E,").append(x).append(",")
-								.append(y).append(",").append(owner)
-								.append(",").append(numShips).append(",")
-								.append(economicValue);
 					} else {
 						return 1;
 					}
 				}
 			}
 		}
-		gameLog.append("|");
+		initialMap = new ArrayList<String>();
+		for (Planet p : planets) {
+			initialMap.add(p.toString());
+		}
 		return 0;
 	}
 
@@ -302,16 +280,16 @@ public class GalaxSix extends Game {
 
 	@Override
 	public void startGame() {
-		for (int numPlayer = 1; numPlayer < numPlayers + 1; numPlayer++) {
+		for (int numPlayer = 1; numPlayer < players.size() + 1; numPlayer++) {
 			Map<Integer, Integer> sw = new HashMap<Integer, Integer>();
 			// 1 : 1:1, 2:2, 3:3
 			// 2 : 1:3, 2:1; 3:2
 			// 3 : 1:2, 2:3; 3:1
-			for (int otherPlayer = 1; otherPlayer < numPlayers + 1; otherPlayer++) {
+			for (int otherPlayer = 1; otherPlayer < players.size() + 1; otherPlayer++) {
 				int decalage = numPlayer - 1;
 				int otherPlayerSwitched = otherPlayer - decalage;
 				if (otherPlayerSwitched < 1) {
-					otherPlayerSwitched += numPlayers;
+					otherPlayerSwitched += players.size();
 				}
 				sw.put(otherPlayer, otherPlayerSwitched);
 			}
@@ -319,6 +297,25 @@ public class GalaxSix extends Game {
 			sw.put(0, 0);
 			playerSwitch.put(numPlayer, sw);
 		}
+
+		scoreHistory = new ArrayList<List<Integer>>();
+		for (Player p : players) {
+			scoreHistory.add(new ArrayList<Integer>());
+		}
+		dataHistory = new ArrayList<List<String>>();
+		playerTurns = new ArrayList<Integer>();
+		for (Player p : players) {
+			playerTurns.add(0);
+		}
+		// planets_history = [('%d %d' % (p.owner,p.num_ships)) for p in
+		// self.planets]
+		// fleets_history = [('%s %d %d %d %d %d %d' % (f.type, f.owner,
+		// f.num_ships, f.source_planet, f.destination_planet,
+		// f.total_trip_length, f.turns_remaining)) for f in self.fleets]
+		// turn_history = ','.join(planets_history)
+		// if len(self.fleets) > 0:
+		// turn_history = turn_history + ',' + ','.join(fleets_history)
+		// self.replay_history.append(turn_history)
 	}
 
 	@Override
@@ -327,26 +324,33 @@ public class GalaxSix extends Game {
 		for (Entry<String, String> e : getOptions().entrySet()) {
 			startMessage += "*" + e.getKey() + ":" + e.getValue() + "\n";
 		}
-		startMessage += getPlayerState(id);
 		return startMessage;
 	}
 
 	@Override
-	public List<String> getScores() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Integer> getScores() {
+		List<Integer> scores = new ArrayList<Integer>();
+		for (Player p : players) {
+			int score = 0;
+			for (Planet planet : planets) {
+				if (planet instanceof EconomicPlanet && planet.owner == p.id) {
+					score++;
+				}
+			}
+			scores.add(score);
+		}
+		return scores;
 	}
 
 	@Override
 	public String getState() {
-		// TODO Auto-generated method stub
+		// UNUSED
 		return null;
 	}
 
 	@Override
 	public void startTurn() {
-		// TODO Auto-generated method stub
-
+		turn++;
 	}
 
 	private Set<MilitaryPlanet> getMilitaryPlanets(int id) {
@@ -384,23 +388,22 @@ public class GalaxSix extends Game {
 			fight(p);
 		}
 
-		int k = 0;
-		for (Planet p : planets) {
-			if (k++ > 0)
-				gameLog.append(",");
-			gameLog.append(p.owner).append(".").append(p.numShips);
+		List<Integer> scores = getScores();
+		for (Player p : players) {
+			if (isAlive(p.id)) {
+				playerTurns.set(p.id - 1, turn);
+			}
+			scoreHistory.get(p.id - 1).add(scores.get(p.id - 1));
 		}
 
-		for (Fleet f : fleets) {
-			if (k++ > 0)
-				gameLog.append(",");
-			gameLog.append(f.owner).append(".").append(f.numShips).append(".")
-					.append(f.sourcePlanet).append(".")
-					.append(f.destinationPlanet).append(".")
-					.append(f.totalTripLength).append(".")
-					.append(f.turnsRemaining);
+		List<String> turnHistory = new ArrayList<String>();
+		for (Planet p : planets) {
+			turnHistory.add(p.owner + " " + p.numShips);
 		}
-		gameLog.append(":");
+		for (Fleet f : fleets) {
+			turnHistory.add(f.toString());
+		}
+		dataHistory.add(turnHistory);
 	}
 
 	@Override
@@ -410,19 +413,19 @@ public class GalaxSix extends Game {
 
 	@Override
 	public boolean isGameOver() {
+		if (turn > Integer.parseInt(getOptions().get("turns"))) {
+			cutoff = "limit turns";
+			return true;
+		}
 		int livePlayers = 0;
-		int possibleWinner = -1;
-		for (int i = 0; i < numPlayers; i++) {
+		for (int i = 0; i < players.size(); i++) {
 			if (isAlive(i + 1)) {
 				livePlayers++;
-				possibleWinner = i + 1;
 			}
 		}
 		if (livePlayers == 1) {
-			winner = possibleWinner;
+			cutoff = "lone survivor";
 			return true;
-		} else if (livePlayers == 0) {
-			winner = 0;
 		}
 		return false;
 	}
@@ -466,4 +469,144 @@ public class GalaxSix extends Game {
 			}
 		}
 	}
+
+	@Override
+	public String getReplay() {
+		Map<String, Object> replay = new LinkedHashMap<String, Object>();
+		replay.put("status", getStatuses());
+		replay.put("replaydata", getReplayData());
+
+		replay.put("rank", getRanks());
+		replay.put("post_id", 0);
+		replay.put("matchup_id", 0);
+		replay.put("challenge", "galaxsix");
+		replay.put("playerturns", playerTurns);
+		replay.put("score", getScores());
+		replay.put("replayformat", "json");
+		replay.put("location", "localhost");
+		replay.put("game_length", turn);
+		replay.put("playernames", getPlayerStubData(false));
+		replay.put("submission_ids", getPlayerStubData(true));
+		replay.put("user_ids", getPlayerStubData(true));
+
+		replay.put("challenge_rank", getPlayerStubData(true));
+		replay.put("challenge_skill", getPlayerStubData(true));
+		replay.put("user_url", "http://localhost/user/~");
+		replay.put("game_url", "http://localhost/game/~");
+		replay.put("date", new Date().toString());
+		replay.put("game_id", 0);
+		replay.put("worker_id", 1);
+
+		return mapToJSON("", replay);
+	}
+
+	public String valToJSON(Object value) {
+		if (value == null) {
+			return "";
+		}
+		if (value instanceof Integer) {
+			return String.valueOf(value);
+		}
+		if (value instanceof String) {
+			return "\"" + value + "\"";
+		}
+		return value.toString();
+	}
+
+	public String objToJSON(String name, Object value) {
+		return "\"" + name + "\":" + valToJSON(value);
+	}
+
+	public String listToJSON(String name, List<Object> array) {
+		String values = "";
+		for (Object o : array) {
+			if (!"".equals(values))
+				values += ",";
+			values += valToJSON(o);
+		}
+		return "\"" + name + "\":[" + values + "]";
+	}
+
+	public String mapToJSON(String name, Map<String, Object> map) {
+		String entries = "";
+		for (Entry<String, Object> e : map.entrySet()) {
+			if (!"".equals(entries))
+				entries += ",";
+			entries += toJSON(e.getKey(), e.getValue());
+		}
+		if ("".equals(name)) {
+			return "{" + entries + "}";
+		}
+		return "\"" + name + "\":{" + entries + "}";
+	}
+
+	public String toJSON(String name, Object o) {
+		if (o instanceof Map) {
+			return mapToJSON(name, (Map) o);
+		} else if (o instanceof List) {
+			return listToJSON(name, (List) o);
+		}
+		return objToJSON(name, o);
+	}
+
+	private List<String> getStatuses() {
+		List<String> statuses = new ArrayList<String>();
+		for (Player p : players) {
+			statuses.add(p.status.toString());
+		}
+		return statuses;
+	}
+
+	private List<Integer> getRanks() {
+		List<Integer> ranks = new ArrayList<Integer>();
+		List<Integer> scores = getScores();
+		for (int i = 0; i < scores.size(); i++) {
+			int s = scores.get(i);
+			int r = 1;
+			for (int j = 0; j < scores.size(); j++) {
+				if (s < scores.get(j)) {
+					r++;
+				}
+			}
+			ranks.add(r);
+		}
+		return ranks;
+	}
+
+	private Map<String, Object> getReplayData() {
+		Map<String, Object> m = new LinkedHashMap<String, Object>();
+		m.put("ranking_turn", 1);
+		m.put("map", getMapData());
+		m.put("loadtime", getOptions().get("loadtime"));
+		m.put("bonus", getPlayerStubData(true));
+		m.put("turns", getOptions().get("turns"));
+		m.put("winning_turn", 0);
+		m.put("players", players.size());
+		m.put("turntime", getOptions().get("turntime"));
+		m.put("scores", scoreHistory);
+		m.put("cutoff", cutoff);
+		m.put("revision", 3);
+		return m;
+	}
+
+	public Map<String, Object> getMapData() {
+		Map<String, Object> m = new LinkedHashMap<String, Object>();
+		m.put("data", initialMap);
+		m.put("history", dataHistory);
+		return m;
+	}
+
+	private List<Object> getPlayerStubData(boolean intData) {
+		List<Object> stub = new ArrayList<Object>();
+		int id = 1;
+		for (Player p : players) {
+			if (intData) {
+				stub.add(0);
+			} else {
+				stub.add("player " + id++);
+			}
+		}
+		return stub;
+	}
+
 }
