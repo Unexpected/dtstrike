@@ -1,3 +1,7 @@
+.form_error {
+	color: red;
+}
+
 pre.error {
     border: dashed 1px DarkRed;
     font-family: Consolas, Inconsolata, monospace;
@@ -14,7 +18,7 @@ pre.error {
 	display: inline-block;
 }
 
-.game_table em {
+#game_table em {
 	font-style: italic;
 	color: #aaa;
 }

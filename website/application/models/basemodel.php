@@ -137,7 +137,9 @@ Class Basemodel extends CI_Model {
 	 * @param array(array()) $clauses [default array()]
 	 * @return int
 	 */
-	function count($clauses = array()) {
+	function count($idField, $clauses = array()) {
+		//log_message('debug', 'Count Query for '.$this->getTableName().' with :'.print_r($clauses, true));
+		
 		// Ajout des conditions
 		if (is_array($clauses) && count($clauses) > 0) {
 			foreach ($clauses as $clause) {
@@ -148,9 +150,16 @@ Class Basemodel extends CI_Model {
 				}
 			}
 		}
+
+		$this->db->select($idField);
 		
 		// Lancement de la requête
-		return $this->db->count_all();
+		$query = $this->db->get($this->getTableName());
+
+		if (!$query || $query->num_rows() == 0) {
+			return 0;
+		}
+		return $query->num_rows();
 	}
 	
 	/**
