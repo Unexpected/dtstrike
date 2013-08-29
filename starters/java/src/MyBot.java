@@ -35,8 +35,6 @@ public class MyBot extends Bot {
 	@Override
 	public void doTurn() {
 		Game game = getGame();
-		System.err.println("planetes : " + game.getPlanets().size());
-		System.err.println("fleets : " + game.getFleets().size());
 
 		// (1) If we currently have a fleet in flight, just do nothing.
 		for (Fleet f : game.getMyMilitaryFleets()) {
