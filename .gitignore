@@ -10,3 +10,5 @@ dist
 *.project
 *.settings
 *.buildpath
+/replays/*
+/uploads/*

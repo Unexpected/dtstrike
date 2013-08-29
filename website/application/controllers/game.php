@@ -3,8 +3,9 @@
 class Game extends CI_Controller {
     function __construct() {
         parent::__construct();
-        
+
         $this->load->model('Gamemodel');
+        $this->load->model('Game_playermodel');
         $this->load->model('Submissionmodel');
 
         $this->load->library('table');
@@ -17,11 +18,12 @@ class Game extends CI_Controller {
 	{
 		// Recup des 20 dernières parties
 		$limit = 20;
-		$games = $this->Gamemodel->getAll($limit);
+		$games = $this->Gamemodel->get_list(0, $limit);
+		$data['list_type'] = 'game';
 		$data['limit'] = $limit;
 		$data['games'] = $games;
 		
-		$data['page_title'] = 'Les dernières parties';
+		$data['page_title'] = "Les dernières parties";
 		$data['page_icon'] = 'play-sign';
 		render($this, 'game/game_list', $data);
 	}
@@ -63,7 +65,21 @@ class Game extends CI_Controller {
 
 	public function view($game_id)
 	{
-		$data['replay_file'] = 'replays/replay_'.$game_id.'.js';
+		if (!isset($game_id)) {
+			redirect('game');
+		}
+
+		// Get game data
+		$user_id = current_user_id();
+		if (verify_user_role($this, "admin", TRUE)) {
+			$user_id = NULL;
+		}
+		$data['game'] = $this->Gamemodel->getOne('game_id', $game_id);
+		$data['errors'] = $this->Game_playermodel->getGamePlayerLogs($game_id, $user_id);
+		
+		// Get replay path
+		$game_id = intval($game_id);
+		$data['replay_file'] =  "replays/" . strval((int) ($game_id / 1000000)) . "/" . strval((int) (($game_id / 1000) % 1000)) . "/" . $game_id . ".replaygz";
 		
 		$data['page_title'] = "Visualisation";
 		$data['page_icon'] = 'play-circle';
@@ -74,9 +90,19 @@ class Game extends CI_Controller {
 	{
 		verify_user_logged($this, 'user');
 
-		$data['page_title'] = "Mes parties";
+		// Récupérer les matchs du joueur
+		$user_id = current_user_id();
+		$limit = 20;
+		$games = $this->Gamemodel->get_list(0, $limit, $user_id);
+		$data['list_type'] = 'user';
+		$data['user_id'] = $user_id;
+		$data['username'] = current_user_name();
+		$data['limit'] = $limit;
+		$data['games'] = $games;
+
+		$data['page_title'] = "Mes dernières parties";
 		$data['page_icon'] = 'briefcase';
-		render($this, 'todo', $data);
+		render($this, 'game/game_list', $data);
 	}
 
 	public function rank($page=0, $org_id=NULL, $country_id=NULL, $language_id=NULL)
@@ -109,14 +135,42 @@ class Game extends CI_Controller {
 		}
 		
 		// Récupération du classement
-		$query = get_rank_query($where, $limit);
+		$query = "select u.user_id, u.username,
+            c.name as country, c.country_code, c.flag_filename,
+            l.language_id, l.name as programming_language,
+            o.org_id, o.name as org_name,
+            s.submission_id, s.version,
+            s.rank, s.rank_change,
+            s.mu, s.mu_change,
+            s.sigma, s.sigma_change,
+            s.mu - s.sigma * 3 as skill,
+            s.mu_change - s.sigma_change * 3 as skill_change,
+            s.latest,
+            s.timestamp,
+            s.game_count,
+            (   select count(distinct game_id) as game_count
+                from opponents o
+                where user_id = u.user_id
+            ) as game_rate
+        from submission s
+        inner join user u
+            on s.user_id = u.user_id
+        left outer join organization o
+            on u.org_id = o.org_id
+        left outer join language l
+            on l.language_id = s.language_id
+        left outer join country c
+            on u.country_code = c.country_code
+        where s.latest = 1 and status in (40, 100) and rank is not null
+		$where
+        order by rank
+        $limit";
 
-		$result_id = $this->Submissionmodel->db->simple_query($query);
-		
+		$result_id = $this->Submissionmodel->db->query($query);
 		if ($result_id === FALSE) {
 			$data['rankings'] = array();
 		} else {
-			$data['rankings'] = mysql_fetch_assoc($result_id);
+			$data['rankings'] = $result_id->result_array();
 		}
 
 		$data['page'] = $page;

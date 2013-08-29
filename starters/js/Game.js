@@ -2,8 +2,8 @@ var fs = require('fs');
 
 exports.game = {
 	'bot' : null,
-	'currentTurn' : -1,
-	'myID' : -1,
+	'currentTurn' : 0,
+	'turnEnded': true,
 	'orders' : [],
 	'planets' : [],
 	'fleets' : [],
@@ -26,7 +26,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner == this.myID) {
+			if (p.owner == 1) {
 				result.push(p);
 			}
 		}
@@ -37,7 +37,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner == this.myID && p.type == 'M') {
+			if (p.owner == 1 && p.type == 'M') {
 				result.push(p);
 			}
 		}
@@ -59,7 +59,18 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner != 0 && p.owner != this.myID) {
+			if (p.owner != 0 && p.owner != 1) {
+				result.push(p);
+			}
+		}
+		return result;
+	},
+
+	'ennemyPlanets' : function(playerID) {
+		var result = [];
+		for ( var i = 0, len = this.planets.length; i < len; ++i) {
+			var p = this.planets[i];
+			if (p.owner != 0 && p.owner == playerID) {
 				result.push(p);
 			}
 		}
@@ -70,7 +81,7 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
 			var p = this.planets[i];
-			if (p.owner != this.myID) {
+			if (p.owner != 1) {
 				result.push(p);
 			}
 		}
@@ -81,7 +92,17 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
 			var fleet = this.fleets[i];
-			if (fleet.owner == this.myID) {
+			if (fleet.owner == 1) {
+				result.push(fleet);
+			}
+		}
+		return result;
+	},
+	'myMilitaryFleets' : function() {
+		var result = [];
+		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
+			var fleet = this.fleets[i];
+			if (fleet.owner == 1 && fleet.type == 'M') {
 				result.push(fleet);
 			}
 		}
@@ -91,7 +112,27 @@ exports.game = {
 		var result = [];
 		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
 			var fleet = this.fleets[i];
-			if (fleet.owner != this.myID) {
+			if (fleet.owner != 1) {
+				result.push(fleet);
+			}
+		}
+		return result;
+	},
+	'enemyMilitaryFleets' : function() {
+		var result = [];
+		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
+			var fleet = this.fleets[i];
+			if (fleet.owner != 1 && fleet.type == 'M') {
+				result.push(fleet);
+			}
+		}
+		return result;
+	},
+	'enemyFleets' : function(playerID) {
+		var result = [];
+		for ( var i = 0, len = this.fleets.length; i < len; ++i) {
+			var fleet = this.fleets[i];
+			if (fleet.owner != playerID) {
 				result.push(fleet);
 			}
 		}
@@ -99,8 +140,20 @@ exports.game = {
 	},
 
 	'distance' : function(sourcePlanet, destinationPlanet) {
-		var source = planets[sourcePlanet];
-		var destination = planets[destinationPlanet];
+		var source = null;
+		var destination = null;
+		if (sourcePlanet instanceof Object) {
+			source = sourcePlanet;
+		} else {
+			source = this.planets[sourcePlanet];
+		}
+		if (destinationPlanet instanceof Object) {
+			destination = destinationPlanet;
+		} else {
+			destination = this.planets[destinationPlanet];
+		}
+		if (source == null || destination == null) return Number.MAX_VALUE;
+		
 		var dx = source.x - destination.x;
 		var dy = source.y - destination.y;
 		return Math.ceil(Math.sqrt(dx * dx + dy * dy));
@@ -128,14 +181,20 @@ exports.game = {
 	 */
 	'start' : function(botInput) {
 		this.bot = botInput;
-		this.planets = [];
-		this.fleets = [];
 
 		var partialline = "";
 		process.stdin.resume();
 		process.stdin.setEncoding('utf8');
 		var thisoutside = this;
 		process.stdin.on('data', function(chunk) {
+			if (thisoutside.turnEnded) {
+				// Reset gama data on turn start
+				thisoutside.currentTurn++;
+				thisoutside.planets = [];
+				thisoutside.fleets = [];
+				thisoutside.turnEnded = false;
+			}
+			
 			var lines = chunk.split("\n");
 			lines[0] = partialline + lines[0];
 			partialline = "";
@@ -154,12 +213,26 @@ exports.game = {
 	'processLine' : function(line) {
 		line = line.trim().split(' ');
 		
-		if(line[0] === 'go') {
-			this.myID = parseInt(line[1]);
-			this.bot.onTurn();
+		if (line[0] === 'ready') {
+			this.bot.onReady();
+			if (!this.turnEnded) {
+				// Failsafe if bot forgot to send 'go'
+				this.finishTurn();
+			}
 			return;
-		} else if(line[0] === 'end') {
+		} else if (line[0] === 'go') {
+			this.bot.onTurn();
+			if (!this.turnEnded) {
+				// Failsafe if bot forgot to send 'go'
+				this.finishTurn();
+			}
+			return;
+		} else if (line[0] === 'end') {
 			this.bot.onEnd();
+			if (!this.turnEnded) {
+				// Failsafe if bot forgot to send 'go'
+				this.finishTurn();
+			}
 			return;
 		}
 		
@@ -194,6 +267,20 @@ exports.game = {
 					return 1;
 				}
 				this.fleets.push({
+					'type' : 'M',
+					'owner' : parseInt(line[1]),
+					'numShips' : parseInt(line[2]),
+					'sourcePlanet' : parseInt(line[3]),
+					'destinationPlanet' : parseInt(line[4]),
+					'totalTripLength' : parseInt(line[5]),
+					'turnsRemaining' : parseInt(line[6])
+				});
+			} else if (line[0] == "R") {
+				if (line.length != 7) {
+					return 1;
+				}
+				this.fleets.push({
+					'type' : 'E',
 					'owner' : parseInt(line[1]),
 					'numShips' : parseInt(line[2]),
 					'sourcePlanet' : parseInt(line[3]),
@@ -221,7 +308,7 @@ exports.game = {
 		}
 		this.orders = [];
 		fs.writeSync(process.stdout.fd, 'go\n');
-		//process.stdout.flush();
+		this.turnEnded = true;
 	},
 	'log' : function(msg) {
 		fs.writeSync(process.stderr.fd, msg + '\n');

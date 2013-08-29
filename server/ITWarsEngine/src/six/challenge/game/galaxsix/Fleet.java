@@ -1,4 +1,5 @@
-package six.challenge.game;
+package six.challenge.game.galaxsix;
+
 public class Fleet {
 	public int owner;
 	public int numShips;
@@ -6,15 +7,17 @@ public class Fleet {
 	public int destinationPlanet;
 	public int totalTripLength;
 	public int turnsRemaining;
+	public boolean military;
 
 	public Fleet(int owner, int numEngineers, int sourceDept, int destDept,
-			int tripLength, int turnsRemaining) {
+			int tripLength, int turnsRemaining, boolean military) {
 		this.owner = owner;
 		this.numShips = numEngineers;
 		this.sourcePlanet = sourceDept;
 		this.destinationPlanet = destDept;
 		this.totalTripLength = tripLength;
 		this.turnsRemaining = turnsRemaining;
+		this.military = military;
 	}
 
 	public Fleet(int owner, int numEngineers) {

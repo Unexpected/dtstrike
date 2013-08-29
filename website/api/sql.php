@@ -58,7 +58,7 @@ $contest_sql = array(
                                  order by player_id;",
     "select_game_metadata" => "select gp.user_id, u.username, gp.submission_id,
                                s.rank, s.mu - s.sigma * 3 as skill,
-                               u.country_id, u.org_id, s.language_id
+                               u.country_code, u.org_id, s.language_id
                                from game_player gp
                                left outer join user u
                                    on u.user_id = gp.user_id
@@ -153,7 +153,7 @@ $contest_sql = array(
         where latest = 1
         %s",
     "select_rankings" => "select u.user_id, u.username,
-            c.country_id, c.name as country, c.country_code, c.flag_filename,
+            c.country_code, c.name as country, c.country_code, c.flag_filename,
             l.language_id, l.name as programming_language,
             o.org_id, o.name as org_name,
             s.submission_id, s.version,
@@ -177,7 +177,7 @@ $contest_sql = array(
         left outer join language l
             on l.language_id = s.language_id
         left outer join country c
-            on u.country_id = c.country_id
+            on u.country_code = c.country_code
         where s.latest = 1 and status in (40, 100) and rank is not null
         %s
         order by rank
@@ -324,7 +324,7 @@ $contest_sql = array(
           c.flag_filename,
           o.org_id,
           o.name as org_name,
-          c.country_id,
+          c.country_code,
           c.name as country_name,
           u.email,
           u.activation_code,
@@ -339,7 +339,7 @@ $contest_sql = array(
             on s.user_id = u.user_id
             and s.latest = 1 and s.status in (40, 100)
           left outer join organization o on o.org_id = u.org_id
-          left outer join country c on c.country_id = u.country_id
+          left outer join country c on c.country_code = u.country_code
         where
           u.user_id = %s",
     "select_user_cookies" => "select u.*, uc.cookie

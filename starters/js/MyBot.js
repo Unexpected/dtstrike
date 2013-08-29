@@ -2,11 +2,12 @@ var game = require('./Game').game;
 
 var bot = {
     'onReady': function() {
-    	war.finishTurn();
+    	game.finishTurn();
     },
     'onTurn': function() {
 		// (1) If we currently have a fleet in flight, just do nothing.
-		if (game.myFleets.length >= 1) {
+		if (game.myMilitaryFleets().length >= 1) {
+			game.finishTurn();
 			return;
 		}
 		
@@ -45,7 +46,7 @@ var bot = {
 		game.finishTurn();
     },
     'onEnd': function() {
-    
+		game.finishTurn();
     }
 };
 game.start(bot);

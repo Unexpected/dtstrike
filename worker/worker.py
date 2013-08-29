@@ -53,9 +53,9 @@ STATUS_UNPACK_ERROR = 60
 STATUS_COMPILE_ERROR = 70
 STATUS_TEST_ERROR = 80
 
-# get game from ants dir
-#sys.path.append(os.path.join(server_info.get('repo_path', '..'), 'ants'))
-#from ants import Ants
+# get game from games dir
+sys.path.append(os.path.join(server_info.get('repo_path', '..'), 'games'))
+from galaxsix import GalaxSix
 
 
 def uni_to_ascii(ustr):
@@ -427,7 +427,7 @@ class Worker:
     def get_test_map(self):
         if self.test_map == None:
             f = open(os.path.join(server_info['repo_path'],
-                                  'ants/submission_test/test.map'), 'r')
+                                  'test_area/test.map'), 'r')
             self.test_map = f.read()
             f.close()
         return self.test_map
@@ -437,19 +437,18 @@ class Worker:
         log.info("Running functional test for %s" % submission_id)
         options = copy(server_info["game_options"])
         options['strict'] = True # kills bot on invalid inputs
-        options['food'] = 'none'
         options['turns'] = 30
         log.debug(options)
         options["map"] = self.get_test_map()
         options['capture_errors'] = True
-        #game = Ants(options)
+        game = GalaxSix(options)
         if submission_id in self.download_dirs:
             bot_dir = self.download_dirs[submission_id]
         else:
             bot_dir = self.submission_dir(submission_id)
         bots = [(os.path.join(bot_dir, 'bot'),
                  compiler.get_run_cmd(bot_dir)),
-                (os.path.join(server_info['repo_path'],"ants","submission_test"), "python TestBot.py")]
+                (os.path.join(server_info['repo_path'],"test_area"), "java -cp MyBot.jar MyBot")]
         log.debug(bots)
         # set worker debug logging
         if self.debug:
@@ -497,7 +496,7 @@ class Worker:
             options["map"] = self.get_map(task['map_filename'])
             options["turns"] = task['max_turns']
             options["output_json"] = True
-            #game = Ants(options)
+            game = GalaxSix(options)
             bots = []
             for submission_id in task["submissions"]:
                 submission_id = int(submission_id)

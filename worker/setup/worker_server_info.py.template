@@ -11,22 +11,8 @@ server_info = {{
     "secure_jail": True,
     "memory_limit": 1500,
     "game_options": {{
-        "turns": 1500,
+        "turns": 1000,
         "loadtime": 3000,
-        "turntime": 500,
-        "viewradius2": 77,
-        "attackradius2": 5,
-        "spawnradius2": 1,
-        "location": "{api_url}",
-        "serial": 2,
-        "food_rate": (5,11),
-        "food_turn": (19,37),
-        "food_start": (75,175),
-        "food_visible": (3,5),
-        "food": "symmetric",
-        "attack": "focus",
-        "kill_points": 2,
-        "cutoff_turn": 150,
-        "cutoff_percent": 0.85
+        "turntime": 1000,
     }}
 }}

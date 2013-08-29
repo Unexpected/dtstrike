@@ -1,4 +1,4 @@
-package six.challenge.game;
+package six.challenge.game.galaxsix;
 import java.io.File;
 
 public class Map {

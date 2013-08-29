@@ -4,7 +4,7 @@
 
 require_once('api_functions.php');
 require_once('server_info.php');
-$skills_dir = $server_info["repo_path"] . "/manager/PHPSkills/Skills/";
+$skills_dir = $server_info["repo_path"] . "PHPSkills/Skills/";
 require_once($skills_dir.'TrueSkill/FactorGraphTrueSkillCalculator.php');
 require_once($skills_dir.'GameInfo.php');
 require_once($skills_dir.'Player.php');
@@ -41,7 +41,7 @@ function game_result_error ($message) {
 
 if ($gamedata == null) {
     game_result_error("Did not recieve post data for game result as proper json.");
-}   
+}
 
 // always return received hash so worker can move on to next task
 echo json_encode(array( "hash" => $json_hash ));
@@ -80,18 +80,20 @@ if (array_key_exists('error', $gamedata)) {
 } else {
     $start_time = time();
     $check_time = $start_time;
-    while (!$memcache->add("lock:game_insert", 1, false, 120)) {
-        if (time() - $check_time > 30) {
-            $check_time = time();
-            api_log(sprintf(
-                "Matchup %d still waiting after %d seconds for insert lock",
-                $gamedata->matchup_id, $check_time - $start_time));
-        }
-        sleep(rand(1, 5));
-    }
-    if (time() - $start_time > 15) {
-        api_log(sprintf("Matchup %d took %d seconds to aquire insert lock",
-            $gamedata->matchup_id, time() - $start_time));
+    if ($memcache) {
+	    while (!$memcache->add("lock:game_insert", 1, false, 120)) {
+	        if (time() - $check_time > 30) {
+	            $check_time = time();
+	            api_log(sprintf(
+	                "Matchup %d still waiting after %d seconds for insert lock",
+	                $gamedata->matchup_id, $check_time - $start_time));
+	        }
+	        sleep(rand(1, 5));
+	    }
+	    if (time() - $start_time > 15) {
+	        api_log(sprintf("Matchup %d took %d seconds to aquire insert lock",
+	            $gamedata->matchup_id, time() - $start_time));
+	    }
     }
 
     if (!mysql_query("START TRANSACTION;")) {
@@ -210,9 +212,11 @@ if (array_key_exists('error', $gamedata)) {
                         $gamedata->matchup_id)."\n".mysql_error());
     }
 
-    $memcache->delete("lock:game_insert");
-    api_log(sprintf("Took %d seconds to insert game %d", time() - $start_time,
-        $game_id));
+    if ($memcache) {
+	    $memcache->delete("lock:game_insert");
+	    api_log(sprintf("Took %d seconds to insert game %d", time() - $start_time,
+	        $game_id));
+    }
 
     // update game data with meta data
     $gamedata->playernames = array();
@@ -234,7 +238,7 @@ if (array_key_exists('error', $gamedata)) {
             $gamedata->user_ids[] = $meta_row["user_id"];
             $gamedata->challenge_rank[] = $meta_row["rank"];
             $gamedata->challenge_skill[] = $meta_row["skill"];
-            $country_ids[] = $meta_row["country_id"];
+            $country_ids[] = $meta_row["country_code"];
             $org_ids[] = $meta_row["org_id"];
             $language_ids[] = $meta_row["language_id"];
             if ($meta_row["rank"] < $high_rank) {

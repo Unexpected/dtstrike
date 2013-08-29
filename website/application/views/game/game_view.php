@@ -28,8 +28,20 @@
         </p>
     </div>
   </div> <!-- end of #container -->
+  
+  <!-- Errors display -->
+  <?php
+  	foreach ($errors as $error) {
+		echo $error;
+	}
+  ?>
 
   <link rel="stylesheet" href="<?php echo base_url("visualizer/inc/style.css?v=1") ?>">
-  <script type="text/javascript">var data = false;</script>
-  <script type="text/javascript" src="<?php echo base_url($replay_file) ?>"></script>
   <script type="text/javascript" src="<?php echo base_url("visualizer/inc/visualizer.js?v=1") ?>"></script>
+  <script type="text/javascript">
+  <?php
+ 	echo "	var dataUrl = '".base_url($replay_file)."';\n";
+	echo "	Visualizer.parseDataFromUrl(dataUrl);\n";
+  ?>
+  </script>
+  
