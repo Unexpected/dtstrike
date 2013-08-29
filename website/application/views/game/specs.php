@@ -9,13 +9,13 @@
 </p>
 <h3>Tour de chauffe</h3>
 <p>Après instanciations des bots, le serveur envoie à chacun d'eux les options de jeu. Le format est le suivant :<br/>
-*option0:valeur<br/>
+<div class="code">*option0:valeur<br/>
 *option1:valeur<br/>
 *option2:valeur<br/>
 ...<br/>
 *optionN:valeur<br/>
 ready<br/>
-<br/>
+<br/></div>
 La liste des options est susceptible de varier avec le temps (de nouvelles options peuvent être ajoutées). 
 Les options sont envoyées à titre informatif et définissent les règles appliquées par le serveur. <br/>
 Les options actuellement envoyées sont : 
@@ -29,14 +29,14 @@ Les options actuellement envoyées sont :
 <p>
 Après la réception du message "ready", le bot peut "démarrer", créer les structures de données nécessaires à son bon fonctionnement, etc. <br/> 
 Il doit notifier le serveur lorsqu'il est prêt en envoyant le message suivant : <br/>
-go<br/>
+<div class="code">go<br/></div>
 <br/>
 Tout autre message envoyé par le bot à ce stade du jeu sera ignoré. 
 </p>
 <h3>Tours de jeu</h3>
 <p>
 Le format des messages reçus à chaque tour de jeu est le suivant : <br/>
-P0 x y owner num_ships<br/>
+<div class="code">P0 x y owner num_ships<br/>
 P1 x y owner num_ships growth_rate<br/>
 P2 x y owner num_ships growth_rate<br/>
 ...<br/>
@@ -47,7 +47,7 @@ R owner num_ships source_planet destination_planet total_trip_length turns_remai
 F owner num_ships source_planet destination_planet total_trip_length turns_remaining<br/>
 R owner num_ships source_planet destination_planet total_trip_length turns_remaining<br/>
 R owner num_ships source_planet destination_planet total_trip_length turns_remaining<br/>
-<br/>
+<br/></div>
 Les règles suivantes s'appliquent aux <b>joueurs</b> : <br/>
 <ul>
 	<li>Le joueur courant à l'ID 1</li>
@@ -80,11 +80,11 @@ Les règles suivantes s'appliquent aux <b>flottes</b> : <br/>
 <h3>Tours de jeu - Réponse des bots</h3>
 <p>
 A chaque tour de jeu, les bots envoient leurs ordres au serveur dans le format suivant : <br/> 
-source_planet destination_planet num_ships<br/>
+<div class="code">source_planet destination_planet num_ships<br/>
 source_planet destination_planet num_ships<br/>
 ...
 source_planet destination_planet num_ships<br/>
-go<br/>
+go<br/></div>
 <br/>
 Les règles suivantes s'appliquent aux <b>ordres des joueurs</b> : <br/>
 <ul>
@@ -99,12 +99,12 @@ Les règles suivantes s'appliquent aux <b>ordres des joueurs</b> : <br/>
 <h3>Tour de fin</h3>
 <p>
 A son dernier tour de jeu, le bot reçoit un message du format suivant :<br/>
-end<br/>
+<div class="code">end<br/>
 players num_players<br/>
 score score_player_1 score_player_2 ... score_player_N<br/>
 status status_player_1  status_player_2 ... status_player_N<br/>
 playerturns turns_player_1 turns_player_2 ... turns_player_N<br/>
-go<br/>
+go<br/></div>
 <br/>
 Les règles suivantes s'appliquent au tour de fin :<br/>
 <ul>
