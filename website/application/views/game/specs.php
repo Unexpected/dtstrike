@@ -95,6 +95,7 @@ Les règles suivantes s'appliquent aux <b>ordres des joueurs</b> : <br/>
 	<li>num_ships : nombre de vaisseaux à envoyer de la planète source vers la planète de destination, entier strictement positif. exemple : 50</li>
 	<li>L'ID de planète source doit correspondre à une planète militaire du joueur courant</li>
 	<li>Le nombre de vaisseaux de la planète doit être supérieur ou égal à la somme des vaisseaux qui vont être envoyés depuis cette planète sur l'ensemble des ordres du tour</li>
+</ul>
 </p>
 <h3>Tour de fin</h3>
 <p>
