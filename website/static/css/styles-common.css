@@ -2,7 +2,8 @@
 	color: red;
 }
 
-pre.error {
+pre.error,
+.code {
     border: dashed 1px DarkRed;
     font-family: Consolas, Inconsolata, monospace;
     text-align: left;
