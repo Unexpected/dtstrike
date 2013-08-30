@@ -6,4 +6,8 @@ public class MilitaryPlanet extends Planet {
 		super(id, owner, numShips, x, y);
 	}
 
+	@Override
+	public String toString() {
+		return String.format("E %f %f %d %d", x, y, owner, numShips);
+	}
 }

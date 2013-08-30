@@ -79,23 +79,11 @@ class User extends CI_Controller {
 			redirect('user');
 		}
 
-		$this->Usermodel->db->select('username, email, organization.name as "org_name", country.name as "country_name", created', false);
-		$this->Usermodel->db->from('user');
-		$this->Usermodel->db->join('organization', 'organization.org_id = user.org_id');
-		$this->Usermodel->db->join('country', 'country.country_code = user.country_code');
-		$this->Usermodel->db->order_by("username", "asc");
-		$this->Usermodel->db->where('user_id', $user_id);
-
-		$query = $this->Usermodel->db->get();
-		if ($query->num_rows())  {
-			$users = $query->result();
-		} else {
-			$users = array();
-		}
-		if (count($users) < 1) {
+		$user =  $this->Usermodel->getUserData($user_id);
+		if ($user == NULL) {
 			redirect('user');
 		}
-		$data['user'] = $users[0];
+		$data['user'] = $user;
 
 		$data['page_title'] = "Fiche du joueur";
 		$data['page_icon'] = 'user';

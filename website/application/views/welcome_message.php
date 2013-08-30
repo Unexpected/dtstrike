@@ -14,8 +14,8 @@ Il y a eux diverses versions au fil des années :
 </ul><br/>
 
 <p>
-L'objectif de ce concour est à la fois très simple et assez challengeant !<br/>
-Vous devez écrire une intelligence artificielle plus aboutie que celle des autres <code>membres CGI</code>.<br/>
+L'objectif de ce concours est à la fois très simple et assez challengeant !<br/>
+Vous devez écrire une intelligence artificielle plus aboutie que celle des autres joueurs. <br/>
 <br/>
 Pour cela, vous avez à votre disposition des Starter Kits dans différents languages.<br/>
 Ou même pour débuter, vous avez accès à une version totalement en ligne (à venir).

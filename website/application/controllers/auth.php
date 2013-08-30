@@ -133,65 +133,84 @@ class Auth extends CI_Controller {
 			$rules->set_rules('password', 'Password', 'required');
 
 			// Do the login...
-			if($rules->run() && $this->authldap->login(
+			if ($rules->run()) {
+				if ($this->authldap->login(
 					$rules->set_value('username'),
 					$rules->set_value('password'))) {
-				// Login WIN!
-				$username = $this->session->userdata('username');
-				log_message('debug', 'Logged with username='.$username);
-
-				// Check if user exists
-				$user_id = -1;
-				$user_id_arr = $this->Usermodel->search('user_id', array(array("username", $username)));
-				if (is_array($user_id_arr) && count($user_id_arr) == 1) {
-					$user_id = $user_id_arr[0]->user_id;
-				}
-				log_message('debug', 'User_id='.($user_id));
-				if ($user_id == -1) {
-					// No, create user
-					$this->Usermodel->user_id = null;
-					$this->Usermodel->username = $username;
-					$this->Usermodel->email = $this->session->userdata('mail');;
-					$this->Usermodel->org_id = 1; // 1 = CGI
-					$this->Usermodel->country_code = 'FR';
-					$this->Usermodel->created = new DateTime();
-					$this->Usermodel->shutdown_date = null;
-					$this->Usermodel->max_game_id = null;
-					$this->Usermodel->insert() or die('Error during user creation');
-
-					// And create role
+					// Login WIN!
+					$username = $this->session->userdata('username');
+					log_message('debug', 'Logged with username='.$username);
+	
+					// Check if user exists
+					$user_id = -1;
 					$user_id_arr = $this->Usermodel->search('user_id', array(array("username", $username)));
 					if (is_array($user_id_arr) && count($user_id_arr) == 1) {
 						$user_id = $user_id_arr[0]->user_id;
-					} else {
-						// FIXME : Faire mieux
-						die('Error during user creation');
 					}
-					$this->User_rolesmodel->user_id = $user_id;
-					$this->User_rolesmodel->role_name = 'USER';
-					$this->User_rolesmodel->insert();
-				}
-				$this->session->set_userdata('user_id', $user_id);
-					
-				// Load roles from DB
-				$roles_db = $this->User_rolesmodel->search('role_name', array(array("user_id", $user_id)));
-				$roles = array();
-				for ($i=0; $i<count($roles_db); $i++) {
-					$roles[$i] = $roles_db[$i]->role_name;
-				}
-				log_message('debug', 'Roles: '.print_r($roles, true));
-				$this->session->set_userdata('roles', $roles);
-
-				if($this->session->flashdata('tried_to')) {
-					redirect($this->session->flashdata('tried_to'));
-				}else {
-					redirect('welcome');
+					log_message('debug', 'User_id='.($user_id));
+					if ($user_id == -1) {
+						// No, create user
+						$this->Usermodel->user_id = null;
+						$this->Usermodel->username = $username;
+						$this->Usermodel->email = $this->session->userdata('mail');
+						$this->Usermodel->org_id = 1; // 1 = CGI global
+						$this->Usermodel->country_code = 'FR';
+						$this->Usermodel->created = new DateTime();
+						$this->Usermodel->shutdown_date = null;
+						$this->Usermodel->max_game_id = null;
+						$ret = $this->Usermodel->insert();
+						log_message('error', 'Error creation result = $ret');
+						if (!$ret) {
+							log_message('error', 'Error during user creation');
+							$this->authldap->logout();
+							$data['login_fail_msg'] = 'Erreur lors de la création de l\'utilisateur en base.';
+							render($this, 'auth/login_form', $data);
+							return;
+						}
+	
+						// And create role
+						$user_id_arr = $this->Usermodel->search('user_id', array(array("username", $username)));
+						if (is_array($user_id_arr) && count($user_id_arr) == 1) {
+							$user_id = $user_id_arr[0]->user_id;
+						} else {
+							log_message('error', 'Error during user creation');
+							$this->authldap->logout();
+							$data['login_fail_msg'] = 'Erreur lors de la création de l\'utilisateur en base.';
+							render($this, 'auth/login_form', $data);
+							return;
+						}
+						$this->User_rolesmodel->user_id = $user_id;
+						$this->User_rolesmodel->role_name = 'USER';
+						$this->User_rolesmodel->insert();
+					}
+					$this->session->set_userdata('user_id', $user_id);
+						
+					// Load roles from DB
+					$roles_db = $this->User_rolesmodel->search('role_name', array(array("user_id", $user_id)));
+					$roles = array();
+					for ($i=0; $i<count($roles_db); $i++) {
+						$roles[$i] = $roles_db[$i]->role_name;
+					}
+					log_message('debug', 'Roles: '.print_r($roles, true));
+					$this->session->set_userdata('roles', $roles);
+	
+					if($this->session->flashdata('tried_to')) {
+						redirect($this->session->flashdata('tried_to'));
+					}else {
+						redirect('welcome');
+					}
+				} else {
+					// Login FAIL
+					$data['page_title'] = 'Identification';
+					$data['page_icon'] = 'user';
+					$data['login_fail_msg'] = 'Error with LDAP authentication.';
+					render($this, 'auth/login_form', $data);
 				}
 			}else {
-				// Login FAIL
+				// No Login
 				$data['page_title'] = 'Identification';
 				$data['page_icon'] = 'user';
-				$data['login_fail_msg'] = 'Error with LDAP authentication.';
+				//$data['login_fail_msg'] = 'Error with LDAP authentication.';
 				render($this, 'auth/login_form', $data);
 			}
 		} else {

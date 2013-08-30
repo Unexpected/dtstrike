@@ -7,6 +7,11 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/font-awesome.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-common.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-dark.css") ?>" id="skin" />
+<!--[if lt IE 9]>
+	<script type="text/javascript">
+		alert("Attention, ce site ne fonctionne qu'avec IE 9 et supérieur ou un vrai navigateur.");
+	</script>
+<![endif]-->
 	<script type="text/javascript" src="<?php echo base_url("static/js/base64.js") ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url("static/js/jquery-2.0.2.js") ?>"></script>
 	<script type="text/javascript" src="<?php echo base_url("static/js/logo.js") ?>"></script>
