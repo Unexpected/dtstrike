@@ -35,6 +35,7 @@ func main() {
 		defer debugFile.Close()
 	}
 
+	// buffer the in/out
 	bio := bufio.NewReader(os.Stdin)
 	bout := bufio.NewWriter(os.Stdout)
 	// setup the world

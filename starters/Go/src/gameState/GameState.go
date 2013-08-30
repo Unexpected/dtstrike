@@ -7,7 +7,9 @@ import (
 	"math"
 	"strconv"
 	"strings"
+	"time"
 )
+
 
 /******************************************************************************
 World State, keep track of things and abstract access to input/output
@@ -26,6 +28,15 @@ type GameState struct {
 	bout     *bufio.Writer
 	init     bool
 	nbPlanet int
+
+	// params
+	loadtime int
+	turntime int
+	turns    int
+
+	// time related
+	starttime   int
+	currentturn int
 }
 
 func New(debug bool, debugLogger log.Logger, bout *bufio.Writer) *GameState {
@@ -38,6 +49,27 @@ func New(debug bool, debugLogger log.Logger, bout *bufio.Writer) *GameState {
 	t.listFleet = make([]Fleet, 0)
 	t.init = true
 	return t
+}
+
+func (l *GameState) Init(params map[string]int) {
+
+	l.loadtime = params["loadtime"]
+	l.turntime = params["turntime"]
+	l.turns = params["turns"]
+
+}
+
+func (l *GameState) RemainingTime() int {
+
+	return time.Now().Nanosecond() - l.starttime
+
+}
+
+func (l *GameState) StartTurnTimer() {
+	l.currentturn++
+	l.Log("Start turn : %o",l.currentturn)
+	l.starttime = time.Now().Nanosecond()
+
 }
 
 func (l *GameState) Reinit() {
@@ -106,29 +138,29 @@ func (l *GameState) UpdateFleet(owner, numShips, source, target, time, remaining
 	return &fleet
 }
 
-func (l *GameState) GetMyMilitary(id int) (MyMilitary Planets) {
-	if len(l.listMili) > len(l.listOwner[id]) {
+func (l *GameState) GetMyMilitary() (MyMilitary Planets) {
+	if len(l.listMili) > len(l.listOwner[1]) {
 		// i have less planet than existing military, so this is more efficient
-		for key := range l.listOwner[id] {
-			if !l.listOwner[id][key].Type {
-				MyMilitary = append(MyMilitary, l.listOwner[id][key])
+		for key := range l.listOwner[1] {
+			if !l.listOwner[1][key].Type {
+				MyMilitary = append(MyMilitary, l.listOwner[1][key])
 			}
 		}
 		return
 	}
 
 	for key := range l.listMili {
-		if l.listMili[key].Owner == id {
+		if l.listMili[key].Owner == 1 {
 			MyMilitary = append(MyMilitary, l.listMili[key])
 		}
 	}
 	return
 }
 
-func (l *GameState) GetOtherPlanets(id int) (potentielTargets Planets) {
+func (l *GameState) GetOtherPlanets() (potentielTargets Planets) {
 	// targets are concat of planet that are not mine
 	for key := range l.listOwner {
-		if key != id {
+		if key != 1 {
 			potentielTargets = append(potentielTargets, l.listOwner[key]...)
 		}
 	}
@@ -160,7 +192,6 @@ This parse the input line correclty
 */
 func (l *GameState) ParseMapLine(line string) {
 
-	line = strings.Replace(strings.Replace(line, "\r", "", 1), "\n", "", 1)
 	lineTokens := strings.Split(line, " ")
 	switch lineTokens[0] {
 	case "E": //E pour le Type de planète économique,
@@ -192,7 +223,7 @@ func (l *GameState) ParseMapLine(line string) {
 		l.updateMilitaryPlanet(X, Y, Owner, NumShips)
 		//fmt.Println("parsing done for : ", mili)
 		break
-
+	case "R":
 	case "F":
 		// F pour Fleet, propriétaire, nombre de vaisseaux, ID planète source, ID planète destination,
 		// longueur totale du voyage (en nb de tours), nb de tours restants avant arrivée
@@ -206,11 +237,9 @@ func (l *GameState) ParseMapLine(line string) {
 			l.Log("error while parsing Fleet : %s : %s|%s|%s|%s|%s|%s", line, err1, err2, err3, err4, err5, err6)
 		}
 		l.UpdateFleet(owner, numShips, source, target, time, remainingtime)
-
 		break
-
 	default:
-		l.Log("error while parsing ?:  %s : %e", line)
+		l.Log("error while parsing ?: %s", line)
 	}
 }
 

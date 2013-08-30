@@ -1,9 +1,7 @@
 package launcher
 
 /*
-
 Written by Kevin Lansard for the SIX IT Challenge
-
 */
 import (
 	"bufio"
@@ -33,11 +31,10 @@ func TestAutoProcessInputLoopMap1(t *testing.T) {
 
 	//--------------
 	{
-		game := *state.New(false, debugLogger, bout)
+		game := *state.New(true, debugLogger, bout)
 		ProcessInputLoop(bio, bout, game)
 	}
 	//--------------
-
 	_ = bout.Flush()
 	testFile.Close()
 
@@ -59,7 +56,7 @@ func TestAutoProcessInputLoopMap2(t *testing.T) {
 
 	//--------------
 	{
-		game := *state.New(false, debugLogger, bout)
+		game := *state.New(true, debugLogger, bout)
 		ProcessInputLoop(bio, bout, game)
 	}
 	//--------------
@@ -85,11 +82,11 @@ func TestAutoProcessInputLoopMap3(t *testing.T) {
 
 	//--------------
 	{
-		game := *state.New(false, debugLogger, bout)
+		game := *state.New(true, debugLogger, bout)
 		ProcessInputLoop(bio, bout, game)
 	}
 	//--------------
-
+	
 	_ = bout.Flush()
 	testFile.Close()
 
