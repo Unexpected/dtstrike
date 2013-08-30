@@ -3,6 +3,11 @@
 // echo '<pre>';
 // print_r($games);
 // echo '</pre>';
+	if (isset($user)) {
+		echo "Liste des parties de ".nice_user($user->user_id, $user->username);
+		echo "<hr/>";
+	}
+
 	if (is_array($games) && count($games) > 0) {
 		echo '<table id="game_table" class="table table-striped table-hover table-condensed">';
 		echo '<thead><tr>';

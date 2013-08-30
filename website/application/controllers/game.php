@@ -7,22 +7,31 @@ class Game extends CI_Controller {
         $this->load->model('Gamemodel');
         $this->load->model('Game_playermodel');
         $this->load->model('Submissionmodel');
+        $this->load->model('Usermodel');
 
         $this->load->library('table');
         $this->load->library('Bootstrap');
+        $this->load->library('pagination');
 
         $this->load->helper('rank');
     }
 
-	public function index()
+	public function index() {
+		redirect('game/liste');
+	}
+
+	public function liste($page=0, $user_id=NULL, $org_id=NULL, $country_id=NULL, $language_id=NULL)
 	{
 		// Recup des 20 dernières parties
 		$limit = 20;
-		$games = $this->Gamemodel->get_list(0, $limit);
+		$games = $this->Gamemodel->get_list($page, $limit);
 		$data['list_type'] = 'game';
 		$data['limit'] = $limit;
 		$data['games'] = $games;
 		
+		if ($user_id != NULL) {
+			$data['user'] =  $this->Usermodel->getUserData($user_id);
+		}
 		$data['page_title'] = "Les dernières parties";
 		$data['page_icon'] = 'play-sign';
 		render($this, 'game/game_list', $data);
@@ -128,10 +137,11 @@ class Game extends CI_Controller {
 		}
 		$page_string .= "&page=";
 		$page_string[0] = "?";
+		$page_size = 20;
 		if ($page === 0) {
-			$limit = "";
+			$limit = "limit ".$page_size;
 		} else {
-			$limit = "limit ".$page_size." offset ".($page_size * ($page-1));
+			$limit = "limit ".$page_size." offset ".($page_size * $page);
 		}
 		
 		// Récupération du classement
@@ -173,8 +183,13 @@ class Game extends CI_Controller {
 			$data['rankings'] = $result_id->result_array();
 		}
 
-		$data['page'] = $page;
-		$data['page_string'] = $page_string;
+		//$data['page'] = $page;
+		//$data['page_string'] = $page_string;
+		$config['base_url'] = site_url('game/game_rank');
+		$config['total_rows'] = 200;
+		$config['per_page'] = $page_size;
+		
+		$this->pagination->initialize($config);
 		
 		$data['page_title'] = "Classement actuel";
 		$data['page_icon'] = 'trophy';
