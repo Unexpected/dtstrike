@@ -40,7 +40,11 @@ class GalaxSix(Game):
         # points start at # of hills to prevent negative scores
         self.score = [1]*self.num_players
         self.bonus = [0]*self.num_players
-        self.score_history = [[s] for s in self.score]
+        
+        for player in range(self.num_players):
+            self.score[player] = len(self.eco_planets_for_player(player + 1))
+
+	self.score_history = [[s] for s in self.score]
 
         # used to give a different ordering of players to each player
         #   initialized to ensure that each player thinks they are player 0
@@ -326,7 +330,9 @@ class GalaxSix(Game):
 		f.owner = 0
 		f.num_ships = 0
 		f.turns_remaining = 0
-		
+	
+	self.score[player] = 0	
+	
     def start_game(self):
         """ Called by engine at the start of the game """
 
