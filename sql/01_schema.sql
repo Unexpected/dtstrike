@@ -57,6 +57,16 @@ CREATE TABLE `language` (
   PRIMARY KEY (`language_id`)
 );
 
+DROP TABLE IF EXISTS `login_attempt`;
+CREATE TABLE `login_attempt` (
+  `timestamp` datetime NOT NULL,
+  `username` varchar(64) NOT NULL,
+  `password` varchar(40) NOT NULL,
+  `naive_ip` varchar(18) NOT NULL,
+  `real_ip` varchar(18) NOT NULL,
+  KEY `timestamp` (`timestamp`,`username`,`password`,`naive_ip`,`real_ip`)
+);
+
 DROP TABLE IF EXISTS `map`;
 CREATE TABLE `map` (
   `map_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -163,11 +173,15 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(128) NOT NULL,
+  `password` varchar(256) NULL,
+  `reset` varchar(256) NULL,
   `email` varchar(256) NOT NULL,
+  `activation_code` varchar(256) NOT NULL DEFAULT '',
   `org_id` int(11) NOT NULL,
   `bio` varchar(4096) DEFAULT NULL,
   `country_code` varchar(8) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
+  `activated` tinyint(1) NOT NULL,
   `shutdown_date` datetime DEFAULT NULL,
   `max_game_id` int(11) NULL,
   PRIMARY KEY (`user_id`),

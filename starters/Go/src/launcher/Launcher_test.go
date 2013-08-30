@@ -1,9 +1,7 @@
 package launcher
 
 /*
-
 Written by Kevin Lansard for the SIX IT Challenge
-
 */
 import (
 	"bufio"
@@ -14,6 +12,7 @@ import (
 	"testing"
 	"time"
 )
+
 import state "gameState"
 
 // simple test with map1
@@ -24,7 +23,7 @@ func TestAutoProcessInputLoopMap1(t *testing.T) {
 
 	fmt.Println("Init Done")
 
-	filename := "..\\..\\maps\\map1.txt"
+	filename := "../../maps/map1.txt"
 	testFile, _ := os.Open(filename)
 	bio := bufio.NewReader(testFile)
 
@@ -32,11 +31,10 @@ func TestAutoProcessInputLoopMap1(t *testing.T) {
 
 	//--------------
 	{
-		game := *state.New(false, debugLogger, bout)
+		game := *state.New(true, debugLogger, bout)
 		ProcessInputLoop(bio, bout, game)
 	}
 	//--------------
-
 	_ = bout.Flush()
 	testFile.Close()
 
@@ -50,7 +48,7 @@ func TestAutoProcessInputLoopMap2(t *testing.T) {
 
 	fmt.Println("Init Done")
 
-	filename := "..\\..\\maps\\map2.txt"
+	filename := "../../maps/map2.txt"
 	testFile, _ := os.Open(filename)
 	bio := bufio.NewReader(testFile)
 
@@ -58,7 +56,7 @@ func TestAutoProcessInputLoopMap2(t *testing.T) {
 
 	//--------------
 	{
-		game := *state.New(false, debugLogger, bout)
+		game := *state.New(true, debugLogger, bout)
 		ProcessInputLoop(bio, bout, game)
 	}
 	//--------------
@@ -76,7 +74,7 @@ func TestAutoProcessInputLoopMap3(t *testing.T) {
 
 	fmt.Println("Init Done")
 
-	filename := "..\\..\\maps\\map3.txt"
+	filename := "../../maps/map3.txt"
 	testFile, _ := os.Open(filename)
 	bio := bufio.NewReader(testFile)
 
@@ -84,11 +82,11 @@ func TestAutoProcessInputLoopMap3(t *testing.T) {
 
 	//--------------
 	{
-		game := *state.New(false, debugLogger, bout)
+		game := *state.New(true, debugLogger, bout)
 		ProcessInputLoop(bio, bout, game)
 	}
 	//--------------
-
+	
 	_ = bout.Flush()
 	testFile.Close()
 
@@ -113,7 +111,7 @@ func BenchmarkProcessInputLoop(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 
-		filename := "..\\..\\maps\\replay.txt"
+		filename := "../../maps/replay.txt"
 		testFile, _ := os.Open(filename)
 		bio := bufio.NewReader(testFile)
 

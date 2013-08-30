@@ -6,8 +6,6 @@ import java.util.Map;
 
 public abstract class Game {
 
-	public int winner;
-	public StringBuffer gameLog = new StringBuffer();
 	public String mapName;
 	public boolean errorAtStartup = false;
 
@@ -75,7 +73,7 @@ public abstract class Game {
 	 * 
 	 * @return
 	 */
-	public abstract List<String> getScores();
+	public abstract List<Integer> getScores();
 
 	/**
 	 * Get current game state for logging
@@ -106,6 +104,8 @@ public abstract class Game {
 	 *         ceci est une private joke)
 	 */
 	public abstract boolean isGameOver();
+
+	public abstract String getReplay();
 
 	public Map<String, String> getOptions() {
 		return options;

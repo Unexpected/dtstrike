@@ -1166,6 +1166,7 @@ class CI_DB_active_record extends CI_DB_driver {
 		{
 			$this->set($set);
 		}
+		log_message('debug', "=====> Insert called for $table with values : ".print_r($this->ar_set, true));
 
 		if (count($this->ar_set) == 0)
 		{
@@ -1191,6 +1192,7 @@ class CI_DB_active_record extends CI_DB_driver {
 		}
 
 		$sql = $this->_insert($this->_protect_identifiers($table, TRUE, NULL, FALSE), array_keys($this->ar_set), array_values($this->ar_set));
+		log_message('debug', "=====> Query is: $sql");
 
 		$this->_reset_write();
 		return $this->query($sql);
@@ -1823,7 +1825,7 @@ class CI_DB_active_record extends CI_DB_driver {
 		foreach (get_object_vars($object) as $key => $val)
 		{
 			// There are some built in keys we need to ignore for this conversion
-			if ( ! is_object($val) && ! is_array($val) && $key != '_parent_name')
+			if ( ! is_object($val) && ! is_array($val) && $key != '_parent_name' && $key != '_resultAsArray')
 			{
 				$array[$key] = $val;
 			}

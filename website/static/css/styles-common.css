@@ -1,4 +1,9 @@
-pre.error {
+.form_error {
+	color: red;
+}
+
+pre.error,
+.code {
     border: dashed 1px DarkRed;
     font-family: Consolas, Inconsolata, monospace;
     text-align: left;
@@ -6,6 +11,7 @@ pre.error {
     width: 680px;
     overflow: auto;
     background-color: #e0e0e0;
+	color: #000;
 }
 
 .logo {
@@ -14,7 +20,7 @@ pre.error {
 	display: inline-block;
 }
 
-.game_table em {
+#game_table em {
 	font-style: italic;
 	color: #aaa;
 }

@@ -1,7 +1,7 @@
 <?php 
 Class Basemodel extends CI_Model {
 	
-	var $resultAsArray = FALSE;
+	var $_resultAsArray = FALSE;
 
 	function __construct() {
 		// Call the Model constructor
@@ -27,7 +27,7 @@ Class Basemodel extends CI_Model {
 		// Lancement de la requête
 		$query = $this->db->get($this->getTableName());
 		if ($query->num_rows())  {
-			if ($this->resultAsArray) {
+			if ($this->_resultAsArray) {
 				return $query->result_array();
 			} else {
 				return $query->result();
@@ -95,7 +95,7 @@ Class Basemodel extends CI_Model {
 		// Lancement de la requête
 		$query = $this->db->get($this->getTableName());
 		if ($query->num_rows())  {
-			if ($this->resultAsArray) {
+			if ($this->_resultAsArray) {
 				return $query->result_array();
 			} else {
 				return $query->result();
@@ -120,7 +120,7 @@ Class Basemodel extends CI_Model {
 
 		if ($query->num_rows()) {
 			$ret = array();
-			if ($this->resultAsArray) {
+			if ($this->_resultAsArray) {
 				$ret = $query->result_array();
 			} else {
 				$ret = $query->result();
@@ -137,7 +137,9 @@ Class Basemodel extends CI_Model {
 	 * @param array(array()) $clauses [default array()]
 	 * @return int
 	 */
-	function count($clauses = array()) {
+	function count($idField, $clauses = array()) {
+		//log_message('debug', 'Count Query for '.$this->getTableName().' with :'.print_r($clauses, true));
+		
 		// Ajout des conditions
 		if (is_array($clauses) && count($clauses) > 0) {
 			foreach ($clauses as $clause) {
@@ -148,9 +150,16 @@ Class Basemodel extends CI_Model {
 				}
 			}
 		}
+
+		$this->db->select($idField);
 		
 		// Lancement de la requête
-		return $this->db->count_all();
+		$query = $this->db->get($this->getTableName());
+
+		if (!$query || $query->num_rows() == 0) {
+			return 0;
+		}
+		return $query->num_rows();
 	}
 	
 	/**
@@ -158,7 +167,7 @@ Class Basemodel extends CI_Model {
 	 * Utiliser la classe courante pour les donnée.
 	 */
 	function insert() {
-        $this->db->insert($this->getTableName(), $this);
+        return $this->db->insert($this->getTableName(), $this);
 	}
 
 	/**
@@ -166,14 +175,14 @@ Class Basemodel extends CI_Model {
 	 * 
 	 */
 	function update($idField, $idValue, $data) {
-        $this->db->update($this->getTableName(), $data, array($idField => $idValue));
+        return $this->db->update($this->getTableName(), $data, array($idField => $idValue));
 	}
 
 	/**
 	 * Suppression de la donnée spécifiée.
 	 */
 	function delete($idField, $idValue) {
-		$this->db->delete($this->getTableName(), $this, array($idField => $idValue));
+		return $this->db->delete($this->getTableName(), $this, array($idField => $idValue));
 	}
 }
 

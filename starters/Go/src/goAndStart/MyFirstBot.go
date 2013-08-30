@@ -5,16 +5,16 @@ import (
 )
 import state "gameState"
 
-func DoTurn(world *state.GameState, myId int) {
-	world.Log("My id is : %d", myId)
+func DoTurn(world *state.GameState) {
+
 	world.Log("My view of the world is %s: \n", world)
 
 	// (1) Find my strongest military planet.
 	var source *state.Planet
 	var target *state.Planet
 	sourceShips := 0
-	myMilitaryPlanets := world.GetMyMilitary(myId)
-
+	myMilitaryPlanets := world.GetMyMilitary()
+	world.Log("My Military : ", myMilitaryPlanets)
 	if len(myMilitaryPlanets) > 0 {
 		for key := range myMilitaryPlanets {
 			score := myMilitaryPlanets[key].NumShips
@@ -23,15 +23,16 @@ func DoTurn(world *state.GameState, myId int) {
 				source = myMilitaryPlanets[key]
 			}
 		}
-
+		
 		world.Log("Source Planet will be : %s", source)
 
+		if source != nil{
 		// (2) Find the weakest enemy or neutral planet.
 		// and the closest also
 		// the "best" between those is the target
 		targetScore := math.MaxInt32
-		targetPlanets := world.GetOtherPlanets(myId)
-		// world.Log("Potentials Target : ", targetPlanets)
+		targetPlanets := world.GetOtherPlanets()
+		world.Log("Potentials Target : ", targetPlanets)
 		for key := range targetPlanets {
 			score := targetPlanets[key].NumShips + world.Distance(source.Id, targetPlanets[key].Id)
 			if score < targetScore {
@@ -40,6 +41,9 @@ func DoTurn(world *state.GameState, myId int) {
 			}
 		}
 		world.Log("Target Planet will be : %s", target)
+		}else {
+		world.Log("no more military planet, i'm dead...")
+	}
 	} else {
 		world.Log("no more military planet, i'm dead...")
 	}
@@ -54,10 +58,17 @@ func DoTurn(world *state.GameState, myId int) {
 	}
 }
 
-func DoEnd(world *state.GameState, data string) {
+func DoEnd(world *state.GameState, players, score, status, playerturns string) {
 	// do wining dance :-)
 	world.Log("World has ended : ", *world)
-	world.Log("finish : " + data)
+	world.Log("players : %s",players)
+	world.Log("score : %s",score)
+	world.Log("status : %s",status)
+	world.Log("playerturns : %s",playerturns)
+}
+
+func DoInit(world *state.GameState, params map[string]int) {
+	world.Log("init do nothing")
 }
 
 func DoBetweenTurn(world *state.GameState, id int) {

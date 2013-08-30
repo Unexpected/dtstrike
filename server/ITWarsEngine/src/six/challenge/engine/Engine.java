@@ -66,12 +66,12 @@ public class Engine {
 			}
 		}
 		Map<String, String> options = new HashMap<String, String>();
+
 		options.put("turns", String.valueOf(turns));
 		options.put("turntime", String.valueOf(turntime));
 		options.put("loadtime", String.valueOf(3 * turntime));
 		if (!errorAtStartup) {
-			game = new GalaxSix(new File(mapFile), options, players.size(),
-					logFile);
+			game = new GalaxSix(new File(mapFile), options, players, logFile);
 			if (game.errorAtStartup) {
 				errorAtStartup = true;
 			}
@@ -109,7 +109,7 @@ public class Engine {
 
 		// As long as there is no winner and that we have some turns left,
 		// we'll play
-		while (!game.isGameOver() && turn <= turns) {
+		while (!game.isGameOver()) {
 			game.startTurn();
 			for (Player p : players) {
 				if (p.status != Status.PLAYING) {
@@ -178,13 +178,9 @@ public class Engine {
 		for (Player p : players) {
 			p.kill(Status.ENDED);
 		}
-		if (game.winner > 0) {
-			System.err.println("Player " + game.winner + " Wins!");
-		} else {
-			System.err.println("Draw!");
-		}
 		// Save game Log
-		// game.saveGameLogToFile(game.winner);
+		String replayData = game.getReplay();
+		System.out.println(replayData);
 	}
 
 	public static void main(String[] args) {

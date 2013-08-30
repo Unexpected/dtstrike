@@ -41,4 +41,11 @@ public class Fleet {
 			turnsRemaining = 0;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return String.format("%s %d %d %d %d %d %d", military ? "F" : "R",
+				owner, numShips, sourcePlanet, destinationPlanet,
+				totalTripLength, turnsRemaining);
+	}
 }
