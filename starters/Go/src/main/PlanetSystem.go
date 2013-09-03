@@ -1,4 +1,4 @@
-package gameState
+package main
 
 import (
 	"fmt"
@@ -85,4 +85,23 @@ func (s *planetSorter) Swap(i, j int) {
 // Less is part of sort.Interface. It is implemented by calling the "by" closure in the sorter.
 func (s *planetSorter) Less(i, j int) bool {
 	return s.by(s.planets[i], s.planets[j])
+}
+
+/*
+Military Fleet, with a owner, a number of Ship, a source, a target and a time to destination (with distance)
+*/
+type Fleet struct {
+	// F/R for Fleet, Owner, Number of Ships, ID source Planet, ID Target Planet,
+	// total lenght (in nb of turns), Remaining nb of turns before impact
+	Type bool // true if reinforcement
+	Owner                               int
+	NumShips                            int
+	Source, Target, Time, Remainingtime int
+}
+
+func (b Fleet) String() string {
+	if b.Type {
+		return fmt.Sprintf("Reinforcement Owner=%d Power=%d [%d=>%d] time=%d remaining=%d\n", b.Owner, b.NumShips, b.Source, b.Target, b.Time, b.Remainingtime)
+	}
+	return fmt.Sprintf("Fleet Owner=%d Power=%d [%d=>%d] time=%d remaining=%d\n", b.Owner, b.NumShips, b.Source, b.Target, b.Time, b.Remainingtime)
 }
