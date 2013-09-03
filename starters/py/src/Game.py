@@ -4,55 +4,35 @@ Created on 28 juil. 2013
 @author: Mike
 '''
 from math import ceil, sqrt
-from sys import stdout
+from sys import stdout, stderr
 
 class Game(object):
     '''
     Class handling communication to the DTStrike server ans providing the basics methods to play.
     '''
-
-
-    def __init__(self, gameState, myID):
-        '''
-        Constructor
-        '''
-        self._planets = []
-        self._fleets = []
-        self._myID = myID
-        if (self.parseGameState(gameState)) > 0:
-            raise Exception("Error parsing game state")
-
-    def numPlanets(self):
-        '''
-        Returns the number of planets. Planets are numbered starting with 0
-        '''
-        return len(self._planets)
-
-    def getPlanet(self, planetID):
-        '''
-        Returns the planet with the given planet_id. There are NumPlanets() planets. They are numbered starting at 0.
-        '''
-        return self._planet[planetID]
-
-    def numFleets(self):
-        '''
-        Returns the number of fleets.
-        '''
-        return len(self._fleets)
+    def __init__(self, data):
+        """ Parse options and send go when ready to rock and roll ! """
+        stdout.write("go\n")
+        stdout.flush()
     
-    def numShips(self, playerID):
+    def start_turn(self, data):
+        self.planets = []
+        self.fleets = []
+        self.parse_game_state(data)
+    
+    def num_ships(self, playerID):
         '''
         Returns the number of ships that the playerID has, either located
         on planets or in flight.
         '''
-        numShips = 0
-        for planet in self._planets:
-            if planet.Owner() == playerID:
-                numShips += planet.NumShips()            
-        for fleet in self._fleets:
+        num_ships = 0
+        for planet in self.planets:
+            if planet.owner == playerID:
+                num_ships += planet.num_ships            
+        for fleet in self.fleets:
             if fleet.Owner() == playerID:
-                numShips += fleet.NumShips()
-        return numShips
+                num_ships += fleet.num_ships()
+        return num_ships
     
     def getFleet(self, fleetID):
         '''
@@ -79,17 +59,6 @@ class Game(object):
             if fleet.Owner() == ID:
                 return True
         return False
-
-    def dropPlayer(self, ID):
-        '''
-        All player planets belong to neutral player. All fleets are destroyed.
-        '''
-        for planet in self._planets:
-            if planet.Owner() == ID:
-                planet.Owner(0)
-        for fleet in self._fleets:
-            if fleet.Owner() == ID:
-                fleet.destroy()
 
     def getMyPlanets(self):
         '''
@@ -134,27 +103,26 @@ class Game(object):
             if (planet.Owner() != 0 & planet.Owner() != self._myID & isinstance(planet, EconomicPlanet)):
                 r.append(planet)
         return r
-
-    def getMyMilitaryPlanets(self):
+        
+    def my_military_fleets(self):
         '''
-        Return a list of all the military planets owned by the current player. By
+        Return a list of all the military fleets owned by the current player. By
         convention, the current player is always player number 1.
         '''
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() == self._myID & isinstance(planet, MilitaryPlanet)):
-                r.append(planet)
-        return r
+        return [f for f in self.fleets if f.owner == 1 & f.military]
+
+    def my_military_planets(self):
+        '''
+        Return a list of all the military fleets owned by the current player. By
+        convention, the current player is always player number 1.
+        '''
+        return [p for p in self.planets if p.owner == 1 & isinstance(p, MilitaryPlanet)]
            
-    def getMilitaryPlanets(self):
+    def military_planets(self):
         '''
         Return a list of all the military planets.
         '''
-        r=[]
-        for planet in self._planets:
-            if (isinstance(planet, MilitaryPlanet)):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if isinstance(p, MilitaryPlanet)]
 
     def getNeutralMilitaryPlanets(self):
         '''
@@ -198,22 +166,12 @@ class Game(object):
                 r.append(planet)
         return r
     
-    def getNotMyPlanets(self):
+    def not_my_planets(self):
         '''
         Return a list of all the planets that are not owned by the current
         player. This includes all enemy planets and neutral planets.
         '''
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() != self._myID):
-                r.append(planet)
-        return r
-
-    def getFleets(self):
-        '''
-        Return a list of all the fleets.
-        '''
-        return self._fleets
+        return [p for p in self.planets if p.owner != 1]
 
     def getMyFleets(self):
         '''
@@ -242,7 +200,7 @@ class Game(object):
         dy = source.Y() - destination.Y()
         return ceil(sqrt(dx * dx + dy * dy))
     
-    def issueOrder(self, sourcePlanet, destinationPlanet, numShips):
+    def issue_order(self, sourcePlanet, destinationPlanet, num_ships):
         '''
         Sends an order to the game engine. An order is composed of a source
         planet number, a destination planet number, and a number of ships. A
@@ -255,49 +213,46 @@ class Game(object):
         * the ships will take a few turns to reach their destination. Travel
         is not instant. See the distance() function for more info.
         '''
-        stdout.write("{:d} {:d} {:d}\n".format(sourcePlanet, destinationPlanet, numShips))
+        stdout.write("%d %d %d\n" % (sourcePlanet, destinationPlanet, num_ships))
         stdout.flush()
         
-    def FinishTurn(self):
+    def finish_turn(self):
         '''
         Sends the game engine a message to let it know that we're done sending
          orders. This means the end of our turn.
         '''
         stdout.write("go\n")
         stdout.flush()
+        
+    def end_game(self, data):
+        ### do nothing
+        stderr.write("bye")
     
-    def parseGameState(self, s):
-        self._planets = []
-        self._fleets = []
-        lines = s.split("\n")
-        planet_id = 0
-
-        for line in lines:
+    def parse_game_state(self, data):
+        for line in data:
             line = line.split("#")[0] # remove comments?!
             tokens = line.split(" ")
             if (len(tokens) > 1): #remove empty strings
                 if (tokens[0] == "M"):
                     if (len(tokens) != 5):
                         return 1
-                    p = MilitaryPlanet(planet_id, # ID of this planet
+                    p = MilitaryPlanet(len(self.planets), # ID of this planet
                        int(tokens[3]), # Owner
                        int(tokens[4]), # Num ships
                        float(tokens[1]), # X
                        float(tokens[2])) # Y
-                    planet_id += 1
-                    self._planets.append(p)
+                    self.planets.append(p)
                 elif tokens[0] == "E":
                     if len(tokens) != 6:
                         return 1
-                    p = EconomicPlanet(planet_id, # ID of this planet
+                    p = EconomicPlanet(len(self.planets), # ID of this planet
                        int(tokens[3]), # Owner
                        int(tokens[4]), # Num ships
                        float(tokens[1]), # X
                        float(tokens[2]), # Y
                        int(tokens[5])) # Income
-                    planet_id += 1
-                    self._planets.append(p)
-                elif tokens[0] == "F":
+                    self.planets.append(p)
+                elif tokens[0] == "F" or tokens[0] == "R":
                     if len(tokens) != 7:
                         return 1
                     f = Fleet(int(tokens[1]), # Owner
@@ -305,125 +260,59 @@ class Game(object):
                       int(tokens[3]), # Source
                       int(tokens[4]), # Destination
                       int(tokens[5]), # Total trip length
-                      int(tokens[6])) # Turns remaining
-                    self._fleets.append(f)
-                else:
-                    return 1
-        return 0
+                      int(tokens[6]), # Turns remaining
+                      tokens[0] == "F") # Military fleet
+                    self.fleets.append(f)
 
 
 class Fleet(object):
     '''
     classdocs
     '''
-
-
-    def __init__(self, owner, power, sourceDept = -1, destDept = -1, tripLength = -1, turnsRemaining = -1):
+    def __init__(self, owner, power, sourceDept = -1, destDept = -1, tripLength = -1, turnsRemaining = -1, military = True):
         '''
         Constructor
         '''
-        self._owner = owner
-        self._numShips = power
-        self._sourcePlanet = sourceDept
-        self._destinationPlanet = destDept
-        self._totalTripLength = tripLength
-        self._turnsRemaining = turnsRemaining
-
-    def Owner(self):
-        return self._owner
-
-    def NumShips(self):
-        return self._num_ships
-
-    def SourcePlanet(self):
-        return self._source_planet
-
-    def DestinationPlanet(self):
-        return self._destination_planet
-
-    def TotalTripLength(self):
-        return self._total_trip_length
-
-    def TurnsRemaining(self):
-        return self._turns_remaining
+        self.owner = owner
+        self.num_ships = power
+        self.sourcePlanet = sourceDept
+        self.destinationPlanet = destDept
+        self.totalTripLength = tripLength
+        self.turnsRemaining = turnsRemaining
+        self.military = military
         
-    def destroy(self):
-        '''
-        Called when the fleet is annihilated
-        '''
-        self._owner = 0
-        self._numShips = 0
-        self._turnsRemaining = 0
-    
-    def doTimeStep(self):
-        self._turnsRemaining -=1
-        if (self._turnsRemaining < 0):
-            self._turnsRemaining = 0
-            
-
 class Planet(object):
     '''
     A Planet, mother class.
     '''
-
-    def __init__(self, ID, owner, numShips, x, y):
+    def __init__(self, id, owner, num_ships, x, y):
         '''
         Constructor
         '''
-        self._planet_id = ID
-        self._owner = owner
-        self._num_ships = numShips
-        self._x = x
-        self._y = y
+        self.id = id
+        self.owner = owner
+        self.num_ships = num_ships
+        self.x = x
+        self.y = y
         
-    def PlanetID(self):
-        return self._planet_id
-
-    def Owner(self, newOwner=None):
-        if newOwner == None:
-            return self._owner
-        self._owner = newOwner
-
-    def NumShips(self, numShips=None):
-        if numShips == None:
-            return self._num_ships
-        self._num_ships = numShips
-
-    def X(self):
-        '''
-        X coordinate
-        '''
-        return self._x
-
-    def Y(self):
-        '''
-        Y coordinate
-        '''
-        return self._y
         
 class EconomicPlanet(Planet):
     '''
     Eco planet with income
     '''
-
-    def __init__(self, ID, owner, numShips, x, y, income):
+    def __init__(self, id, owner, num_ships, x, y, income):
         '''
         Constructor
         '''
-        Planet.__init__(self, ID, owner, numShips, x, y)
-        self._income = income
-    
-    def Income(self):
-        return self._income
-        
+        Planet.__init__(self, id, owner, num_ships, x, y)
+        self.income = income        
         
 class MilitaryPlanet(Planet):
     '''
     Military Planet, which can handle ships.
     '''
-
-    def __init__(self, ID, owner, numShips, x, y):
+    def __init__(self, id, owner, num_ships, x, y):
         '''
         Constructor
         '''
-        Planet.__init__(self, ID, owner, numShips, x, y)
+        Planet.__init__(self, id, owner, num_ships, x, y)
