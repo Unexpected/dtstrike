@@ -1,32 +1,25 @@
-case class Fleet(
-  val owner: Int,
-  val shipsNumber: Int,
-  val sourcePlanetId: Int,
-  val destinationPlanetId: Int,
-  val totalTripLength: Int,
-  var turnsRemaining: Int) {
-
-  def doTimeStep() = {
-    turnsRemaining -= 1;
-    if (turnsRemaining < 0) {
-      turnsRemaining = 0;
-    }
-  }
+/** Fleets flying in the air */
+sealed abstract class Fleet {  
+  val owner: Int
+  val shipsNumber: Int
+  val source: Planet
+  val destination: Planet
+  val totalTripLength: Int
+  val turnsRemaining: Int
 }
 
-//
-//	public Fleet(int owner, int numEngineers) {
-//		this.owner = owner;
-//		this.numShips = numEngineers;
-//		this.sourcePlanet = -1;
-//		this.destinationPlanet = -1;
-//		this.totalTripLength = -1;
-//		this.turnsRemaining = -1;
-//	}
-//
-//	public void destroy() {
-//		owner = 0;
-//		numShips = 0;
-//		turnsRemaining = 0;
-//	}
-//
+/** Fleets coming from a military planet, and potentially threatening */
+case class MilitaryFleet(val owner: Int,
+  val shipsNumber: Int,
+  val source: Planet,
+  val destination: Planet,
+  val totalTripLength: Int,
+  val turnsRemaining: Int) extends Fleet
+
+/** Fleets flying from an economic planet to a friendly military planet nearby */
+case class EconomicFleet(val owner: Int,
+  val shipsNumber: Int,
+  val source: Planet,
+  val destination: Planet,
+  val totalTripLength: Int,
+  val turnsRemaining: Int) extends Fleet
