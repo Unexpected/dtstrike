@@ -205,6 +205,7 @@ var Visualizer = {
 	
     drawFeedline: function(frame){
         var canvas = document.getElementById('feedline');
+		if (!canvas) return;
         var ctx = canvas.getContext('2d');
 		
         var widthFactor = canvas.width / Math.max(200, this.moves.length);
@@ -228,6 +229,7 @@ var Visualizer = {
     
     drawChart: function(){
         var canvas = document.getElementById('chart');
+		if (!canvas) return;
         var ctx = canvas.getContext('2d');
         ctx.scale(1,-1);
         ctx.translate(0,-canvas.height);

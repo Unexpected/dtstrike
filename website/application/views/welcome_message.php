@@ -1,13 +1,12 @@
 ﻿
-<p>Le Six Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA). Grâce aux Kits de démarrage "clé en main" fournis, 
-que vous soyez un développeur débutant ou experimenté, vous allez concevoir un programme qui contrôle des flottes de vaisseaux spatiaux et lutte 
-contre les IA des autres joueurs pour la domination de l'espace. </p>
+<p>
+Le Six Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA) qui va lutter contre celle des autres joueurs dans d'épiques batailles spatiales. <br/><br/>
 
-<p>En moins de <code>5 minutes</code>, vous pouvez choisir votre langage de programmation préféré, soumettre le kit de démarrage correspondant et regarder vos vaisseaux 
-affronter d'autres joueurs de CGI pour conquérir la galaxie. <a href="<?php echo site_url("game/start") ?>">Suivez le guide !</a></p>
+Grâce aux Kits de démarrage "clé en main", que vous soyez débutant ou développeur experimenté, vous pouvez en moins de <code>5 minutes</code>, choisir votre langage de programmation préféré, soumettre le kit de démarrage correspondant et regarder vos vaisseaux 
+affronter d'autres joueurs de CGI pour conquérir la galaxie. Pour embarquer, <a href="<?php echo site_url("game/start") ?>">suivez le guide !</a></p><br/>
 
 <p>Une partie jouée récemment : </p>
-<div id="container">
+<div id="container" style="text-align: center;>
 	<div id="players">Loading</div>
     <div id="main">
         <canvas id="display" width="480" height="480"></canvas>
