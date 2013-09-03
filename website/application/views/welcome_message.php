@@ -6,7 +6,7 @@ Grâce aux Kits de démarrage "clé en main", que vous soyez débutant ou dével
 affronter d'autres joueurs de CGI pour conquérir la galaxie. Pour embarquer, <a href="<?php echo site_url("game/start") ?>">suivez le guide !</a></p><br/>
 
 <p>Une partie jouée récemment : </p>
-<div id="container" style="text-align: center;>
+<div id="container" style="text-align: center;">
 	<div id="players">Loading</div>
     <div id="main">
         <canvas id="display" width="480" height="480"></canvas>
