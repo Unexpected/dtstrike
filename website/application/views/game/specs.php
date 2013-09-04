@@ -36,7 +36,9 @@ Tout autre message envoyé par le bot à ce stade du jeu sera ignoré.
 <h3>Tours de jeu</h3>
 <p>
 Le format des messages reçus à chaque tour de jeu est le suivant : <br/>
-<div class="code">P0 x y owner num_ships<br/>
+<div class="code">
+turn Z<br/>
+P0 x y owner num_ships<br/>
 P1 x y owner num_ships growth_rate<br/>
 P2 x y owner num_ships growth_rate<br/>
 ...<br/>
@@ -47,7 +49,15 @@ R owner num_ships source_planet destination_planet total_trip_length turns_remai
 F owner num_ships source_planet destination_planet total_trip_length turns_remaining<br/>
 R owner num_ships source_planet destination_planet total_trip_length turns_remaining<br/>
 R owner num_ships source_planet destination_planet total_trip_length turns_remaining<br/>
+go<br/>
 <br/></div>
+Les règles suivantes s'appliquent à <b>chaque tour</b> : <br/>
+<ul>
+	<li>Le message débute par "turn Z" où Z est le n° du tour courant. Cette information peut être ignorée par le bot s'il calcule lui même le n° de tour courant. </li>
+	<li>A chaque tour, l'intégralité de la liste des planètes militaires et économiques ainsi que leurs propriétaires et nombre de vaisseaux est envoyée à chaque joueur. </li>
+	<li>A chaque tour, l'intégralité de la liste des flottes d'attaque et de renforts ainsi que leurs propriétaires, nombre de vaisseaux, destination, source et nombre de tours de voyage restant est envoyée à chaque joueur. </li>
+	<li>Le message termine par "go" pour donner le feu vert au bot afin qu'il envoie ses ordres. </li>
+</ul>
 Les règles suivantes s'appliquent aux <b>joueurs</b> : <br/>
 <ul>
 	<li>Le joueur courant à l'ID 1</li>
