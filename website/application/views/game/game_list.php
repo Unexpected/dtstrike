@@ -35,6 +35,7 @@
 			echo '</tr>';
 		}
 		echo '</table>';
+		echo $this->pagination->create_links();
 	} else {
 		echo '<span class="comment">Aucunes</span>';
 	}
