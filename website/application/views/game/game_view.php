@@ -1,8 +1,8 @@
-
-  <div id="container">
-    <header>
-	  <div id="players">Loading</div>
-    </header>
+<?php 
+	$is_included = defined("VISUALIZER_INCLUDED");
+?>
+<div id="container">
+	<div id="players">Loading</div>
     
     <div id="main">
         <canvas id="display" width="640" height="640"></canvas>
@@ -16,6 +16,7 @@
             <a href="#" id="end-button">&raquo;</a> | 
             <a href="#" id="fast-button">+</a> |
         </p>
+<?php if (!$is_included) { ?>
         <p>
 		  <div style="height: 20px;">
 			  <span style="float: left">Match: <span id="macthId">Loading</span></span>
@@ -26,20 +27,24 @@
 			  <canvas id="feedline" width="640" height="100" style="position: absolute; background-color: transparent; z-index: 2" ></canvas>
 		  </div>
         </p>
+<?php } ?>
     </div>
-  </div> <!-- end of #container -->
+</div> <!-- end of #container -->
   
   <!-- Errors display -->
-  <?php
-  	foreach ($errors as $error) {
-		echo $error;
+<?php
+	if (!$is_included) {
+		foreach ($errors as $error) {
+			echo $error;
+		}
 	}
-  ?>
+?>
 
   <link rel="stylesheet" href="<?php echo base_url("visualizer/inc/style.css?v=1") ?>">
   <script type="text/javascript" src="<?php echo base_url("visualizer/inc/visualizer.js?v=1") ?>"></script>
   <script type="text/javascript">
   <?php
+ 	echo "	var userUrl = '".site_url('user/view')."/';\n";
  	echo "	var dataUrl = '".base_url($replay_file)."';\n";
 	echo "	Visualizer.parseDataFromUrl(dataUrl);\n";
   ?>
