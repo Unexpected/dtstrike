@@ -29,16 +29,17 @@ class Game extends CI_Controller {
 		$data['limit'] = $page_size;
 		$data['games'] = $games;
 
-		$row_count = $this->Gamemodel->get_game_count($user_id, $submission_id);
 		
+		// Config de la pagination
+		$row_count = $this->Gamemodel->get_game_count($user_id, $submission_id);
 		$config['base_url'] = site_url('game/liste');
 		$config['total_rows'] = ceil($row_count / $page_size);
 		$config['per_page'] = $page_size;
 		if ($user_id != NULL) {
 			$config['suffix'] = "/$user_id";
 		}
-		
 		$this->pagination->initialize($config);
+		
 		
 		if ($user_id != NULL) {
 			$data['user'] =  $this->Usermodel->getUserData($user_id);
@@ -113,10 +114,9 @@ class Game extends CI_Controller {
 		// Récupérer les matchs du joueur
 		$user_id = current_user_id();
 		$limit = 20;
-		$games = $this->Gamemodel->get_list(0, $limit, $user_id);
-		$data['list_type'] = 'user';
-		$data['user_id'] = $user_id;
-		$data['username'] = current_user_name();
+		$games = $this->Gamemodel->get_game_list(0, $limit, $user_id);
+
+		$data['user'] =  $this->Usermodel->getUserData($user_id);
 		$data['limit'] = $limit;
 		$data['games'] = $games;
 
@@ -131,13 +131,17 @@ class Game extends CI_Controller {
 		$page_size = 20;
 		$data['rankings'] = $this->Submissionmodel->get_rank_list($page, $page_size, $org_id, $country_id, $language_id);
 		
+		
+		// Config de la pagination
 		$row_count = $this->Submissionmodel->get_rank_count($org_id, $country_id, $language_id);
-
 		$config['base_url'] = site_url('game/game_rank');
 		$config['total_rows'] = ceil($row_count / $page_size);
 		$config['per_page'] = $page_size;
-		
+		if ($org_id != NULL) {
+			$config['suffix'] = "/$org_id";
+		}
 		$this->pagination->initialize($config);
+		
 		
 		$data['page_title'] = "Classement actuel";
 		$data['page_icon'] = 'trophy';
