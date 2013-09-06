@@ -18,17 +18,15 @@ object MyBot extends App with Bot {
       return None
     }
 
-    // (2) Find my strongest military planet.
-
+    // (2) Find my strongest military planet
     val myMilitaryPlanets = game.myMilitaryPlanets
     val source = if (myMilitaryPlanets.isEmpty) None else Some(myMilitaryPlanets.max(OrderingByStrength))
 
-    // (3) Find the weakest enemy or neutral planet.
+    // (3) Find the weakest enemy or neutral planet
     val notMyPlanets = game.notMyPlanets
     val dest = if (notMyPlanets.isEmpty) None else Some(notMyPlanets.min(OrderingByStrength))
 
-    // (4) Send half the ships from my strongest planet to the weakest
-    // planet that I do not own.
+    // (4) Send half the ships from my strongest planet to the weakest planet that I do not own.
     if (source.isDefined && dest.isDefined) {
       val ships = source.get.shipsNumber / 2
       Some(Order(source.get, dest.get, ships))

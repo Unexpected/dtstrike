@@ -77,6 +77,6 @@ case class GameState(val turn: Int, val planets: IndexedSeq[Planet], val fleets:
   }
 
   /** Returns how much time the bot has still has to take its turn before timing out. */
-  def timeRemaining = turnStart - System.currentTimeMillis()
+  def timeSpent = System.currentTimeMillis() - turnStart
 }
 
