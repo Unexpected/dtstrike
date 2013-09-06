@@ -33,31 +33,32 @@ Class Game_playermodel extends Basemodel {
         where gp.game_id = $game_id";
 		if ($user_id !== NULL) {
 			$query .= " and gp.user_id = $user_id
-        and (gp.status = 'timeout'
-            or gp.status = 'crashed'
-            or gp.status = 'invalid')";
+		        and (gp.status = 'timeout'
+		            or gp.status = 'crashed'
+		            or gp.status = 'invalid')";
 		}
 
 		$req = $this->db->query($query);
 		$results = $req->result_array();
-		$errors = array();
+// 		$errors = array();
 		if ($results) {
-			for ($i=0; $i<count($results); $i++) {
-				$row = $results[$i];
+			return $results;
+// 			for ($i=0; $i<count($results); $i++) {
+// 				$row = $results[$i];
 				
-	            $error_msg = "<ul>";
-	            $username = $row["username"];
-	            $status = $row["status"];
-	            $error_msg .= "<li><p>$username - $status</p><pre class=\"error\">";
-	            $error_msg .= str_replace('\n', "\n", $row["errors"])."\n";
-	            $error_msg .= "</pre></li>";
-	            $error_msg .= "</ul>";
+// 	            $error_msg = "<ul>";
+// 	            $username = $row["username"];
+// 	            $status = $row["status"];
+// 	            $error_msg .= "<li><p>$username - $status</p><pre class=\"error\">";
+// 	            $error_msg .= str_replace('\n', "\n", $row["errors"])."\n";
+// 	            $error_msg .= "</pre></li>";
+// 	            $error_msg .= "</ul>";
 	            
-	            $errors[$i] = $error_msg;
-			}
+// 	            $errors[$i] = $error_msg;
+// 			}
 		}
 		
-		return $errors;
+		return array();
 	}
 
 }

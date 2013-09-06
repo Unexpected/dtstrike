@@ -12,7 +12,7 @@ Ce jeu est très fortement inspiré des concours organisés par Google et l'Univ
 Il y a eux diverses versions au fil des années :
 </p>
 <ul>
-	<li>Tron (Winter 2009)</li>
+	<li>Tron (Hiver 2009)</li>
 	<li><a href="http://planetwars.aichallenge.org">Planet Wars (Automne 2010)</a></li>
 	<li><a href="http://aichallenge.org">Ants (Automne 2011)</a></li>
 </ul><br/>

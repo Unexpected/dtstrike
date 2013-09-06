@@ -35,7 +35,13 @@
 <?php
 	if (!$is_included) {
 		foreach ($errors as $error) {
-			echo $error;
+			$username = $error["username"];
+			$status = $error["status"];
+			echo "<ul>";
+	        echo "<li><p>$username - $status</p><pre class=\"error\">";
+	        echo str_replace('\n', "\n", $error["errors"])."\n";
+	        echo "</pre></li>";
+			echo "</ul>";
 		}
 	}
 ?>
