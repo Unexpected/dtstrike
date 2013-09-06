@@ -87,13 +87,21 @@ func (s *planetSorter) Less(i, j int) bool {
 	return s.by(s.planets[i], s.planets[j])
 }
 
+// to do a sort, juste define a method/Closure of type func(p1, p2 *Planet) bool that is used by Less
+// for example, this sort by number of ship (max first)
+func byNumship(p1, p2 *Planet) bool {
+	return p1.NumShips > p2.NumShips
+}
+
+// then just use By(byNumship).Sort(myMilitaryPlanets)
+
 /*
 Military Fleet, with a owner, a number of Ship, a source, a target and a time to destination (with distance)
 */
 type Fleet struct {
 	// F/R for Fleet, Owner, Number of Ships, ID source Planet, ID Target Planet,
 	// total lenght (in nb of turns), Remaining nb of turns before impact
-	Type bool // true if reinforcement
+	Type                                bool // true if reinforcement
 	Owner                               int
 	NumShips                            int
 	Source, Target, Time, Remainingtime int

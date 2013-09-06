@@ -16,5 +16,6 @@ do not forget to set the GOPATH value !
 
 if you need pointer in how to develop with GO, here are some good starting point :
 - http://golang.org/
+- http://www.golang-book.com/
 - https://code.google.com/p/go-wiki/wiki/Projects
 - contact me

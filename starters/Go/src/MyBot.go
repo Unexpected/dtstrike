@@ -16,14 +16,15 @@ Main method, you should do the main algo here.
 ******************************************************************************/
 func DoTurn(world *GameState) {
 
-	world.Log("My view of the world is %s: \n", world)
+	world.Log("My view of the world is : %s\n", world)
 
 	// (1) Find my strongest military planet.
 	var source *Planet
 	var target *Planet
 	sourceShips := 0
 	myMilitaryPlanets := world.GetMyMilitary()
-	world.Log("My Military : ", myMilitaryPlanets)
+
+	//world.Log("My Military : %s", myMilitaryPlanets)
 	if len(myMilitaryPlanets) > 0 {
 		for key := range myMilitaryPlanets {
 			score := myMilitaryPlanets[key].NumShips
@@ -32,7 +33,6 @@ func DoTurn(world *GameState) {
 				source = myMilitaryPlanets[key]
 			}
 		}
-
 		world.Log("Source Planet will be : %s", source)
 
 		if source != nil {
@@ -40,9 +40,9 @@ func DoTurn(world *GameState) {
 			// the "best" between those is the target
 			targetScore := math.MaxInt32
 			targetPlanets := world.GetOtherPlanets()
-			world.Log("Potentials Target : ", targetPlanets)
+			//world.Log("Potentials Target : ", targetPlanets)
 			for key := range targetPlanets {
-				score := targetPlanets[key].NumShips + world.Distance(source.Id, targetPlanets[key].Id)
+				score := targetPlanets[key].NumShips + 2*world.Distance(source.Id, targetPlanets[key].Id) + targetPlanets[key].Id
 				if score < targetScore {
 					targetScore = score
 					target = targetPlanets[key]
@@ -67,7 +67,7 @@ func DoTurn(world *GameState) {
 }
 
 /******************************************************************************
-DoBetweenTurn : do some cleaning on the world (cleaning previous state),
+DoBetweenTurn : do some cleaning, the world itself will be cleaned up jute afte,
 it's out of the timer, so all non critical path calculations should be done here
 ******************************************************************************/
 func DoBetweenTurn(world *GameState, id int) {
@@ -78,7 +78,7 @@ func DoBetweenTurn(world *GameState, id int) {
 DoEnd : do wining dance :-)
 ******************************************************************************/
 func DoEnd(world *GameState, players, score, status, playerturns string) {
-	world.Log("World has ended : ", *world)
+	//world.Log("World has ended : ", *world)
 	world.Log("players : %s", players)
 	world.Log("score : %s", score)
 	world.Log("status : %s", status)
