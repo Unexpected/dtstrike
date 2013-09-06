@@ -106,25 +106,25 @@ function ends_with($str, $sub) {
 function getStatusLabelDescription($status) {
 	switch ($status) {
 		case 10:
-			return array("Created", "Entry record created in database");
+			return array("Created", "Ligne créée en base de données.");
 			break;
 		case 20:
-			return array("Uploaded", "Ready to be unzipped and compiled.");
+			return array("Uploaded", "Prêt à être dézippé et compilé.");
 			break;
 		case 30:
-			return array("Compiling", "Worker is compiling and running tests");
+			return array("Compilation", "Compilation et tests en cours.");
 			break;
 		case 40:
-			return array("Runable", "Compiled successfully and passed test cases. Ready to be run.");
+			return array("Jouable", "Compilé et a réussi les cas de test. Prêt à être exécuté.");
 			break;
 		case 50:
-			return array("Download Error", "Error receiving submission zip file.");
+			return array("Download Error", "Erreur lors de la réception du fichier zip.");
 			break;
 		case 60:
-			return array("Unpack Error", "Error while unzipping submission file.");
+			return array("Unpack Error", "Erreur lors de l'ouverture de l'archive.");
 			break;
 		case 70:
-			return array("Compile Error", "Error while compiling submission.");
+			return array("Compile Error", "Erreur lors de la compilation.");
 			break;
 		case 80:
 			return array("Test Error", "Compiled successfully but failed test cases.");
@@ -133,7 +133,7 @@ function getStatusLabelDescription($status) {
 			return array("Upload Error", "Server failed to retrieve uploaded file correctly.");
 			break;
 		case 100:
-			return array("Inactivated", "Submission must be activated to continue being chosen as a seed it can still be pulled in as an opponent");
+			return array("Inactivée", "La soumission doit être ré-activée pour continuer à être choisie comme attaquant, sinon, elle peut encore être choisie comme un adversaire");
 			break;
 	}
 }

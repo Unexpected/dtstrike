@@ -474,12 +474,15 @@ function initStaticData() {
 		} else {
 			playersHtml += ' class="looser"';
 		}
-		playersHtml += ' href="profile.php?user_id=' + Visualizer.players[i].id + '">';
+		if (userUrl) {
+			playersHtml += ' href="' + userUrl + Visualizer.players[i].id + '"';
+		}
+		playersHtml += '>';
 		playersHtml += (i+1) + '. ' + Visualizer.players[i].name;
 		playersHtml += '</a>&nbsp;&nbsp;';
 	}
 	$('#players').html(playersHtml);
-    $('title').text('CGI - Planet Wars - Match '+Visualizer.game_id);
+    //$('title').text('CGI - Planet Wars - Match '+Visualizer.game_id);
     $('#macthId').text(Visualizer.game_id);
 }
 
