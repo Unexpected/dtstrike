@@ -22,7 +22,56 @@ Class Gamemodel extends Basemodel {
 		return 'game';
 	}
 
-	function get_list($page=0, $limit=20, $user_id=NULL, $submission_id=NULL) {
+	/**
+	 * Get game count
+	 * 
+	 * @param string $user_id
+	 * @param string $submission_id
+	 * 
+	 * @return count
+	 */
+	function get_game_count($user_id=NULL, $submission_id=NULL) {
+		$list_select_field = 1;
+		$list_id = 1;
+
+		if ($user_id !== NULL) {
+			$list_select_field = 'user_id';
+			$list_id = $user_id;
+		} else if ($submission_id !== NULL) {
+			$list_select_field = 'submission_id';
+			$list_id = $submission_id;
+		} else {
+			// Default
+			$list_select_field = 1;
+			$list_id = 1;
+		}
+		
+		$query = "select count(*) as cnt
+            from game g
+            inner join game_player gp
+                on g.game_id = gp.game_id
+            where $list_select_field = $list_id";
+		
+		$result_id = $this->db->query($query);
+		if ($result_id === FALSE) {
+			return 0;
+		} else {
+			$arr = $result_id->result_array();
+			return $arr[0]['cnt'];
+		}
+	}
+
+	/**
+	 * Get Game list
+	 *
+	 * @param number $page
+	 * @param number $limit
+	 * @param string $user_id
+	 * @param string $submission_id
+	 *
+	 * @return array of db rows
+	 */
+	function get_game_list($page=0, $limit=20, $user_id=NULL, $submission_id=NULL) {
 		$offset = 0;
 		if ($page > 0)
 			$offset = (($page - 1) * $limit);
