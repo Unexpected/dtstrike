@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 )
-
+import . "myBot"
 /******************************************************************************
 No need to change this file, it's doing all the boilerplate work for you !
 Launch the bot with -d option and it will generate a debug file with everything logged

@@ -20,6 +20,11 @@
                 <attribute name="Main-Class" value="six.challenge.engine.Engine" />
             </manifest>
 		</jar>
+		<jar destfile="dist/mapgen.jar" basedir="dist/build/classes">
+            <manifest>
+                <attribute name="Main-Class" value="com.cgi.itwar.MapGenerator" />
+            </manifest>
+		</jar>
 	</target>
 	
 	<target name="zip" depends="jar">

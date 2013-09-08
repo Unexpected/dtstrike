@@ -1,4 +1,4 @@
-package main
+package myBot
 
 /*
 Written by Kevin Lansard for the SIX IT Challenge
@@ -24,7 +24,7 @@ func TestAutoProcessInputLoopMap1(t *testing.T) {
 
 	fmt.Println("Init Done")
 
-	filename := "../maps/map1.txt"
+	filename := "../../maps/map1.txt"
 	testFile, _ := os.Open(filename)
 	defer testFile.Close()
 	bio := bufio.NewReader(testFile)
@@ -51,7 +51,7 @@ func TestAutoProcessInputLoopMap2(t *testing.T) {
 
 	fmt.Println("Init Done")
 
-	filename := "../maps/map2.txt"
+	filename := "../../maps/map2.txt"
 	testFile, _ := os.Open(filename)
 	bio := bufio.NewReader(testFile)
 
@@ -77,7 +77,7 @@ func TestAutoProcessInputLoopMap3(t *testing.T) {
 
 	fmt.Println("Init Done")
 
-	filename := "../maps/map3.txt"
+	filename := "../../maps/map3.txt"
 	testFile, _ := os.Open(filename)
 	bio := bufio.NewReader(testFile)
 
@@ -118,7 +118,7 @@ func BenchmarkProcessInputLoop(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 
-		filename := "../../maps/map3.txt"
+		filename := "../../../maps/map3.txt"
 		testFile, _ := os.Open(filename)
 		bio := bufio.NewReader(testFile)
 
