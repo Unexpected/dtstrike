@@ -71,6 +71,7 @@ public class MyBot extends Bot {
 			for (Planet src : sources) {
 				if (src.numShips > 0) {
 					game.issueOrder(src.id, itTargets.next().id, 1);
+					production--;
 					break;
 				}
 			}
