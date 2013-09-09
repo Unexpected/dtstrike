@@ -2,10 +2,10 @@ import collection.mutable
 
 /** Class to parse input and produce a GameOptions object. */
 class GameOptionsBuilder {
-  private val optionLoadTimeRegex = """loadtime:(\d*)""".r
-  private val optionTurnTimeRegex = """turntime:(\d*)""".r
-  private val optionTurnsRegex = """turns:(\d*)""".r
-  private val optionOtherRegex = """(\w*):(\w*)""".r
+  private val optionLoadTimeRegex = """\*loadtime:(\d*)""".r
+  private val optionTurnTimeRegex = """\*turntime:(\d*)""".r
+  private val optionTurnsRegex = """\*turns:(\d*)""".r
+  private val optionOtherRegex = """\*(\w*):(\w*)""".r
   private val readyRegex = "ready".r
 
   private var loadTime: Option[Int] = None
@@ -22,7 +22,6 @@ class GameOptionsBuilder {
       case optionTurnsRegex(t) => turns = Some(t.toInt)
       case optionOtherRegex(otherKey, otherValue) => otherOptions(otherKey) = otherValue
       case readyRegex() => goOn = false
-     // case _ => System.err.println("Could not parse : [" + str + "]")
     }
 
     new {
