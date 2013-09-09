@@ -1,5 +1,6 @@
+# example de commandes utiles pour linux
 export GOPATH=${PWD}
-go install main
-go test launcher
-go test launcher -bench . -benchtime 100s -cpuprofile prof.out -memprofile mem.out -benchmem
-go tool pprof ./launcher.test src/launcher/prof.out
+go install myBot
+go test myBot
+go test myBot -bench . -benchtime 10s -cpuprofile prof.out -memprofile mem.out -benchmem
+go tool pprof ./myBot.test src/myBot/prof.out
