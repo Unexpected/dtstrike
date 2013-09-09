@@ -266,7 +266,7 @@ public class Game {
 	public List<Planet> getEnemyEconomicPlanets() {
 		List<Planet> r = new ArrayList<Planet>();
 		for (Planet p : planets) {
-			if (p.owner != 1 && p instanceof EconomicPlanet) {
+			if (p.owner != 0 && p.owner != 1 && p instanceof EconomicPlanet) {
 				r.add(p);
 			}
 		}
@@ -284,7 +284,7 @@ public class Game {
 	public List<Planet> getEnemyMilitaryPlanets(int playerID) {
 		List<Planet> r = new ArrayList<Planet>();
 		for (Planet p : planets) {
-			if (p.owner == playerID && p instanceof MilitaryPlanet) {
+			if (p.owner != 0 && p.owner == playerID && p instanceof MilitaryPlanet) {
 				r.add(p);
 			}
 		}
