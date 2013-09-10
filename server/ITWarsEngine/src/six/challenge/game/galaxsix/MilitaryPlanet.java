@@ -8,6 +8,6 @@ public class MilitaryPlanet extends Planet {
 
 	@Override
 	public String toString() {
-		return String.format("E %f %f %d %d", x, y, owner, numShips);
+		return String.format("M %f %f %d %d", x, y, owner, numShips);
 	}
 }

@@ -57,7 +57,7 @@ public class GalaxSix extends Game {
 
 	private List<List<Integer>> scoreHistory;
 	private List<String> initialMap;
-	private List<List<String>> dataHistory;
+	private List<String> dataHistory;
 	private List<Integer> playerTurns;
 	private int turn;
 	private String cutoff;
@@ -302,7 +302,7 @@ public class GalaxSix extends Game {
 		for (Player p : players) {
 			scoreHistory.add(new ArrayList<Integer>());
 		}
-		dataHistory = new ArrayList<List<String>>();
+		dataHistory = new ArrayList<String>();
 		playerTurns = new ArrayList<Integer>();
 		for (Player p : players) {
 			playerTurns.add(0);
@@ -396,12 +396,18 @@ public class GalaxSix extends Game {
 			scoreHistory.get(p.id - 1).add(scores.get(p.id - 1));
 		}
 
-		List<String> turnHistory = new ArrayList<String>();
+		String turnHistory = "";
+		boolean first = true;
 		for (Planet p : planets) {
-			turnHistory.add(p.owner + " " + p.numShips);
+			if (!first)
+				turnHistory += ",";
+			turnHistory += p.owner + " " + p.numShips;
+			first = false;
 		}
 		for (Fleet f : fleets) {
-			turnHistory.add(f.toString());
+			// add a comma before the first fleet to separate from planets
+			turnHistory += ",";
+			turnHistory += f.toString();
 		}
 		dataHistory.add(turnHistory);
 	}
