@@ -40,23 +40,24 @@ Class Submissionmodel extends Basemodel {
 	 * 
 	 * @return number
 	 */
-	function get_rank_count($org_id=NULL, $country_id=NULL, $language_id=NULL) {
+	function get_rank_count($org_id=NULL, $country_code=NULL, $language_id=NULL) {
 		$where = '';
 		if ($org_id !== NULL) {
 			$where .= " and u.org_id = ".$org_id;
 		}
-		if ($country_id !== NULL) {
-			$where .= " and u.country_id = ".$country_id;
+		if ($country_code !== NULL) {
+			$where .= " and u.country_code = ".$country_code;
 		}
 		if ($language_id !== NULL) {
 			$where .= " and s.language_id = ".$language_id;
 		}
+		log_message('debug', "get_rank_count where=$where");
 		
 		$query = "select count(*) as cnt
 	        from submission s
 	        inner join user u
 	            on u.user_id = s.user_id
-	        where latest = 1
+	        where latest = 1 and status in (40, 100) and rank is not null
 	        $where";
 
 		$result_id = $this->db->query($query);
@@ -79,22 +80,22 @@ Class Submissionmodel extends Basemodel {
 	 * 
 	 * @return array of db rows
 	 */
-	function get_rank_list($page=0, $limit=20, $org_id=NULL, $country_id=NULL, $language_id=NULL) {
-		$offset = 0;
-		if ($page > 0)
-			$offset = (($page - 1) * $limit);
+	function get_rank_list($page=1, $limit=20, $org_id=NULL, $country_code=NULL, $language_id=NULL) {
+		$offset = (($page - 1) * $limit);
 
 		$where = '';
 		if ($org_id !== NULL) {
 			$filtered = True;
 			$where .= " and u.org_id = ".$org_id;
 		}
-		if ($country_id !== NULL) {
-			$where .= " and u.country_id = ".$country_id;
+		if ($country_code !== NULL) {
+			$where .= " and u.country_code = '".$country_code."'";
 		}
 		if ($language_id !== NULL) {
 			$where .= " and s.language_id = ".$language_id;
 		}
+		log_message('debug', "get_rank_list where=$where");
+		
 		
 		// Récupération du classement
 		$query = "select u.user_id, u.username,

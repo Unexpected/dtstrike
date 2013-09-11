@@ -71,10 +71,8 @@ Class Gamemodel extends Basemodel {
 	 *
 	 * @return array of db rows
 	 */
-	function get_game_list($page=0, $limit=20, $user_id=NULL, $submission_id=NULL) {
-		$offset = 0;
-		if ($page > 0)
-			$offset = (($page - 1) * $limit);
+	function get_game_list($page=1, $limit=20, $user_id=NULL, $submission_id=NULL) {
+		$offset = (($page - 1) * $limit);
 		$list_select_field = 1;
 		$list_id = 1;
 

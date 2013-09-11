@@ -1,8 +1,10 @@
 <p>
 <?php
-// echo '<pre>';
-// print_r($rankings);
-// echo '</pre>';
+	if (isset($sub_title)) {
+		echo "$sub_title";
+		echo "<hr/>";
+	}
+
 	if (is_array($rankings) && count($rankings) > 0) {
 		echo '<table class="table table-striped table-hover table-condensed">';
 		echo '<thead><tr>';

@@ -60,11 +60,11 @@ function nice_country($country_code, $country_name, $flag) {
 }
 
 function nice_organization($org_id, $org_name) {
-	return $org_name;
+	return '<a href="'.site_url("game/rank/org_id/$org_id").'">'.$org_name.'</a>';
 }
 
 function nice_language($lang_id, $lang_name) {
-	return $lang_name;
+	return '<a href="'.site_url("game/rank/language_id/$lang_id").'">'.$lang_name.'</a>';
 }
 
 function nice_interval($interval) {

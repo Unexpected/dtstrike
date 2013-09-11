@@ -8,7 +8,10 @@ class Game extends CI_Controller {
         $this->load->model('Game_playermodel');
         $this->load->model('Submissionmodel');
         $this->load->model('Usermodel');
-
+        $this->load->model('Organizationmodel');
+        $this->load->model('Countrymodel');
+        $this->load->model('Languagemodel');
+        
         $this->load->library('table');
         $this->load->library('Bootstrap');
         $this->load->library('pagination');
@@ -20,30 +23,38 @@ class Game extends CI_Controller {
 		redirect('game/liste');
 	}
 
-	public function liste($page=0, $user_id=NULL, $submission_id=NULL)
+	public function liste()
 	{
+		// Extract parameters
+		$params = $this->uri->uri_to_assoc();
+		$page = isset($params['page']) ? $params['page'] : 1;
+		$user_id = isset($params['user_id']) ? $params['user_id'] : NULL;
+		$submission_id = isset($params['submission_id']) ? $params['submission_id'] : NULL;
+		
+		
 		// Recup des 20 dernières parties
 		$page_size = 20;
-		$games = $this->Gamemodel->get_game_list($page, $page_size, $user_id, $submission_id);
-		$data['list_type'] = 'game';
-		$data['limit'] = $page_size;
-		$data['games'] = $games;
+		$data['games'] = $this->Gamemodel->get_game_list($page, $page_size, $user_id, $submission_id);
 
 		
 		// Config de la pagination
-		$row_count = $this->Gamemodel->get_game_count($user_id, $submission_id);
-		$config['base_url'] = site_url('game/liste');
-		$config['total_rows'] = ceil($row_count / $page_size);
+		$config['base_url'] = site_url('game/liste').getPaginationParams($params);
+		$config['uri_segment'] = getPaginationSegment($params, $page);
+		$config['use_page_numbers'] = TRUE;
+		$config['total_rows'] = $this->Gamemodel->get_game_count($user_id, $submission_id);
 		$config['per_page'] = $page_size;
-		if ($user_id != NULL) {
-			$config['suffix'] = "/$user_id";
-		}
+		$config['prefix'] = "/page/";
 		$this->pagination->initialize($config);
 		
-		
+
 		if ($user_id != NULL) {
-			$data['user'] =  $this->Usermodel->getUserData($user_id);
+			$user = $this->Usermodel->getOne('user_id', $user_id);
+			$data['sub_title'] = "Parties de ".nice_user($user->user_id, $user->username);
+		} else if ($submission_id != NULL) {
+			//$ctr = $this->Countrymodel->getOne('country_code', $country_code);
+			$data['sub_title'] = "Parties de l'IA avec l'id '$submission_id'";
 		}
+		$data['limit'] = $page_size;
 		$data['page_title'] = "Les dernières parties";
 		$data['page_icon'] = 'play-sign';
 		render($this, 'game/game_list', $data);
@@ -125,24 +136,41 @@ class Game extends CI_Controller {
 		render($this, 'game/game_list', $data);
 	}
 
-	public function rank($page=0, $org_id=NULL, $country_id=NULL, $language_id=NULL)
+	public function rank()
 	{
+		// Extract parameters
+		$params = $this->uri->uri_to_assoc();
+		$page = isset($params['page']) ? $params['page'] : 1;
+		$org_id = isset($params['org_id']) ? $params['org_id'] : NULL;
+		$country_code = isset($params['country_code']) ? $params['country_code'] : NULL;
+		$language_id = isset($params['language_id']) ? $params['language_id'] : NULL;
+
+		
 		// Récupération des données
-		$page_size = 20;
-		$data['rankings'] = $this->Submissionmodel->get_rank_list($page, $page_size, $org_id, $country_id, $language_id);
+		$page_size = 1;
+		$data['rankings'] = $this->Submissionmodel->get_rank_list($page, $page_size, $org_id, $country_code, $language_id);
 		
 		
 		// Config de la pagination
-		$row_count = $this->Submissionmodel->get_rank_count($org_id, $country_id, $language_id);
-		$config['base_url'] = site_url('game/game_rank');
-		$config['total_rows'] = ceil($row_count / $page_size);
+		$config['base_url'] = site_url('game/rank').getPaginationParams($params);
+		$config['uri_segment'] = getPaginationSegment($params, $page);
+		$config['use_page_numbers'] = TRUE;
+		$config['total_rows'] = $this->Submissionmodel->get_rank_count($org_id, $country_code, $language_id);
 		$config['per_page'] = $page_size;
-		if ($org_id != NULL) {
-			$config['suffix'] = "/$org_id";
-		}
+		$config['prefix'] = "/page/";
 		$this->pagination->initialize($config);
 		
-		
+
+		if ($org_id != NULL) {
+			$org = $this->Organizationmodel->getOne('org_id', $org_id);
+			$data['sub_title'] = "Classement filtré pour l'organisation '$org->name'";
+		} else if ($country_code != NULL) {
+			$ctr = $this->Countrymodel->getOne('country_code', $country_code);
+			$data['sub_title'] = "Classement filtré pour le pays '$ctr->name'";
+		} else if ($language_id != NULL) {
+			$lng = $this->Languagemodel->getOne('language_id', $language_id);
+			$data['sub_title'] = "Classement filtré pour le language '$lng->name'";
+		}
 		$data['page_title'] = "Classement actuel";
 		$data['page_icon'] = 'trophy';
 		render($this, 'game/game_rank', $data);

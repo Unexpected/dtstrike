@@ -1,10 +1,7 @@
 <p>
 <?php
-// echo '<pre>';
-// print_r($games);
-// echo '</pre>';
-	if (isset($user)) {
-		echo "Liste des parties de ".nice_user($user->user_id, $user->username);
+	if (isset($sub_title)) {
+		echo "$sub_title";
 		echo "<hr/>";
 	}
 

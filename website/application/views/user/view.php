@@ -37,6 +37,6 @@
 	</tr>
 	<tr>
 		<td class="table_label">Liens :</td>
-		<td class="table_value"><?php echo '<a href="' . site_url("game/liste/0/".$user->user_id) . '">Voir les matchs de ce joueur</a>'; ?></td>
+		<td class="table_value"><?php echo '<a href="' . site_url("game/liste/user_id/".$user->user_id) . '">Voir les matchs de ce joueur</a>'; ?></td>
 	</tr>
 </table>
