@@ -17,12 +17,24 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 
 <h3><a href="<?php echo base_url('starters/java_starter_package.zip') ?>" target="_blank">Java</a></h3>
 <p>
-Nos serveurs fonctionnent sous OpenJDK 1.6
+Nos serveurs fonctionnent sous OpenJDK 1.7
 </p>
 <br/>
 
 <h3><a href="<?php echo base_url('starters/javascript_starter_package.zip') ?>" target="_blank">JavaScript</a></h3>
 <p>
-Nos serveurs fonctionnent sous node X.y
+Nos serveurs fonctionnent sous node 0.10
+</p>
+<br/>
+
+<h3><a href="<?php echo base_url('starters/scala_starter_package.zip') ?>" target="_blank">Scala</a></h3>
+<p>
+Nos serveurs fonctionnent sous Scala 2.9
+</p>
+<br/>
+
+<h3><a href="<?php echo base_url('starters/go_starter_package.zip') ?>" target="_blank">Go</a></h3>
+<p>
+Nos serveurs fonctionnent sous Go 1.1
 </p>
 <br/>
