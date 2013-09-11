@@ -108,6 +108,7 @@ class Admin extends CI_Controller {
 			// MaJ du user
 			$userdata['org_id'] = $data['org_id'];
 			$userdata['country_code'] = $data['country_code'];
+			$userdata['email'] = $data['email'];
 			$this->Usermodel->update('user_id', $user_id, $userdata);
 
 			// MaJ des roles

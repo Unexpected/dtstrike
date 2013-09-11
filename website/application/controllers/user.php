@@ -10,6 +10,8 @@ class User extends CI_Controller {
 
 		$this->load->model('Usermodel');
 		$this->load->model('Submissionmodel');
+        $this->load->model('Organizationmodel');
+        $this->load->model('Countrymodel');
 
 		$this->load->helper('submission');
 		$this->load->helper('file_system');
@@ -226,5 +228,68 @@ class User extends CI_Controller {
 			}
 		}
 		return $errors;
+	}
+	
+
+
+	public function edit()
+	{
+		verify_user_logged($this, 'user/edit');
+
+		// Utilisateur connecté
+		$user_id = current_user_id();
+	
+		// Lecture du user
+		$user = $this->Usermodel->search('', array(array('user_id', $user_id)));
+		if (count($user) < 1) {
+			show_error("Utilisateur avec l'ID $user_id non disponible.");
+		}
+		$data['user'] = $user[0];
+	
+		// Lecture des référentiels
+		$data['orgas'] = $this->Organizationmodel->getAllForCombo('org_id', 'name');
+		$data['countries'] = $this->Countrymodel->getAllForCombo('country_code', 'name');
+	
+		// Affichage
+		$data['page_title'] = "MaJ de son compte";
+		$data['page_icon'] = 'save';
+		render($this, 'user/edit', $data);
+	}
+	
+	public function save()
+	{
+		verify_user_logged($this, 'user');
+	
+		// Utilisateur connecté
+		$user_id = current_user_id();
+		if ($user_id > 0) {
+			// Lecture des données
+			$data = $this->input->post();
+			
+			$user = $this->Usermodel->search('', array(array('user_id', $user_id)));
+			if (count($user) < 1) {
+				show_error("Utilisateur avec l'ID $user_id non disponible.");
+			}
+			$user = $user[0];
+				
+			// MaJ du user
+			$userdata['country_code'] = $data['country_code'];
+			if (isset($data['org_name']) && $data['org_name'] != '') {
+				// New org
+				$org_name = $data['org_name'];
+
+				$this->Organizationmodel->name = $org_name;
+				$ret = $this->Organizationmodel->insert();
+
+				$org = $this->Organizationmodel->getOne('name', $org_name);
+				$userdata['org_id'] = $org->org_id;
+			} else {
+				$userdata['org_id'] = $data['org_id'];
+			}
+			$userdata['email'] = $data['email'];
+			$this->Usermodel->update('user_id', $user_id, $userdata);
+		}
+	
+		redirect('user/index');
 	}
 }

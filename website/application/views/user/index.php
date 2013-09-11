@@ -14,6 +14,7 @@ Vous n'êtes pas encore classé, pensez à uploader votre première IA !
 
 <p>Les actions possibles sont les suivantes :</p>
 <ul>
+	<li><a href="<?php echo site_url('user/edit') ?>">Modifier mes informations</a></li>
 	<li><a href="<?php echo site_url('user/bot_upload') ?>">Upload d'un bot</a></li>
 	<li><a href="<?php echo site_url('user/bots') ?>">Mes IAs</a></li>
 	<li><a href="<?php echo site_url('game/mine') ?>">Mes parties</a></li>
