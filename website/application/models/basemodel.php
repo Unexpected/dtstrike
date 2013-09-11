@@ -45,6 +45,7 @@ Class Basemodel extends CI_Model {
 	function getAllForCombo($id_field, $value_field) {
 		// Ajout du select
 		$this->db->select($id_field.', '.$value_field);
+		$this->db->order_by($value_field);
 		
 		// Lancement de la requête
 		$query = $this->db->get($this->getTableName());
