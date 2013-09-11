@@ -1,21 +1,21 @@
 <?php 
 Class Game_playermodel extends Basemodel {
 
-	var $game_id = -1; // int(11)
-	var $user_id = -1; // int(11)
-	var $submission_id = -1; // int(11)
-	var $player_id = -1; // int(11)
-	var $errors = ''; // varchar(1024)
-	var $status = ''; // varchar(255)
-	var $game_rank = -1; // int(11)
-	var $game_score = -1; // int(11)
-	var $rank_before = -1; // int(11)
-	var $rank_after = -1; // int(11)
-	var $mu_before = ''; // float
-	var $mu_after = ''; // float
-	var $sigma_before = ''; // float
-	var $sigma_after = ''; // float
-	var $valid = ''; // tinyint(1)
+	var $game_id = NULL; // int(11)
+	var $user_id = NULL; // int(11)
+	var $submission_id = NULL; // int(11)
+	var $player_id = NULL; // int(11)
+	var $errors = NULL; // varchar(1024)
+	var $status = NULL; // varchar(255)
+	var $game_rank = NULL; // int(11)
+	var $game_score = NULL; // int(11)
+	var $rank_before = NULL; // int(11)
+	var $rank_after = NULL; // int(11)
+	var $mu_before = NULL; // float
+	var $mu_after = NULL; // float
+	var $sigma_before = NULL; // float
+	var $sigma_after = NULL; // float
+	var $valid = NULL; // tinyint(1)
 
 	function __construct() {
 		// Call the BaseModel constructor

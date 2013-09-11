@@ -1,12 +1,12 @@
 <?php 
 Class Mapmodel extends Basemodel {
  
-  var $map_id = -1; // int(11)
-  var $filename = ''; // varchar(256)
-  var $priority = -1; // int(11)
-  var $players = -1; // int(11)
-  var $max_turns = -1; // int(11)
-  var $timestamp = ''; // datetime
+  var $map_id = NULL; // int(11)
+  var $filename = NULL; // varchar(256)
+  var $priority = NULL; // int(11)
+  var $players = NULL; // int(11)
+  var $max_turns = NULL; // int(11)
+  var $timestamp = NULL; // datetime
  
   function __construct() {
     // Call the BaseModel constructor

@@ -1,9 +1,9 @@
 <?php 
 Class Settingsmodel extends Basemodel {
  
-  var $name = ''; // varchar(20)
-  var $number = -1; // int(11)
-  var $string = ''; // varchar(255)
+  var $name = NULL; // varchar(20)
+  var $number = NULL; // int(11)
+  var $string = NULL; // varchar(255)
  
   function __construct() {
     // Call the BaseModel constructor
