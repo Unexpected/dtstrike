@@ -12,3 +12,5 @@ dist
 *.buildpath
 /replays/*
 /uploads/*
+
+/starters/scala/.cache
