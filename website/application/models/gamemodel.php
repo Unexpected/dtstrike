@@ -167,7 +167,7 @@ Class Gamemodel extends Basemodel {
 	function get_last_good_game() {
 		$this->db->select('game_id');
 		$this->db->from($this->getTableName());
-		$this->db->where('game_length >', 10);
+		$this->db->where('game_length >', 50);
 		$this->db->order_by("game_id", "desc");
 		$this->db->limit(1);
 		
