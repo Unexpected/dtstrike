@@ -223,7 +223,7 @@ public class GalaxSix extends Game {
 		planets = new ArrayList<Planet>();
 		fleets = new ArrayList<Fleet>();
 
-		String[] lines = map.split("\r\n");
+		String[] lines = map.split("\n");
 		for (int i = 0; i < lines.length; i++) {
 			String str = lines[i];
 
