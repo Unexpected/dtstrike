@@ -1,6 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Welcome extends CI_Controller {
+    function __construct() {
+        parent::__construct();
+
+        $this->load->model('Gamemodel');
+    }
 
 	public function index()
 	{
@@ -8,7 +13,7 @@ class Welcome extends CI_Controller {
 		$data['page_icon'] = 'rocket';
 		
 		// Get replay path
-		$game_id = 31453; // FIXME - Get a pretty replay, the latest with at least 4 players.
+		$game_id = $this->Gamemodel->get_last_good_game();
 		$data['replay_file'] =  "replays/" . strval((int) ($game_id / 1000000)) . "/" . strval((int) (($game_id / 1000) % 1000)) . "/" . $game_id . ".replaygz";
 
 		

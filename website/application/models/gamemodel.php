@@ -158,6 +158,31 @@ Class Gamemodel extends Basemodel {
 
 		return $rows;
 	}
+	
+	/**
+	 * Get last game with length > 10.
+	 * 
+	 * @return Game ID
+	 */
+	function get_last_good_game() {
+		$this->db->select('game_id');
+		$this->db->from($this->getTableName());
+		$this->db->where('game_length >', 10);
+		$this->db->order_by("game_id", "desc");
+		$this->db->limit(1);
+		
+		$query = $this->db->get();
+		if ($query->num_rows())  {
+			$rows = $query->result();
+		} else {
+			$rows = array();
+		}
+		
+		if (count($rows) < 1) {
+			return 1;
+		}
+		return $rows[0]->game_id;
+	}
 
 }
 

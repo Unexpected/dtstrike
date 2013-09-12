@@ -30,7 +30,7 @@ Class Usermodel extends Basemodel {
 		}
 		
 		$this->db->select('user_id, username, email, organization.name as "org_name", country.name as "country_name", created', false);
-		$this->db->from('user');
+		$this->db->from($this->getTableName());
 		$this->db->join('organization', 'organization.org_id = user.org_id');
 		$this->db->join('country', 'country.country_code = user.country_code');
 		$this->db->order_by("username", "asc");
