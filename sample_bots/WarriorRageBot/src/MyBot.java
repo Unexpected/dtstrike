@@ -58,16 +58,17 @@ public class MyBot extends Bot {
 				}
 			}
 		}
-		
-		if (dest == null) { 
+
+		if (dest == null) {
 			return;
 		}
-		
+
 		int destId = dest.id;
 
 		// From each of my military planets, send max fleet
 		for (Planet p : game.getMyMilitaryPlanets()) {
-			game.issueOrder(p.id, destId, p.numShips);
+			if (p.numShips > 0)
+				game.issueOrder(p.id, destId, p.numShips);
 		}
 	}
 }

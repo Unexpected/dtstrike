@@ -56,7 +56,8 @@ public class MyBot extends Bot {
 		Planet target = game.getPlanet(currentTarget);
 
 		for (Planet p : game.getMyMilitaryPlanets()) {
-			game.issueOrder(p.id, target.id, p.numShips);
+			if (p.numShips > 0)
+				game.issueOrder(p.id, target.id, p.numShips);
 		}
 
 	}

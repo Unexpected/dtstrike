@@ -69,7 +69,9 @@ public class MyBot extends Bot {
 		// planet that I do not own.
 		if (source != null && dest != null) {
 			int numShips = source.numShips / 2;
-			game.issueOrder(source, dest, numShips);
+			if (numShips > 0) {
+				game.issueOrder(source, dest, numShips);
+			}
 		}
 	}
 }

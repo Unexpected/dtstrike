@@ -59,8 +59,10 @@ public class MyBot extends Bot {
 
 		/* if enough, attack */
 		if (troops >= dest.numShips) {
-			for (Planet p : game.getMyMilitaryPlanets()) {						
-				game.issueOrder(p.id, dest.id, p.numShips);
+			for (Planet p : game.getMyMilitaryPlanets()) {
+				if (p.numShips > 0) {
+					game.issueOrder(p.id, dest.id, p.numShips);					
+				}
 			}
 		}
 
