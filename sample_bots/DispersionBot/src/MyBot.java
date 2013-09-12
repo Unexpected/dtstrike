@@ -68,9 +68,11 @@ public class MyBot extends Bot {
 		/* Send one */
 		Iterator<Planet> itTargets = targets.iterator();
 		while (itTargets.hasNext() && production > 0) {
+			Planet target = itTargets.next();
 			for (Planet src : sources) {
 				if (src.numShips > 0) {
-					game.issueOrder(src.id, itTargets.next().id, 1);
+					game.issueOrder(src.id, target.id, 1);
+					src.numShips--;
 					production--;
 					break;
 				}
