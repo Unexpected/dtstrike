@@ -41,6 +41,11 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 		<td><a href="<?php echo base_url('starters/javascript_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr class="odd">
+		<td>PHP</td>
+		<td>Nos serveurs fonctionnent sous PHP ?.?</td>
+		<td><a href="<?php echo base_url('starters/php_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+	<tr class="even">
 		<td>Scala</td>
 		<td>Nos serveurs fonctionnent sous Scala 2.9</td>
 		<td><a href="<?php echo base_url('starters/scala_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
