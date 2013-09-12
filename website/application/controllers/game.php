@@ -125,7 +125,7 @@ class Game extends CI_Controller {
 		// Récupérer les matchs du joueur
 		$user_id = current_user_id();
 		$limit = 20;
-		$games = $this->Gamemodel->get_game_list(0, $limit, $user_id);
+		$games = $this->Gamemodel->get_game_list(1, $limit, $user_id);
 
 		$data['user'] =  $this->Usermodel->getUserData($user_id);
 		$data['limit'] = $limit;
