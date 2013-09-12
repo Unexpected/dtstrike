@@ -1,5 +1,5 @@
 <?xml version="1.0" ?> 
-<project name="engine" default="jar" basedir="..">
+<project name="engine" default="dist" basedir="..">
 	
 	<target name="init">
 		<mkdir dir="dist/build/classes" />
@@ -27,14 +27,17 @@
 		</jar>
 	</target>
 	
-	<target name="zip" depends="jar">
-		<delete dir="dist/build" />
+	<target name="dist" depends="jar">
 		<copy todir="dist">
 			<fileset dir="scripts" />
 		</copy>
 		<!--<copy todir="dist/maps">
 			<fileset dir="maps" />
 		</copy>-->
+	</target>
+	
+	<target name="zip" depends="dist">
+		<delete dir="dist/build" />
 		<delete file="dist/engine.zip" />
 		<zip destfile="dist/engine.zip" basedir="dist"></zip>
 	</target>
