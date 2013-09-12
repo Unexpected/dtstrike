@@ -15,26 +15,40 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 </p>
 <br/>
 
-<h3><a href="<?php echo base_url('starters/java_starter_package.zip') ?>" target="_blank">Java</a></h3>
-<p>
-Nos serveurs fonctionnent sous OpenJDK 1.7
-</p>
-<br/>
+<h3>Voici les Starter-Kits disponibles</h3>
+<table class="table table-striped table-hover table-condensed">
+<thead>
+	<tr>
+		<th style="width: 100px;">Language</th>
+		<th>Description</th>
+		<th style="width: 100px;">Lien</th>
+	</tr>
+</thead>
+<tbody>
+	<tr class="even">
+		<td>Go</td>
+		<td>Nos serveurs fonctionnent sous Go 1.1</td>
+		<td><a href="<?php echo base_url('starters/go_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+	<tr class="odd">
+		<td>Java</td>
+		<td>Nos serveurs fonctionnent sous OpenJDK 1.7</td>
+		<td><a href="<?php echo base_url('starters/java_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+	<tr class="even">
+		<td>JavaScript</td>
+		<td>Nos serveurs fonctionnent sous node 0.10</td>
+		<td><a href="<?php echo base_url('starters/javascript_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+	<tr class="odd">
+		<td>Scala</td>
+		<td>Nos serveurs fonctionnent sous Scala 2.9</td>
+		<td><a href="<?php echo base_url('starters/scala_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+</tbody>
+</table>
 
-<h3><a href="<?php echo base_url('starters/javascript_starter_package.zip') ?>" target="_blank">JavaScript</a></h3>
 <p>
-Nos serveurs fonctionnent sous node 0.10
+Si vous le souhaitez, vous pouvez bien sûr réaliser votre propre Starter Kit et 
+<a id="contact" href="#" onclick="contactUs();">nous contacter</a> pour le mettre à disposition des autres.
 </p>
-<br/>
-
-<h3><a href="<?php echo base_url('starters/scala_starter_package.zip') ?>" target="_blank">Scala</a></h3>
-<p>
-Nos serveurs fonctionnent sous Scala 2.9
-</p>
-<br/>
-
-<h3><a href="<?php echo base_url('starters/go_starter_package.zip') ?>" target="_blank">Go</a></h3>
-<p>
-Nos serveurs fonctionnent sous Go 1.1
-</p>
-<br/>
