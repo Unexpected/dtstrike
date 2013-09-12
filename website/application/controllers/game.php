@@ -147,7 +147,7 @@ class Game extends CI_Controller {
 
 		
 		// Récupération des données
-		$page_size = 1;
+		$page_size = 20;
 		$data['rankings'] = $this->Submissionmodel->get_rank_list($page, $page_size, $org_id, $country_code, $language_id);
 		
 		
