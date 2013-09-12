@@ -22,7 +22,7 @@
 		</jar>
 		<jar destfile="dist/mapgen.jar" basedir="dist/build/classes">
             <manifest>
-                <attribute name="Main-Class" value="com.cgi.itwar.MapGenerator" />
+                <attribute name="Main-Class" value="com.cgi.itwar.map.MapGenerator" />
             </manifest>
 		</jar>
 	</target>
