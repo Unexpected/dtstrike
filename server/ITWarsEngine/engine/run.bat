@@ -5,9 +5,6 @@ echo.
 
 REM TODO :
 REM    - specialiser le run pour chaque StarterKit
-REM    - les maps devraient être incluses dans les starters
-REM    - lancer le replays après (navigateur sur index.html)
-REM    - detecter si replay_err ou replay_log contiennent des donnees ==> si oui, les afficher
 
 
 REM Exemple d'appel : run map1.txt "node MyBot.js" "php MyBot.php"
@@ -47,12 +44,14 @@ if errorlevel 1 (
 )
 
 REM Define other bots
-set bot1="java -jar engine.jar six.challenge.bot.BullyBot"
-set bot2="java -jar engine.jar six.challenge.bot.LooterBot"
-set bot3="java -jar engine.jar six.challenge.bot.RageBot"
-set bot4="java -jar engine.jar six.challenge.bot.RandomBot"
+set bot1="java -cp engine.jar six.challenge.bot.BullyBot"
+set bot2="java -cp engine.jar six.challenge.bot.LooterBot"
+set bot3="java -cp engine.jar six.challenge.bot.RageBot"
+set bot4="java -cp engine.jar six.challenge.bot.RandomBot"
 
 echo Lancement de la partie a %nb_players% joueurs sur la carte %map%
+echo.
+echo Dans le replay, le player 1 est toujours votre bot
 echo.
 
 :runEngine
