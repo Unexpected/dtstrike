@@ -1,0 +1,69 @@
+<?xml version="1.0" ?> 
+<project name="engine" default="dist" basedir="..">
+	
+	<target name="init">
+		<mkdir dir="dist/build/classes" />
+	</target>
+	
+	<target name="compile" depends="init" >
+		<javac destdir="dist/build/classes" debug="true" srcdir="src" includeantruntime="false" encoding="iso-8859-1" />
+		<copy todir="dist/build/classes">
+			<fileset dir="src">
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<jar destfile="dist/engine.jar" basedir="dist/build/classes" excludes="com/**">
+            <manifest>
+                <attribute name="Main-Class" value="six.challenge.engine.Engine" />
+            </manifest>
+		</jar>
+	</target>
+	
+	<target name="dist" depends="jar">
+		<!-- Copy engine files -->
+		<copy todir="dist">
+			<fileset dir="engine" />
+		</copy>
+		<!-- Copy maps -->
+	    <mkdir dir="dist/maps/2" />
+	    <mkdir dir="dist/maps/3" />
+	    <mkdir dir="dist/maps/4" />
+		<copy todir="dist/maps/2">
+			<fileset dir="../../maps" includes="map*.txt">
+				<filename regex="map([1-9]|[12][0-9]|3[0-3]).txt" />
+			</fileset>
+		</copy>
+		<copy todir="dist/maps/3">
+			<fileset dir="../../maps" includes="map*.txt">
+				<filename regex="map(3[4-9]|[45][0-9]|6[0-6]).txt" />
+			</fileset>
+		</copy>
+		<copy todir="dist/maps/4">
+			<fileset dir="../../maps" includes="map*.txt">
+				<filename regex="map(6[7-9]|[7-9][0-9]).txt" />
+			</fileset>
+		</copy>
+		<!-- Copy visualizer files -->
+	    <mkdir dir="dist/visu/inc" />
+		<copy todir="dist/visu">
+			<fileset dir="../../visualizer" includes="index.html" />
+		</copy>
+		<copy todir="dist/visu/inc">
+			<fileset dir="../../visualizer/inc" />
+		</copy>
+	</target>
+	
+	<target name="zip" depends="dist">
+		<delete dir="dist/build" />
+		<delete file="dist/engine.zip" />
+		<zip destfile="dist/engine.zip" basedir="dist"></zip>
+	</target>
+	
+	<target name="clean">
+		<delete dir="dist" />
+	</target>
+	
+</project>

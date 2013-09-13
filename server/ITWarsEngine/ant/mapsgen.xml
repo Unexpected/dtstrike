@@ -15,11 +15,6 @@
 	</target>
 	
 	<target name="jar" depends="compile">
-		<jar destfile="dist/engine.jar" basedir="dist/build/classes">
-            <manifest>
-                <attribute name="Main-Class" value="six.challenge.engine.Engine" />
-            </manifest>
-		</jar>
 		<jar destfile="dist/mapgen.jar" basedir="dist/build/classes">
             <manifest>
                 <attribute name="Main-Class" value="com.cgi.itwar.map.MapGenerator" />
@@ -29,17 +24,8 @@
 	
 	<target name="dist" depends="jar">
 		<copy todir="dist">
-			<fileset dir="scripts" />
+			<fileset dir="mapsgen" />
 		</copy>
-		<!--<copy todir="dist/maps">
-			<fileset dir="maps" />
-		</copy>-->
-	</target>
-	
-	<target name="zip" depends="dist">
-		<delete dir="dist/build" />
-		<delete file="dist/engine.zip" />
-		<zip destfile="dist/engine.zip" basedir="dist"></zip>
 	</target>
 	
 	<target name="clean">
