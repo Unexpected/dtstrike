@@ -62,7 +62,7 @@ if %nb_players% == 3 set run_cmd="%bot_cmd%" %bot1% %bot2%
 if %nb_players% == 4 set run_cmd="%bot_cmd%" %bot1% %bot2% %bot3%
 
 echo var replayJson=>visu\replay.js
-java -Duser.language=en -jar engine.jar %map% 1000 1000 replay_log.txt %run_cmd% 1>>visu\replay.json 2>%err_file%
+java -Duser.language=en -jar engine.jar %map% 1000 1000 replay_log.txt %run_cmd% 1>>visu\replay.js 2>%err_file%
 if not "%errorlevel%" == "0" goto error
 
 REM Check if replay_err is empty
@@ -70,7 +70,7 @@ for %%A in (%err_file%) do if not %%~zA==0 goto error
 echo Game ended
 
 REM Launch replay
-visu/index.html
+start explorer visu/index.html
 goto end
 
 :error
