@@ -42,10 +42,15 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	</tr>
 	<tr class="odd">
 		<td>PHP</td>
-		<td>Nos serveurs fonctionnent sous PHP ?.?</td>
+		<td>Nos serveurs fonctionnent sous PHP 5.4</td>
 		<td><a href="<?php echo base_url('starters/php_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr class="even">
+		<td>Python</td>
+		<td>Nos serveurs fonctionnent sous Python 3.2</td>
+		<td>Bientôt</td>
+	</tr>
+	<tr class="odd">
 		<td>Scala</td>
 		<td>Nos serveurs fonctionnent sous Scala 2.9</td>
 		<td><a href="<?php echo base_url('starters/scala_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
