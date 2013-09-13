@@ -22,6 +22,16 @@ public class Colony {
 		this.maxY = maxY;
 	}
 
+	public Colony(double x, double y, int player, boolean isBase, int numShip, double maxX, double maxY) {
+		this.x = x;
+		this.y = y;
+		this.gamer = player;
+		this.isBase = isBase;
+		this.numShip = numShip;
+		this.maxX = maxX;
+		this.maxY = maxY;
+	}
+
 	/**
 	 * Return the colony with the correct map format.
 	 * <ul>

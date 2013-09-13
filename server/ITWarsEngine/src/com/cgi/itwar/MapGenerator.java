@@ -289,6 +289,10 @@ public class MapGenerator {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		System.err.println("===================================================");
+		System.err.println("=== WARNING This version is highly deprecated ! ===");
+		System.err.println("===================================================");
+		
 		Hashtable<String, Integer> options = null;
 		try {
 			options = parseOptions(args);

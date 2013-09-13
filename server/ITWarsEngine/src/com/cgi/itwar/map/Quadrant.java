@@ -77,7 +77,15 @@ public class Quadrant {
 			}
 		} while (invalid);
 		
-		Colony colony = new Colony(x, y, player, isBase, map.mapWidth, map.mapHeight);
+		Colony colony = null;
+		if (isBase && player == 0) {
+			// Force numShips on Military planets of player
+			int numShips = 100 / map.basesPerGamer;
+			colony = new Colony(x, y, player, isBase, numShips, map.mapWidth, map.mapHeight);
+		} else {
+			// Otherwise, use random numShips
+			colony = new Colony(x, y, player, isBase, map.mapWidth, map.mapHeight);
+		}
 		if (map.debug) System.out.println("  "+colony + " placed in quadrant #" + this.index);
 		colonies.add(colony);
 	}

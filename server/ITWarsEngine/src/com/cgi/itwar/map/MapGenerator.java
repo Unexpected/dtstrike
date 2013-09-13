@@ -37,6 +37,7 @@ import java.util.Hashtable;
  */
 public class MapGenerator {
 	public final int nbGamers;
+	public final int basesPerGamer;
 	public final double mapHeight = 640;
 	public final double mapWidth = 640;
 	public final double colonyRadius = 20;
@@ -68,6 +69,7 @@ public class MapGenerator {
 		}
 		/* Initialize variables */
 		this.nbGamers = pNbGamers;
+		this.basesPerGamer = pBasesPerGamer;
 		minDistanceFromColony = 1.8 * colonyRadius;
 		minDistanceFromEdge = 1 * colonyRadius;
 
@@ -125,7 +127,7 @@ public class MapGenerator {
 				Point2D newPoint = rotationPoint(new Point2D.Double(colony.x,  colony.y), (-1 * gamer * quadrantAngle));
 				int newGamer = colony.gamer == Colony.NEUTRAL_PLAYER ? colony.gamer : gamer;
 				
-				nextQuadrant.addColony(new Colony(newPoint.getX(), newPoint.getY(), newGamer, colony.isBase, this.mapWidth, this.mapHeight));
+				nextQuadrant.addColony(new Colony(newPoint.getX(), newPoint.getY(), newGamer, colony.isBase, colony.numShip, this.mapWidth, this.mapHeight));
 			}
 			
 			quadrants.add(nextQuadrant);
@@ -231,7 +233,8 @@ public class MapGenerator {
 		} else {
 			// Live ouput
 			for (Colony colony : colonies) {
-				System.out.println(colony.toMap());
+				System.out.print(colony.toMap());
+				System.out.print("\n");
 			}
 		}
 	}
