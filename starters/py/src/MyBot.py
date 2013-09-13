@@ -50,7 +50,7 @@ def main():
         game_running = False
         data = []
         while(True):
-            current_line = raw_input()
+            current_line = input()
             if current_line == "ready": # ending loadturn
                 game = Game(data)
                 data = []

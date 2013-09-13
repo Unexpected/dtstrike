@@ -10,6 +10,9 @@ class Game(object):
     '''
     Class handling communication to the DTStrike server ans providing the basics methods to play.
     '''
+
+    MY_ID = 1
+
     def __init__(self, data):
         """ Parse options and send go when ready to rock and roll ! """
         stdout.write("go\n")
@@ -34,75 +37,53 @@ class Game(object):
                 num_ships += fleet.num_ships()
         return num_ships
     
-    def getFleet(self, fleetID):
-        '''
-        Returns the fleet with the given fleet_id. Fleets are numbered starting
-        with 0. There are NumFleets() fleets. fleet_id's are not consistent from
-        one turn to the next.
-        '''
-        return self._fleets[fleetID]
-
-    def getPlanets(self):
-        '''
-        Returns a list of all the planets.
-        '''
-        return self._planets     
- 
-    def isAlive(self, ID):
+    def is_alive(self, playerID):
         '''
         A player is alive if he owns at least one military planet or one fleet.
         '''
         for planet in self._planets:
-            if(isinstance(planet, MilitaryPlanet) & planet.Owner() == ID):
+            if(isinstance(planet, MilitaryPlanet) & planet.owner == playerID):
                 return True
-        for fleet in self._fleets:
-            if fleet.Owner() == ID:
+        for fleet in self.fleets:
+            if fleet.Owner() == playerID:
                 return True
         return False
 
-    def getMyPlanets(self):
+    def my_planets(self):
         '''
         Return a list of all the planets owned by the current player. By
         convention, the current player is always player number 1.
         '''
         r=[]
-        for planet in self._planets:
-            if planet.Owner() == self._myID:
+        for planet in self.planets:
+            if planet.owner == self.MY_ID:
                 r.append(planet)
         return r
     
     
-    def getMyEconomicPlanets(self):
+    def my_economic_planets(self):
         '''
         Return a list of all the economic planets owned by the current player. By
         convention, the current player is always player number 1.
         '''        
         r=[]
-        for planet in self._planets:
-            if (planet.Owner() == self._myID & isinstance(planet, EconomicPlanet)):
+        for planet in self.planets:
+            if (planet.owner == self._myID & isinstance(planet, EconomicPlanet)):
                 r.append(planet)
         return r
 
-    def getNeutralEconomicPlanets(self):
+    def neutral_economic_planets(self):
         '''
         Return a list of all neutral economic planets.
         '''
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() == 0 & isinstance(planet, EconomicPlanet)):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if p.owner == 0 & isinstance(p, EconomicPlanet)]
 
-    def getEnemyEconomicPlanets(self):
+    def enemy_economic_planets(self):
         '''
         Return a list of all the economic planets owned by rival players. This excludes
         economic planets owned by the current player, as well as neutral economic planets.
         '''
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() != 0 & planet.Owner() != self._myID & isinstance(planet, EconomicPlanet)):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if p.owner > self.MY_ID & isinstance(p, EconomicPlanet)]
         
     def my_military_fleets(self):
         '''
@@ -124,74 +105,56 @@ class Game(object):
         '''
         return [p for p in self.planets if isinstance(p, MilitaryPlanet)]
 
-    def getNeutralMilitaryPlanets(self):
+    def neutral_military_planets(self):
         '''
         Return a list of all neutral military planets.
         '''
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() == 0 & isinstance(planet, MilitaryPlanet)):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if p.owner == 0 & isinstance(p, MilitaryPlanet)]
     
-    def getEnemyMilitaryPlanets(self):
+    def enemy_military_planets(self):
         '''
         Return a list of all the military planets owned by rival players. This excludes
         military planets owned by the current player, as well as neutral military planets.
         '''        
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() != 0 & planet.Owner() != self._myID & isinstance(planet, MilitaryPlanet)):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if p.owner > self.MY_ID & isinstance(p, MilitaryPlanet)]
 
-    def getNeutralPlanets(self):
+    def neutral_planets(self):
         '''
         Return a list of all neutral planets.
         '''
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() == 0):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if p.owner == 0]
 
-    def getEnemyPlanets(self):
+    def enemy_planets(self):
         '''
         Return a list of all the planets owned by rival players. This excludes
         planets owned by the current player, as well as neutral planets.
         '''
-        r=[]
-        for planet in self._planets:
-            if (planet.Owner() != 0 & planet.Owner() != self._myID):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if p.owner > self.MY_ID]
     
     def not_my_planets(self):
         '''
         Return a list of all the planets that are not owned by the current
         player. This includes all enemy planets and neutral planets.
         '''
-        return [p for p in self.planets if p.owner != 1]
+        return [p for p in self.planets if p.owner != self.MY_ID]
 
-    def getMyFleets(self):
+    def not_my_fleets(self):
+        '''
+        Return a list of all the fleets not owned by the current player.
+        '''
+        return [f for f in self.fleets if f.owner != self.MY_ID]
+
+    def my_fleets(self):
         '''
         Return a list of all the fleets owned by the current player.
         '''
-        r=[]
-        for fleet in self._fleets:
-            if (fleet.Owner() == self._myID):
-                r.append(fleet)
-        return r
+        return [f for f in self.fleets if f.owner == self.MY_ID]
     
-    def getEnemyFleets(self):
+    def enemy_fleets(self):
         '''
         Return a list of all the fleets owned by enemy players.
         '''
-        r=[]
-        for fleet in self._fleets:
-            if (fleet.Owner() != self._myID):
-                r.append(fleet)
-        return r
+        return [f for f in self.fleets if f.owner > self.MY_ID]
 
     def distance(self, sourcePlanet, destinationPlanet):
         source = self._planets[sourcePlanet]
