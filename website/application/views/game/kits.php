@@ -48,7 +48,7 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	<tr class="even">
 		<td>Python</td>
 		<td>Nos serveurs fonctionnent sous Python 3.2</td>
-		<td>Bientôt</td>
+		<td><a href="<?php echo base_url('starters/python_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr class="odd">
 		<td>Scala</td>
