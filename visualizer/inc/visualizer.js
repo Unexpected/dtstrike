@@ -473,7 +473,7 @@ function initStaticData() {
 	var playersHtml = '';
     for (var i = 0; i < Visualizer.players.length; i++) {
 		playersHtml += '<a style="color: '+ Visualizer.config.teamColor[i+1] +'"';
-		if ('survived' == Visualizer.players[i].status) {
+		if ('SURVIVED' == Visualizer.players[i].status) {
 			playersHtml += ' class="winner"';
 		} else {
 			playersHtml += ' class="looser"';
