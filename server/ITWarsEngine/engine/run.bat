@@ -5,6 +5,7 @@ echo.
 
 REM TODO :
 REM    - specialiser le run pour chaque StarterKit
+REM    - Corriger l'ouverture du navigateur sur le replay
 
 
 REM Exemple d'appel : run map1.txt "node MyBot.js" "php MyBot.php"
@@ -60,16 +61,29 @@ if %nb_players% == 2 set run_cmd="%bot_cmd%" %bot1%
 if %nb_players% == 3 set run_cmd="%bot_cmd%" %bot1% %bot2%
 if %nb_players% == 4 set run_cmd="%bot_cmd%" %bot1% %bot2% %bot3%
 
+REM Nettoyage partie precedente
+del %err_file% 2>NUL
+del replay_log.txt 2>NUL
+del visu\replay.js 2>NUL
+
 echo var replayJson=>visu\replay.js
 java -Duser.language=en -jar engine.jar %map% 1000 1000 replay_log.txt %run_cmd% 1>>visu\replay.js 2>%err_file%
 if not "%errorlevel%" == "0" goto error
 
 REM Check if replay_err is empty
 for %%A in (%err_file%) do if not %%~zA==0 goto error
-echo Game ended
 
 REM Launch replay
-start explorer visu/index.html
+REM FIXE start explorer visu/index.html
+echo.
+echo ====================================================================
+echo ====================================================================
+echo                    La partie est terminee.
+echo Vous pouvez regarder le replay en ouvrant le fichier visu/index.html
+echo ====================================================================
+echo ====================================================================
+echo.
+pause
 goto end
 
 :error
