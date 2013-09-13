@@ -321,6 +321,10 @@ var Visualizer = {
     
     parseDataFromFile: function(input) {
     	var gameResult = $.parseJSON(input);
+		if (gameResult == null && input != '') {
+			// Maybe already JSON ?
+			gameResult = input;
+		}
 
     	this.parseData(gameResult);
     },

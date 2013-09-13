@@ -46,7 +46,8 @@
   <script type="text/javascript" src="inc/visualizer.js?v=1"></script>
   <script type="text/javascript" src="replay.js"></script>
   <script type="text/javascript" >
-	Visualizer.parseData(replayJson);
+	var userUrl = '';
+	if (replayJson) Visualizer.parseDataFromFile(replayJson);
   </script>
 </body>
 </html>
