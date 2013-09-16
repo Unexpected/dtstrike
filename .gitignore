@@ -14,3 +14,6 @@ dist
 /uploads/*
 
 /starters/scala/.cache
+/LocalTester/LocalTester.zip
+/LocalTester/dist/*
+/LocalTester/maps
