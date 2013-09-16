@@ -8,31 +8,31 @@ import java.util.Arrays;
 import java.util.Hashtable;
 
 /**
- * <h1>Générateur de map symétriques</h1>
+ * <h1>Gï¿½nï¿½rateur de map symï¿½triques</h1>
  * <br>
- * Les paramètres sont les suivants :<br>
+ * Les paramï¿½tres sont les suivants :<br>
  * <ul>
  *   <li>nbPlayers [4] : Nombre de joueurs sur la carte</li>
- *   <li>gamerMilitary [1] : Nombre de planète militaire de base par joueur</li>
- *   <li>gamerEconomic [1] : Nombre de planète économique de base par joueur</li>
- *   <li>neutralMilitary [1] : Nombre de planète militaire neutre par joueur</li>
- *   <li>neutralEconomic [3] : Nombre de planète économique neutre par joueur</li>
+ *   <li>gamerMilitary [1] : Nombre de planï¿½te militaire de base par joueur</li>
+ *   <li>gamerEconomic [1] : Nombre de planï¿½te ï¿½conomique de base par joueur</li>
+ *   <li>neutralMilitary [1] : Nombre de planï¿½te militaire neutre par joueur</li>
+ *   <li>neutralEconomic [3] : Nombre de planï¿½te ï¿½conomique neutre par joueur</li>
  * </ul>
- * Les 4 dernièrs paramètres correspondent aux nombres de colonies générées dans le 1er cadrant !<br>
+ * Les 4 derniï¿½rs paramï¿½tres correspondent aux nombres de colonies gï¿½nï¿½rï¿½es dans le 1er cadrant !<br>
  * <br>
  * <pre>
- * Cette classe génère des maps pour de 2 à 4 joueurs de manière symétrique.
+ * Cette classe gï¿½nï¿½re des maps pour de 2 ï¿½ 4 joueurs de maniï¿½re symï¿½trique.
  * 
- * La génération est faite comme suit :
- *   - Découpage du plateau (640 x 640) en 1 "part"
- *     Cette part correspond à un angle de 360° / Nb de joueurs.
- *   - Génération aléatoire des bases pour 1 joueurs et les neutres dans ce cadrant.
- *   - Duplication du cadrant par rotation pour générer les autres joueurs.
+ * La gï¿½nï¿½ration est faite comme suit :
+ *   - Dï¿½coupage du plateau (640 x 640) en 1 "part"
+ *     Cette part correspond ï¿½ un angle de 360ï¿½ / Nb de joueurs.
+ *   - Gï¿½nï¿½ration alï¿½atoire des bases pour 1 joueurs et les neutres dans ce cadrant.
+ *   - Duplication du cadrant par rotation pour gï¿½nï¿½rer les autres joueurs.
  * </pre>
- * FIXME : La détection de proximité des "bords" pour une colonie ne prend pas en compte la bordure de fin de la "part".
+ * FIXME : La dï¿½tection de proximitï¿½ des "bords" pour une colonie ne prend pas en compte la bordure de fin de la "part".
  * 
  * @author Dimitri Vergos
- * @author Sébastien Schmitt
+ * @author Sï¿½bastien Schmitt
  * 
  */
 public class MapGenerator {
@@ -53,8 +53,7 @@ public class MapGenerator {
 	public final double quadrantMaxY;
 	private ArrayList<Quadrant> quadrants = new ArrayList<Quadrant>();
 
-
-	private MapGenerator(boolean debug, int pNbGamers, int pBasesPerGamer, int pColoniesPerGamer, int pneutralMilitary,	int pneutralEconomic) {
+	public MapGenerator(boolean debug, int pNbGamers, int pBasesPerGamer, int pColoniesPerGamer, int pneutralMilitary,	int pneutralEconomic) {
 		long debut = System.currentTimeMillis();
 		this.debug = debug;
 		if (debug) {
@@ -92,14 +91,14 @@ public class MapGenerator {
 		quadrantMinY = 0;
 		quadrantMaxY = mapHeight / 2;
 		if (debug) {
-			System.out.println("Angle calculé pour les quadrants : "+quadrantAngle);
+			System.out.println("Angle calculï¿½ pour les quadrants : "+quadrantAngle);
 			System.out.println("Dim X : "+quadrantMinX+" < X < "+quadrantMaxX);
 			System.out.println("Dim Y : "+quadrantMinY+" < Y < "+quadrantMaxY);
 		}
 		Quadrant quadrant = new Quadrant(0, this);
 
 		if (debug) System.out.println("");
-		if (debug) System.out.println("Génération du premier quadrant aléatoire :");
+		if (debug) System.out.println("Gï¿½nï¿½ration du premier quadrant alï¿½atoire :");
 		/* Populate Quadrant with gamer colonies */
 		for (int i = 0; i < pBasesPerGamer; i++) {
 			quadrant.tryPutColony(true, 0);
@@ -116,9 +115,9 @@ public class MapGenerator {
 		}
 		quadrants.add(quadrant);
 		
-		/* Création des autres quadrants par rotation */
+		/* Crï¿½ation des autres quadrants par rotation */
 		if (debug) System.out.println("");
-		if (debug) System.out.println("Génération des autres quadrants par rotation :");
+		if (debug) System.out.println("Gï¿½nï¿½ration des autres quadrants par rotation :");
 		Quadrant nextQuadrant;
 		for (int gamer = 1; gamer < nbGamers; gamer++) {
 			nextQuadrant = new Quadrant(gamer, this);
@@ -151,7 +150,7 @@ public class MapGenerator {
 	private Point2D rotationPoint(Point2D ptDepart, double angleRadian) {
 		double sina = Math.sin(angleRadian);
 		double cosa = Math.cos(angleRadian);
-		if (angleRadian == -1*Math.PI) sina = 0; // Fix round error (with 180° rotation)
+		if (angleRadian == -1*Math.PI) sina = 0; // Fix round error (with 180ï¿½ rotation)
 		double x1 = ptDepart.getX() * cosa - ptDepart.getY() * sina;
 		double y1 = ptDepart.getX() * sina + ptDepart.getY() * cosa;
 		

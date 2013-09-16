@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment/>
+<entry key="CrazyBot">java -jar sampleBots/CrazyBot.jar</entry>
+<entry key="DedicatedBot">java -jar sampleBots/DedicatedBot.jar</entry>
+<entry key="DefensiveBot">java -jar sampleBots/DefensiveBot.jar</entry>
+<entry key="DispersionBot">java -jar sampleBots/DispersionBot.jar</entry>
+<entry key="FlightyBot">java -jar sampleBots/FlightyBot.jar</entry>
+<entry key="LooterRageBot">java -jar sampleBots/LooterRageBot.jar</entry>
+<entry key="PatientBot">java -jar sampleBots/PatientBot.jar</entry>
+<entry key="WarriorRageBot">java -jar sampleBots/WarriorRageBot.jar</entry>
+</properties>

@@ -40,7 +40,7 @@ public class Engine {
 	/**
 	 * Error during startup (game initialization and players initialization)
 	 */
-	private boolean errorAtStartup = false;
+	public boolean errorAtStartup = false;
 
 	public static ResourceBundle engineParameters;
 
@@ -174,13 +174,13 @@ public class Engine {
 	/**
 	 * Kill 'em all
 	 */
-	private void end() {
+	public String end() {
 		for (Player p : players) {
 			p.kill(Status.ENDED);
 		}
 		// Save game Log
 		String replayData = game.getReplay();
-		System.out.println(replayData);
+		return replayData;
 	}
 
 	public static void main(String[] args) {
@@ -194,7 +194,8 @@ public class Engine {
 		Engine e = new Engine(args);
 		if (!e.errorAtStartup) {
 			e.play();
-			e.end();
+			String replayData=e.end();
+			System.out.println(replayData);
 		}
 		System.exit(0);
 	}
