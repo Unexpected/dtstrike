@@ -222,8 +222,12 @@ public class GalaxSix extends Game {
 	private int parse(String map) {
 		planets = new ArrayList<Planet>();
 		fleets = new ArrayList<Fleet>();
-
-		String[] lines = map.split("\n");
+		String[] lines = null;
+		if (map.contains("\r\n")) {
+			lines = map.split("\r\n");
+		} else {
+			lines = map.split("\n");
+		}
 		for (int i = 0; i < lines.length; i++) {
 			String str = lines[i];
 
