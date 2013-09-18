@@ -33,7 +33,7 @@ class Game(object):
             if planet.owner == playerID:
                 num_ships += planet.num_ships            
         for fleet in self.fleets:
-            if fleet.Owner() == playerID:
+            if fleet.owner == playerID:
                 num_ships += fleet.num_ships()
         return num_ships
     
@@ -41,11 +41,11 @@ class Game(object):
         '''
         A player is alive if he owns at least one military planet or one fleet.
         '''
-        for planet in self._planets:
+        for planet in self.planets:
             if(isinstance(planet, MilitaryPlanet) & planet.owner == playerID):
                 return True
         for fleet in self.fleets:
-            if fleet.Owner() == playerID:
+            if fleet.owner == playerID:
                 return True
         return False
 
@@ -54,23 +54,15 @@ class Game(object):
         Return a list of all the planets owned by the current player. By
         convention, the current player is always player number 1.
         '''
-        r=[]
-        for planet in self.planets:
-            if planet.owner == self.MY_ID:
-                r.append(planet)
-        return r
-    
+        return [p for p in self.planets if p.owner == self.MY_ID]
     
     def my_economic_planets(self):
         '''
         Return a list of all the economic planets owned by the current player. By
         convention, the current player is always player number 1.
         '''        
-        r=[]
-        for planet in self.planets:
-            if (planet.owner == self._myID & isinstance(planet, EconomicPlanet)):
-                r.append(planet)
-        return r
+        return [p for p in self.planets if p.owner == self.MY_ID & isinstance(p, EconomicPlanet)]
+
 
     def neutral_economic_planets(self):
         '''
@@ -156,14 +148,14 @@ class Game(object):
         '''
         return [f for f in self.fleets if f.owner > self.MY_ID]
 
-    def distance(self, sourcePlanet, destinationPlanet):
-        source = self._planets[sourcePlanet]
-        destination = self._planets[destinationPlanet]
+    def distance(self, source_planet_id, destination_planet_id):
+        source = self.planets[source_planet_id]
+        destination = self.planets[destination_planet_id]
         dx = source.X() - destination.X()
         dy = source.Y() - destination.Y()
         return ceil(sqrt(dx * dx + dy * dy))
     
-    def issue_order(self, sourcePlanet, destinationPlanet, num_ships):
+    def issue_order(self, source_planet_id, destination_planet_id, num_ships):
         '''
         Sends an order to the game engine. An order is composed of a source
         planet number, a destination planet number, and a number of ships. A
@@ -176,7 +168,7 @@ class Game(object):
         * the ships will take a few turns to reach their destination. Travel
         is not instant. See the distance() function for more info.
         '''
-        stdout.write("%d %d %d\n" % (sourcePlanet, destinationPlanet, num_ships))
+        stdout.write("%d %d %d\n" % (source_planet_id, destination_planet_id, num_ships))
         stdout.flush()
         
     def finish_turn(self):
