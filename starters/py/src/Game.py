@@ -42,7 +42,7 @@ class Game(object):
         A player is alive if he owns at least one military planet or one fleet.
         '''
         for planet in self.planets:
-            if(isinstance(planet, MilitaryPlanet) & planet.owner == playerID):
+            if(isinstance(planet, MilitaryPlanet) and planet.owner == playerID):
                 return True
         for fleet in self.fleets:
             if fleet.owner == playerID:
@@ -61,35 +61,35 @@ class Game(object):
         Return a list of all the economic planets owned by the current player. By
         convention, the current player is always player number 1.
         '''        
-        return [p for p in self.planets if p.owner == self.MY_ID & isinstance(p, EconomicPlanet)]
+        return [p for p in self.planets if p.owner == self.MY_ID and isinstance(p, EconomicPlanet)]
 
 
     def neutral_economic_planets(self):
         '''
         Return a list of all neutral economic planets.
         '''
-        return [p for p in self.planets if p.owner == 0 & isinstance(p, EconomicPlanet)]
+        return [p for p in self.planets if p.owner == 0 and isinstance(p, EconomicPlanet)]
 
     def enemy_economic_planets(self):
         '''
         Return a list of all the economic planets owned by rival players. This excludes
         economic planets owned by the current player, as well as neutral economic planets.
         '''
-        return [p for p in self.planets if p.owner > self.MY_ID & isinstance(p, EconomicPlanet)]
+        return [p for p in self.planets if p.owner > self.MY_ID and isinstance(p, EconomicPlanet)]
         
     def my_military_fleets(self):
         '''
         Return a list of all the military fleets owned by the current player. By
         convention, the current player is always player number 1.
         '''
-        return [f for f in self.fleets if f.owner == 1 & f.military]
+        return [f for f in self.fleets if f.owner == 1 and f.military]
 
     def my_military_planets(self):
         '''
         Return a list of all the military fleets owned by the current player. By
         convention, the current player is always player number 1.
         '''
-        return [p for p in self.planets if p.owner == 1 & isinstance(p, MilitaryPlanet)]
+        return [p for p in self.planets if p.owner == 1 and isinstance(p, MilitaryPlanet)]
            
     def military_planets(self):
         '''
@@ -101,14 +101,14 @@ class Game(object):
         '''
         Return a list of all neutral military planets.
         '''
-        return [p for p in self.planets if p.owner == 0 & isinstance(p, MilitaryPlanet)]
+        return [p for p in self.planets if p.owner == 0 and isinstance(p, MilitaryPlanet)]
     
     def enemy_military_planets(self):
         '''
         Return a list of all the military planets owned by rival players. This excludes
         military planets owned by the current player, as well as neutral military planets.
         '''        
-        return [p for p in self.planets if p.owner > self.MY_ID & isinstance(p, MilitaryPlanet)]
+        return [p for p in self.planets if p.owner > self.MY_ID and isinstance(p, MilitaryPlanet)]
 
     def neutral_planets(self):
         '''
