@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Six Challenge</title>
+	<title>CGI Challenge</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/bootstrap.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/font-awesome.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-common.css") ?>" />
@@ -21,17 +21,13 @@
 	<header class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<h1 class="pull-left">
-				<a href="<?php echo base_url() ?>">SIX <i class="icon-rocket icon-large"></i> Challenge</a>
+				<a href="<?php echo base_url() ?>">CGI <i class="icon-rocket icon-large"></i> Challenge</a>
 			</h1>
 			<div class="logo pull-right">
-				<img id="logo_fixed" src="<?php echo base_url("static/images/logo/logo_six_full.png") ?>" style="display: none;" />
-				<img id="logo_front" src="<?php echo base_url("static/images/logo/logo_six_front.png") ?>" style="display: none;" />
-				<img id="logo_back_1" src="<?php echo base_url("static/images/logo/logo_six_back_1.png") ?>" style="display: none;" />
-				<img id="logo_back_2" src="<?php echo base_url("static/images/logo/logo_six_back_2.png") ?>" style="display: none;" />
-				<img id="logo_back_3" src="<?php echo base_url("static/images/logo/logo_six_back_3.png") ?>" style="display: none;" />
-				<img id="logo_back_4" src="<?php echo base_url("static/images/logo/logo_six_back_4.png") ?>" style="display: none;" />
-				<img id="logo_back_5" src="<?php echo base_url("static/images/logo/logo_six_back_5.png") ?>" style="display: none;" />
-				<canvas id="logo" width="100" height="100"></canvas>
+				<img id="logo_cgi" src="<?php echo base_url("static/images/logo/logo.png") ?>" style="position: absolute; z-index: 1;" />
+				<img id="planet_1" src="<?php echo base_url("static/images/logo/planet_1.png") ?>" style="display: none;" />
+				<img id="planet_2" src="<?php echo base_url("static/images/logo/planet_2.png") ?>" style="display: none;" />
+				<canvas id="logo" width="158" height="100"></canvas>
 			</div>
 		</div>
 	</header>

@@ -9,7 +9,7 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
-		$data['page_title'] = 'Bienvenue sur Six Challenge!';
+		$data['page_title'] = 'Bienvenue sur CGI Challenge!';
 		$data['page_icon'] = 'rocket';
 		
 		// Get replay path

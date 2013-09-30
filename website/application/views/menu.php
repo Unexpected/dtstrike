@@ -1,6 +1,6 @@
 <?php
 	$menu = array(
-		array('Six Challenge', '', 'globe')
+		array('CGI Challenge', '', 'globe')
 		, array("Accueil", site_url("welcome"))
 		, array("Classement actuel", site_url("game/rank"))
 		, array("Dernières parties", site_url("game"))

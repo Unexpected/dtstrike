@@ -1,6 +1,6 @@
 ﻿
 <p>
-Le Six Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA) qui va lutter contre celle des autres joueurs dans d'épiques batailles spatiales. <br/><br/>
+Le CGI Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA) qui va lutter contre celle des autres joueurs dans d'épiques batailles spatiales. <br/><br/>
 
 Grâce aux Kits de démarrage "clé en main", que vous soyez débutant ou développeur experimenté, vous pouvez en moins de <code>5 minutes</code>, choisir votre langage de programmation préféré, soumettre le kit de démarrage correspondant et regarder vos vaisseaux 
 affronter d'autres joueurs de CGI pour conquérir la galaxie. Pour embarquer, <a href="<?php echo site_url("game/start") ?>">suivez le guide !</a></p><br/>

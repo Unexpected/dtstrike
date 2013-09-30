@@ -2,7 +2,7 @@
 Pour vous identifier, vous pouvez utiliser :
 <ul>
 	<li>soit votre compte <code>Groupinfra</code>, si vous en possédez un.</li>
-	<li>soit le compte SixChallenge que vous avez créé.</li>
+	<li>soit le compte CGI Challenge que vous avez créé.</li>
 </ul>
 </p>
 

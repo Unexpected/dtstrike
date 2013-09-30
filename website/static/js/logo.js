@@ -1,5 +1,5 @@
 /**
- * CGI - SiX logo animation
+ * CGI - CGI logo animation
  * @author sebastien.schmitt@cgi.com
  */
 
@@ -15,75 +15,149 @@ if (!window.requestAnimFrame) {
 	})();
 }
 
-var SixLogo = {
+var CgiLogo = {
+	width: 0,
+	height: 0,
 	canvas: null,
 	ctx: null,
-	
+
 	frontImageObj: null,
+	nbImage: 2,
 	backImageObj: [],
 	
-	nbFrames: [1200, 1800, 1400, 2000, 1600],
-	lastAngle: [1, 1, 1, 1, 1],
+	nbFrames: [1200, 1800],
+	lastPos: [0, 900],
 	
-	initCanvas: function() {
+	initCanvas: function(w, h) {
+		this.width = w;
+		this.height = h;
+		
 		try {
 			// Check if canvas is supported
 			this.canvas = document.getElementById('logo');
 	        this.ctx = this.canvas.getContext('2d');
-			
+	        // Define pos & style
+			this.ctx.translate(this.width / 2, this.height / 2);
+			this.ctx.strokeStyle = '#bbbbbb';
+
 			this.frontImageObj = new Image();
-			this.frontImageObj.src = document.getElementById('logo_front').src;
+			this.frontImageObj.onload = function() {
+				CgiLogo.animate.apply(CgiLogo);
+			};
+			this.frontImageObj.src = document.getElementById('logo_cgi').src;
 
-			for (var i=0; i<5; i++) {
+			for (var i=0; i<this.nbImage; i++) {
 				this.backImageObj[i] = new Image();
-				this.backImageObj[i].src = document.getElementById('logo_back_'+(i+1)).src;
-			}
-
-			var val = localStorage.getItem("SixLogo.lastAngle");
-			if (val != null) {
-				this.lastAngle = JSON.parse(val);
+				this.backImageObj[i].src = document.getElementById('planet_'+(i+1)).src ;
 			}
 			
-			this.animate();
+			var val = localStorage.getItem("CgiLogo.lastPos");
+			if (val != null) {
+				this.lastPos = JSON.parse(val);
+			}
+
+			document.getElementById('logo_cgi').style.display = 'none';
 		} catch (e) {
 			// old browsers support
-			if (window.console) console.log(e.message);
-			document.getElementById('logo_fixed').style.display = 'block';
-		}
+			if (window.console && console.log) console.log(e.message);
+			document.getElementById('logo_cgi').style.display = 'block';
+		};
 	},
 
 	animate: function() {
+		var ctx = this.ctx;
 		// Clear
-		this.ctx.clearRect(0, 0, 100, 100);
+		ctx.clearRect(this.width / -2, this.height / -2, this.width, this.height);
+
+		// Background ellipse
+		ctx.save();
+		ctx.rotate(-1 * Math.PI / 4);
+		this.drawHalfEllipseByCenter(0, 0, 100, 50, true);
+		this.drawPlanet(0, true);
+		ctx.rotate(Math.PI / 2);
+		this.drawHalfEllipseByCenter(0, 0, 100, 50, true);
+		this.drawPlanet(1, true);
+		ctx.restore();
 		
-		// Translate & Rotate each bg image
-		for (var i=0; i<5; i++) {
-			this.ctx.save();
-			
-			// Draw image
-			this.ctx.translate(50, 50);
-			var rotateAngle = this.lastAngle[i] * Math.PI / this.nbFrames[i];
-			this.ctx.rotate(rotateAngle);
-			
-			// Advance angle
-			this.lastAngle[i] += 1;
-			if (this.lastAngle[i] == 2*this.nbFrames[i]) {
-				this.lastAngle[i] = 1;
+		// Draw logo
+		ctx.drawImage(this.frontImageObj, this.width / -2, this.height / -2);
+
+		// Front ellipse
+		ctx.save();
+		ctx.rotate(-1 * Math.PI / 4);
+		this.drawHalfEllipseByCenter(0, 0, 100, 50, false);
+		this.drawPlanet(0, false);
+		ctx.rotate(Math.PI / 2);
+		this.drawHalfEllipseByCenter(0, 0, 100, 50, false);
+		this.drawPlanet(1, false);
+		ctx.restore();
+
+		for (var i=0; i<this.nbImage; i++) {
+			this.lastPos[i] += 1;
+			if (this.lastPos[i] >= this.nbFrames[i]) {
+				this.lastPos[i] = 0;
 			}
-			
-			// draw image
-			this.ctx.drawImage(this.backImageObj[i], -50, -50);
-			
-			this.ctx.restore();
 		}
-		
-		// Draw Front image
-		this.ctx.drawImage(this.frontImageObj, 0, 0);
-		
+	
 		// Save state
-		localStorage.setItem("SixLogo.lastAngle", JSON.stringify(this.lastAngle));
+		localStorage.setItem("CgiLogo.lastPos", JSON.stringify(this.lastPos));
 	
 		// request new frame
-		requestAnimFrame(function() {SixLogo.animate.apply(SixLogo);});
+		requestAnimFrame(function() {CgiLogo.animate.apply(CgiLogo);});
+	},
+	
+	drawPlanet: function(idx, up) {
+		var halfFrame = this.nbFrames[idx] / 2;
+		
+		if (!up && this.lastPos[idx] < halfFrame) {
+			// Draw planet on BG
+			var x = (100 * this.lastPos[idx] / halfFrame) - 50;
+			var y = Math.sqrt(Math.pow(25, 2) - Math.pow(x, 2) / 4);
+			//if (idx==0) console.log("DrawPlanet BG #"+idx+" at "+[x, y]+' for '+this.lastPos[idx]);
+			
+			// Ajust with img size
+			x = x - this.backImageObj[idx].width / 2;
+			y = y - this.backImageObj[idx].height / 2;
+			
+			this.ctx.drawImage(this.backImageObj[idx], x, y);
+		}
+		if (up && this.lastPos[idx] >= halfFrame) {
+			// Draw planet on FG
+			var x = -1 * ((100 * (this.lastPos[idx] - halfFrame) / halfFrame) - 50);
+			var y = -1 * Math.sqrt(Math.pow(25, 2) - Math.pow(x, 2) / 4);
+			//if (idx==0) console.log("DrawPlanet FG #"+idx+" at "+[x, y]+' for '+this.lastPos[idx]);
+			
+			// Ajust with img size
+			x = x - this.backImageObj[idx].width / 2;
+			y = y - this.backImageObj[idx].height / 2;
+
+			this.ctx.drawImage(this.backImageObj[idx], x, y);
+		}
+	},
+	
+	drawHalfEllipseByCenter: function(cx, cy, w, h, up) {
+		this.drawHalfEllipse(cx - w/2.0, cy - h/2.0, w, h, up);
+	},
+
+	drawHalfEllipse: function(x, y, w, h, up) {
+		var kappa = .5522848,
+			ox = (w / 2) * kappa, // control point offset horizontal
+			oy = (h / 2) * kappa, // control point offset vertical
+			xe = x + w,           // x-end
+			ye = y + h,           // y-end
+			xm = x + w / 2,       // x-middle
+			ym = y + h / 2;       // y-middle
+
+		this.ctx.beginPath();
+		if (up) {
+			this.ctx.moveTo(x, ym);
+			this.ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+			this.ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+		} else {
+			this.ctx.moveTo(xe, ym);
+			this.ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+			this.ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+		}
+		this.ctx.stroke();
 	}
 };

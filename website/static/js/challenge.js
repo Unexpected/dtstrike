@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	initCssSelector();
-	SixLogo.initCanvas();
+	CgiLogo.initCanvas(158, 100);
 });
 
 function initCssSelector() {
