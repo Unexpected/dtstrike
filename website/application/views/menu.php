@@ -21,7 +21,7 @@
 	$menu = array_merge($menu, array(array('Mon compte', '', 'user')));
 	
 	if (!is_logged_in($this)) {
-		//$menu = array_merge($menu, array(array("S'enregistrer", site_url("user/register"))));
+		$menu = array_merge($menu, array(array("S'enregistrer", site_url("auth/register"))));
 		$menu = array_merge($menu, array(array("Se connecter", site_url("auth/login"))));
 	} else {
 		$menu = array_merge($menu, array(array("Mon compte", site_url("user"))

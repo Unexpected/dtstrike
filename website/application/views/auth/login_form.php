@@ -21,3 +21,6 @@ Pour vous identifier, vous pouvez utiliser :
 <p>
 Si vous n'avez pas de compte, vous pouvez en <a href="<?php echo site_url('auth/register') ?>">créer un</a>.
 </p>
+<p>
+Si vous avez oublié votre login ou mot de passe, vous pouvez <a href="<?php echo site_url('auth/forgot') ?>">les réinitialiser</a>.
+</p>

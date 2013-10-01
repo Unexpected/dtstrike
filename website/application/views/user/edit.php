@@ -2,7 +2,7 @@
 
 <?php echo form_open('user/save', array('id' => 'userform', 'class' => 'form-horizontal')); ?>
 <?php
-	echo form_fieldset('Informations générale');
+	echo form_fieldset('Informations générales');
 	$this->bootstrap->input('Username :', array('id' => 'username', 'name' => 'username', 'class' => 'formfield', 'disabled' => 'disabled'), $user->username);
 	$this->bootstrap->input('E-mail :', array('id' => 'email', 'name' => 'email', 'class' => 'formfield'), $user->email);
 	$this->bootstrap->select('Pays :', array('id' => 'country_code', 'name' => 'country_code', 'class' => 'formfield'), 'country_code', $countries, $user->country_code);

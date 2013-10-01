@@ -42,7 +42,7 @@ Class Basemodel extends CI_Model {
 	 * @param $id_field nom du champ servant d'ID
 	 * @return array($id_field => $value_field)
 	 */
-	function getAllForCombo($id_field, $value_field) {
+	function getAllForCombo($id_field, $value_field, $with_empty = FALSE) {
 		// Ajout du select
 		$this->db->select($id_field.', '.$value_field);
 		$this->db->order_by($value_field);
@@ -53,6 +53,9 @@ Class Basemodel extends CI_Model {
 			$results = $query->result();
 			
 			$resultArray = array();
+			if ($with_empty) {
+				$resultArray[""] = "";
+			}
 			foreach ($results as $result) {
 				$resultArray[$result->$id_field] = $result->$value_field;
 			}
