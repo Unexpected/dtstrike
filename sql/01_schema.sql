@@ -60,11 +60,10 @@ CREATE TABLE `language` (
 DROP TABLE IF EXISTS `login_attempt`;
 CREATE TABLE `login_attempt` (
   `timestamp` datetime NOT NULL,
-  `username` varchar(64) NOT NULL,
-  `password` varchar(40) NOT NULL,
+  `username` varchar(128) NOT NULL,
   `naive_ip` varchar(18) NOT NULL,
   `real_ip` varchar(18) NOT NULL,
-  KEY `timestamp` (`timestamp`,`username`,`password`,`naive_ip`,`real_ip`)
+  KEY `timestamp` (`timestamp`,`username`,`naive_ip`,`real_ip`)
 );
 
 DROP TABLE IF EXISTS `map`;
