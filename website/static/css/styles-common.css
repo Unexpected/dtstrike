@@ -1,6 +1,9 @@
 .form_error {
 	color: red;
 }
+.form_message {
+	color: green;
+}
 
 pre.error,
 .code {

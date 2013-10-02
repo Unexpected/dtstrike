@@ -63,7 +63,6 @@ Class Usermodel extends Basemodel {
 	 * @return boolean
 	 */
 	function check_credentials($username, $password) {
-		log_message('debug', "check_credentials($username, $password)");
 		
 		// Create query
 		$this->db->select('user_id, username, password', false);
@@ -76,8 +75,6 @@ Class Usermodel extends Basemodel {
 			$users = $query->result();
 			if (count($users) == 1) {
 				$user = $users[0];
-				log_message('debug', "found user");
-				log_message('debug', $user->password);
 	
 				if (crypt($password, $user->password) == $user->password) {
 					// Create session data
@@ -94,6 +91,37 @@ Class Usermodel extends Basemodel {
 			return false;
 		}
 	}
+	
+	function get_userid_from_confirmation_code($confirmation_code) {
+		// Create query
+		$this->db->select('user_id');
+		$this->db->from($this->getTableName());
+		$this->db->where('activation_code', $confirmation_code);
+		
+		$query = $this->db->get();
+		if ($query->num_rows())  {
+			$users = $query->result();
+			if (count($users) == 1) {
+				$user = $users[0];
+				
+				return $user->user_id;
+			}
+			return false;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Activate given user
+	 * 
+	 * @param string $user_id
+	 */
+	function activate_user($user_id) {
+		$userdata['activated'] = 1;
+		return $this->update('user_id', $user_id, $userdata);
+	}
+	
 
 }
 

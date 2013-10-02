@@ -1,4 +1,8 @@
-﻿
+﻿<?php
+	if (isset($error)) echo '<p class="form_error">'.$error.'</p>';
+	if (isset($message)) echo '<p class="form_message">'.$message.'</p>';
+?>
+
 <p>
 Le CGI Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA) qui va lutter contre celle des autres joueurs dans d'épiques batailles spatiales. <br/><br/>
 

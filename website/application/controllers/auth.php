@@ -13,6 +13,7 @@ class Auth extends CI_Controller {
         $this->load->model('Login_attemptmodel');
 
         $this->load->helper('login');
+        $this->load->helper('email');
 	}
 
 	function index() {
@@ -88,6 +89,7 @@ class Auth extends CI_Controller {
 						$this->Usermodel->insert();
 						
 						// FIXME Send confirmation mail to user.
+						//send_email("sebastien.schmitt@logica.com");
 						
 						$register = true;
 					}
@@ -114,11 +116,31 @@ class Auth extends CI_Controller {
 		}
 
 	}
-	
-	function register_validate($activationcode) {
+
+	function register_validate() {
 		if (is_logged_in($this)) {
 			redirect('welcome');
 		}
+
+		$confirmation_code = isset($_GET['confirmation_code']) ? $_GET['confirmation_code'] : "";
+		$msg = "Activation réussie";
+		if ($confirmation_code == NULL || strlen($confirmation_code) <= 0) {
+			$this->session->set_flashdata('error', "Echec de l'activation (101)");
+		} else {
+			$user_id = $this->Usermodel->get_userid_from_confirmation_code($confirmation_code);
+			if (!$user_id) {
+				$this->session->set_flashdata('error', "Echec de l'activation (102)");
+			} else {
+				$result = $this->Usermodel->activate_user($user_id);
+				if (!$result) {
+					$this->session->set_flashdata('error', "Echec de l'activation (103)");
+				} else {
+					$this->session->set_flashdata('message', "Activation réussie");
+				}
+			}
+		}
+
+		redirect('welcome');
 	}
 
 	function forgot() {
