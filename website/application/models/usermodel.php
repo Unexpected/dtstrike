@@ -119,6 +119,7 @@ Class Usermodel extends Basemodel {
 	 */
 	function activate_user($user_id) {
 		$userdata['activated'] = 1;
+		$userdata['activation_code'] = NULL;
 		return $this->update('user_id', $user_id, $userdata);
 	}
 	

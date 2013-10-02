@@ -5,6 +5,7 @@ class Auth extends CI_Controller {
 		parent::__construct();
 
 		$this->load->library('Form_validation');
+        $this->load->library('email');
 
 		$this->load->model('Usermodel');
 		$this->load->model('User_rolesmodel');
@@ -13,7 +14,6 @@ class Auth extends CI_Controller {
         $this->load->model('Login_attemptmodel');
 
         $this->load->helper('login');
-        $this->load->helper('email');
 	}
 
 	function index() {
@@ -82,16 +82,20 @@ class Auth extends CI_Controller {
 						$this->Usermodel->password = crypt_password($data['password']);
 						$this->Usermodel->country_code = $data['country_code'];
 						$this->Usermodel->org_id = $data['org_id'];
-						$this->Usermodel->activation_code = $confirmation_code;
 						$this->Usermodel->created = new DateTime();
-						$this->Usermodel->activated = 1; // FIXME : Remove quand confirmation par mail
+						$this->Usermodel->activation_code = $confirmation_code;
+						$this->Usermodel->activated = 0;
 						
 						$this->Usermodel->insert();
 						
-						// FIXME Send confirmation mail to user.
-						//send_email("sebastien.schmitt@logica.com");
-						
-						$register = true;
+						// Send confirmation mail to user.
+						if ($this->sendmail($data['email'], true)) {
+							// Send mail error
+							$data['register_fail_msg'] = 'Erreur lors de l\'envoi du mail de confirmation, merci de vous réinscrire ultérieurement.';
+							$this->Usermodel->delete('username', $data['username']);
+						} else {
+							$register = true;
+						}
 					}
 				}
 			}
@@ -114,7 +118,65 @@ class Auth extends CI_Controller {
 			$data['page_icon'] = 'user';
 			render($this, 'auth/register_ok', $data);
 		}
-
+	}
+	
+	/**
+	 * Envoi d'un email
+	 * 
+	 * @param string $to destinataire
+	 * @param boolean $register TRUE si c'est la confirmation, FALSE si c'est l'oubli de mail
+	 * @return boolean
+	 */
+	private function sendmail($to, $confirmation_code, $register) {
+		// FIXME : URL ?
+		$BASE_URL = "http://toy.groupinfra.com/sixchallenge/";
+		$BR = "<br/>\n\n";
+		
+		$this->email->from('cgichallenge@logica.com', 'CGI Challenge');
+		$this->email->to($to);
+		
+		if ($register) {
+			// Confirmation register
+			$this->email->subject('CGI Challenge : inscription');
+			$activation_url = $BASE_URL . "auth/register_validate?confirmation_code=" . $confirmation_code;
+			$peer_message = "";
+			$this->email->message("<html><body>" . 
+					"Bienvenu au CGI Challenge !" . $BR .
+					$BR .
+					"Cliquez sur le lien ci-dessous pour activer votre compte :" . $BR .
+					"<a href=\"" . $activation_url . "\">".$activation_url ."</a>" . $BR .
+					$BR .
+					"Après cette activation, vous pourrez vous authentifier avec votre compte " .
+					"et participer à la compétition." . $BR .
+					$peer_message . $BR . 
+					"Merci pour votre participation," . $BR . 
+					"Good Luck & Have Fun !" . $BR .
+					"Les organisateurs." . $BR .
+					"</body></html>");
+		} else {
+			// Password Lost
+			$this->email->subject('CGI Challenge : Reset du compte');
+			$reset_url = $BASE_URL . "auth/reset?confirmation_code=" . $confirmation_code;
+			$this->email->message("<html><body>" . 
+					"Réinitialissation de votre compte CGI Challenge !" . $BR .
+					$BR .
+					"Cliquez sur le lien ci-dessous pour réinitialiser votre compte :" . $BR .
+					"<a href=\"" . $reset_url . "\">".$reset_url ."</a>" . $BR .
+					$BR .
+					"Vous pourrez ainsi modifier votre mot de passe." . $BR .
+					$BR . 
+					"Merci pour votre confiance," . $BR . 
+					"Les organisateurs." . $BR .
+					"</body></html>");
+		}
+		
+		if (!$this->email->send()) {
+			// Send mail error
+			log_message('error', $this->email->print_debugger());
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	function register_validate() {
@@ -156,17 +218,102 @@ class Auth extends CI_Controller {
 		$data['email'] = isset($_POST['email']) ? $_POST['email'] : "";
 		
 		if ($rules->run()) {
-			// FIXME Send confirmation mail to user.
+			// Update user
+			$confirmation_code = md5(salt(64));
+			$userdata['activated'] = 0;
+			$userdata['activation_code'] = $confirmation_code;
+			$ret = $this->update('email', $data['email'], $userdata);
 			
-			$data['page_title'] = 'Réinitialisation réussie !';
-			$data['page_icon'] = 'user';
-			render($this, 'auth/forgot_ok', $data);
+			if (!$ret) {
+				// Email non reconnu
+				$data['error_msg'] = 'Email non reconnu !';
+				$data['page_title'] = 'Réinitialisation d\'un compte';
+				$data['page_icon'] = 'user';
+				render($this, 'auth/forgot_form', $data);
+			} else {
+				// Send confirmation mail to user.
+				$this->sendmail($data['email'], $confirmation_code, FALSE);
+				
+				$data['page_title'] = 'Réinitialisation en cours !';
+				$data['page_icon'] = 'user';
+				render($this, 'auth/forgot_ok', $data);
+			}
 		} else {
-			// First display
+			// First display or error
 			$data['page_title'] = 'Réinitialisation d\'un compte';
 			$data['page_icon'] = 'user';
 			render($this, 'auth/forgot_form', $data);
 		}
+	}
+
+	function reset() {
+		if (is_logged_in($this)) {
+			redirect('welcome');
+		}
+
+		$confirmation_code = isset($_GET['confirmation_code']) ? $_GET['confirmation_code'] : "";
+		if ($confirmation_code == NULL || strlen($confirmation_code) <= 0) {
+			$this->session->set_flashdata('error', "Echec de la réinitialisation (101)");
+			redirect('welcome');
+		} else {
+			$user_id = $this->Usermodel->get_userid_from_confirmation_code($confirmation_code);
+			if (!$user_id) {
+				$this->session->set_flashdata('error', "Echec de la réinitialisation (102)");
+				redirect('welcome');
+			} else {
+				$data['confirmation_code'] = $confirmation_code;
+				$data['page_title'] = 'Réinitialisation du mot de passe';
+				$data['page_icon'] = 'user';
+				render($this, 'auth/reset_form', $data);
+			}
+		}
+	}
+
+	function reset_validate() {
+		if (is_logged_in($this)) {
+			redirect('welcome');
+		}
+		
+		$rules = $this->form_validation;
+		$rules->set_rules('password', 'Password', 'required|min_length[6]');
+		$rules->set_rules('password2', 'Confirmation', 'required');
+
+		// Données soumises
+		$data['confirmation_code'] = isset($_POST['confirmation_code']) ? $_POST['confirmation_code'] : "-";
+		$data['password'] = isset($_POST['password']) ? $_POST['password'] : "";
+		$data['password2'] = isset($_POST['password2']) ? $_POST['password2'] : "";
+
+		if ($rules->run()) {
+			// Check that the two passwords given match.
+			if ($data['password'] != $data['password2']) {
+				$data['error_msg'] = 'Les mots de passe ne correspondent pas.';
+			} else {
+				// Change password 
+				$user_id = $this->Usermodel->get_userid_from_confirmation_code($data['confirmation_code']);
+				
+				if (!$user_id) {
+					$this->session->set_flashdata('error', "Echec de la réinitialisation (103)");
+				} else {
+					// Update user
+					$userdata['activated'] = 1;
+					$userdata['password'] = crypt_password($data['password']);
+					$userdata['activation_code'] = NULL;
+					$ret = $this->update('user_id', $user_id, $userdata);
+					
+					if ($ret) {
+						$this->session->set_flashdata('message', "Mot de passe modifié, vous pouvez vous connecter.");
+					} else {
+						$this->session->set_flashdata('error', "Echec de la réinitialisation (104)");
+					}
+				}
+				redirect('welcome');
+			}
+		}
+		
+		// Error, re-display form
+		$data['page_title'] = 'Réinitialisation du mot de passe';
+		$data['page_icon'] = 'user';
+		render($this, 'auth/reset_form', $data);
 	}
 
 	function login($errorMsg = NULL){

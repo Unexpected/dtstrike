@@ -1,5 +1,6 @@
 <?php
 	echo validation_errors('<p class="form_error">', '</p>');
+	if (isset($error_msg)) echo '<p class="form_error">'.$error_msg.'</p>';
 	
 	echo form_open('auth/forgot', array('id' => 'forgotform', 'class' => 'form-horizontal'));
 
