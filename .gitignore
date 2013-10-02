@@ -17,3 +17,4 @@ dist
 /LocalTester/LocalTester.zip
 /LocalTester/dist/*
 /LocalTester/maps
+/logs/*.log
