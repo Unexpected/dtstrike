@@ -10,15 +10,6 @@ if ( ! function_exists('render'))
 	}
 }
 
-// function nice_rank($rank, $rank_change) {
-// 	$str = $rank;
-// 	$str .= nice_ordinal($rank);
-// 	if ($rank_change != null && $rank_change != 0) {
-// 		$str .= ' ('.$rank_change.')';
-// 	}
-// 	return $str;
-// }
-
 function nice_rank($rank, $rank_change, $filter_rank=NULL) {
 	$rank_arrow = nice_change_marker($rank_change, 0, FALSE);
 	if ($filter_rank) {
@@ -31,16 +22,6 @@ function nice_rank($rank, $rank_change, $filter_rank=NULL) {
 	}
 }
 
-// function nice_opponent($user_id, $username, $game_rank, $rank_before,
-//         $skill, $mu, $sigma, $skill_change, $mu_change, $sigma_change,
-//         $user=False) {
-//     $skill_hint = skill_hint($skill, $mu, $sigma, $skill_change, $mu_change, $sigma_change);
-//     if ($user) {
-//         return "<span><em title='$skill_hint'>#$rank_before-</em><strong>".nice_ordinal($game_rank)."</strong>-".nice_user($user_id, $username)."</span>";
-//     } else {
-//         return "<span><em title='$skill_hint'>#$rank_before-</em>".nice_ordinal($game_rank)."-".nice_user($user_id, $username)."</span>";
-//     }
-// }
 function nice_opponent($user_id, $username, $game_rank, $rank_before,
 		$user=False) {
 	$skill_hint = '';
@@ -151,7 +132,6 @@ function nice_status($status) {
 }
 
 function nice_viewer($game_id, $nb_turns, $cutoff, $winning_turn) {
-	//return $nb_turns.' turns, '.$cutoff.' »<br/>Won at '.$winning_turn.' »</a>';
 	$str = $nb_turns.' turns, '.$cutoff.' »';
 	return '<a href="'.site_url("game/view/$game_id").'">'.$str.'</a>';
 }
