@@ -1,40 +1,16 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
-/*
- * This file is part of AuthLDAP.
 
-AuthLDAP is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-AuthLDAP is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with AuthLDAP.  If not, see <http://www.gnu.org/licenses/>.
-*
-*/
-
-/**
- * @author      Greg Wojtak <gwojtak@techrockdo.com>
- * @copyright   Copyright © 2010-2013 by Greg Wojtak <gwojtak@techrockdo.com>
- * @package     AuthLDAP
- * @subpackage  auth demo
- * @license     GNU Lesser General Public License
-*/
 class Auth extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 
 		$this->load->library('Form_validation');
-		$this->load->library('AuthLDAP');
 
 		$this->load->model('Usermodel');
 		$this->load->model('User_rolesmodel');
         $this->load->model('Organizationmodel');
         $this->load->model('Countrymodel');
+        $this->load->model('Login_attemptmodel');
 
         $this->load->helper('login');
 	}
@@ -102,7 +78,7 @@ class Auth extends CI_Controller {
 						// Create user
 						$this->Usermodel->email = $data['email'];
 						$this->Usermodel->username = $data['username'];
-						$this->Usermodel->password = $data['password'];
+						$this->Usermodel->password = crypt_password($data['password']);
 						$this->Usermodel->country_code = $data['country_code'];
 						$this->Usermodel->org_id = $data['org_id'];
 						$this->Usermodel->activation_code = $confirmation_code;
@@ -173,7 +149,7 @@ class Auth extends CI_Controller {
 
 	function login($errorMsg = NULL){
 		$this->session->keep_flashdata('tried_to');
-		if(!$this->authldap->is_authenticated()) {
+		if (!$this->is_authenticated()) {
 			// Set up rules for form validation
 			$rules = $this->form_validation;
 			$rules->set_rules('username', 'Username', 'required|alpha_numeric');
@@ -181,51 +157,17 @@ class Auth extends CI_Controller {
 
 			// Do the login...
 			if ($rules->run()) {
-				if ($this->authldap->login(
-					$rules->set_value('username'),
-					$rules->set_value('password'))) {
+				$username = $rules->set_value('username');
+				$password = $rules->set_value('password');
+				
+				// Log attempt
+				$naive_ip = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
+				$real_ip = mysql_real_escape_string($this->getRealIpAddr());
+				$this->Login_attemptmodel->logAttempt($username, $naive_ip, $real_ip);
+				
+				if ($this->Usermodel->check_credentials($username, $password)) {
 					// Login WIN!
-					$username = $this->session->userdata('username');
-	
-					// Check if user exists
-					$user_id = -1;
-					$user_id_arr = $this->Usermodel->search('user_id', array(array("username", $username)));
-					if (is_array($user_id_arr) && count($user_id_arr) == 1) {
-						$user_id = $user_id_arr[0]->user_id;
-					}
-					if ($user_id == -1) {
-						// No, create user
-						$this->Usermodel->user_id = null;
-						$this->Usermodel->username = $username;
-						$this->Usermodel->email = $this->session->userdata('mail');
-						$this->Usermodel->org_id = 1; // 1 = CGI global
-						$this->Usermodel->country_code = 'FR';
-						$this->Usermodel->created = new DateTime();
-						$ret = $this->Usermodel->insert();
-						if (!$ret) {
-							log_message('error', 'Error during user creation');
-							$this->authldap->logout();
-							$data['login_fail_msg'] = 'Erreur lors de la création de l\'utilisateur en base.';
-							render($this, 'auth/login_form', $data);
-							return;
-						}
-	
-						// And create role
-						$user_id_arr = $this->Usermodel->search('user_id', array(array("username", $username)));
-						if (is_array($user_id_arr) && count($user_id_arr) == 1) {
-							$user_id = $user_id_arr[0]->user_id;
-						} else {
-							log_message('error', 'Error during user creation');
-							$this->authldap->logout();
-							$data['login_fail_msg'] = 'Erreur lors de la création de l\'utilisateur en base.';
-							render($this, 'auth/login_form', $data);
-							return;
-						}
-						$this->User_rolesmodel->user_id = $user_id;
-						$this->User_rolesmodel->role_name = 'USER';
-						$this->User_rolesmodel->insert();
-					}
-					$this->session->set_userdata('user_id', $user_id);
+					$user_id = $this->session->userdata('user_id');
 						
 					// Load roles from DB
 					$roles_db = $this->User_rolesmodel->search('role_name', array(array("user_id", $user_id)));
@@ -235,23 +177,22 @@ class Auth extends CI_Controller {
 					}
 					$this->session->set_userdata('roles', $roles);
 	
-					if($this->session->flashdata('tried_to')) {
+					if ($this->session->flashdata('tried_to')) {
 						redirect($this->session->flashdata('tried_to'));
-					}else {
+					} else {
 						redirect('welcome');
 					}
 				} else {
 					// Login FAIL
 					$data['page_title'] = 'Identification';
 					$data['page_icon'] = 'user';
-					$data['login_fail_msg'] = 'Error with LDAP authentication.';
+					$data['login_fail_msg'] = 'Utilisateur/Mot de passe invalides ou utilisateur inactif.';
 					render($this, 'auth/login_form', $data);
 				}
 			}else {
 				// No Login
 				$data['page_title'] = 'Identification';
 				$data['page_icon'] = 'user';
-				//$data['login_fail_msg'] = 'Error with LDAP authentication.';
 				render($this, 'auth/login_form', $data);
 			}
 		} else {
@@ -261,10 +202,30 @@ class Auth extends CI_Controller {
 	}
 
 	function logout() {
-		if($this->session->userdata('logged_in')) {
-			$this->authldap->logout();
+		if ($this->session->userdata('logged_in')) {
+	        $this->session->set_userdata(array('logged_in' => FALSE));
+	        $this->session->sess_destroy();
 		}
 		redirect('welcome');
+	}
+	
+    private function is_authenticated() {
+        if($this->session->userdata('logged_in')) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+	
+	private function getRealIpAddr() {
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip;
 	}
 }
 

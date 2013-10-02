@@ -5,7 +5,6 @@ class User extends CI_Controller {
 		parent::__construct();
 
 		$this->load->library('Form_validation');
-		$this->load->library('AuthLDAP');
         $this->load->library('Bootstrap');
 
 		$this->load->model('Usermodel');

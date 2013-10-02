@@ -24,6 +24,12 @@ Class Usermodel extends Basemodel {
 		return 'user';
 	}
 	
+	/**
+	 * Get user data
+	 * 
+	 * @param string $user_id
+	 * @return NULL|Usermodel
+	 */
 	function getUserData($user_id) {
 		if (!isset($user_id)) {
 			return NULL;
@@ -47,6 +53,46 @@ Class Usermodel extends Basemodel {
 			return NULL;
 		}
 		return $users[0];
+	}
+	
+	/**
+	 * Check is username/password match an activated user
+	 * 
+	 * @param string $username
+	 * @param string $password
+	 * @return boolean
+	 */
+	function check_credentials($username, $password) {
+		log_message('debug', "check_credentials($username, $password)");
+		
+		// Create query
+		$this->db->select('user_id, username, password', false);
+		$this->db->from($this->getTableName());
+		$this->db->where('username', $username);
+		$this->db->where('activated', 1);
+		
+		$query = $this->db->get();
+		if ($query->num_rows())  {
+			$users = $query->result();
+			if (count($users) == 1) {
+				$user = $users[0];
+				log_message('debug', "found user");
+				log_message('debug', $user->password);
+	
+				if (crypt($password, $user->password) == $user->password) {
+					// Create session data
+			        $userdata = array('username' => $username,
+			                          'user_id' => $user->user_id,
+			                          'logged_in' => TRUE);
+			        $this->session->set_userdata($userdata);
+			        
+					return true;
+				}
+			}
+			return false;
+		} else {
+			return false;
+		}
 	}
 
 }
