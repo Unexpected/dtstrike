@@ -23,3 +23,13 @@ function changeSkin(val) {
 	$(newSkinLink).attr('href', val);
 	oldSkinLink.parentNode.replaceChild(newSkinLink, oldSkinLink);
 }
+
+function orgSelect() {
+	var val = $("#org_id").val();
+	console.debug(val);
+	if (val == '-') {
+		// Remove select, show input
+		$("#org_id").hide();
+		$("#org_name").show();
+	}
+}

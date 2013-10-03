@@ -57,7 +57,7 @@ Class Basemodel extends CI_Model {
 				$resultArray[""] = "";
 			}
 			foreach ($results as $result) {
-				$resultArray[$result->$id_field] = $result->$value_field;
+				$resultArray["".$result->$id_field] = $result->$value_field;
 			}
 			
 			return $resultArray;
