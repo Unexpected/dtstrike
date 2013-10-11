@@ -15,6 +15,9 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 </p>
 <br/>
 
+<?php
+	$lineCount = 0;
+?>
 <h3>Voici les Starter-Kits disponibles</h3>
 <table class="table table-striped table-hover table-condensed">
 <thead>
@@ -25,32 +28,37 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	</tr>
 </thead>
 <tbody>
-	<tr class="even">
+	<tr>
+		<td>C#</td>
+		<td>Nos serveurs fonctionnent sous Mono 2.10.8</td>
+		<td><a href="<?php echo base_url('starters/cSharp_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+	<tr>
 		<td>Go</td>
 		<td>Nos serveurs fonctionnent sous Go 1.1</td>
 		<td><a href="<?php echo base_url('starters/go_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
-	<tr class="odd">
+	<tr>
 		<td>Java</td>
 		<td>Nos serveurs fonctionnent sous OpenJDK 1.7</td>
 		<td><a href="<?php echo base_url('starters/java_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
-	<tr class="even">
+	<tr>
 		<td>JavaScript</td>
 		<td>Nos serveurs fonctionnent sous node 0.10</td>
 		<td><a href="<?php echo base_url('starters/javascript_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
-	<tr class="odd">
+	<tr>
 		<td>PHP</td>
 		<td>Nos serveurs fonctionnent sous PHP 5.4</td>
 		<td><a href="<?php echo base_url('starters/php_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
-	<tr class="even">
+	<tr>
 		<td>Python</td>
 		<td>Nos serveurs fonctionnent sous Python 3.2</td>
 		<td><a href="<?php echo base_url('starters/python_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
-	<tr class="odd">
+	<tr>
 		<td>Scala</td>
 		<td>Nos serveurs fonctionnent sous Scala 2.9</td>
 		<td><a href="<?php echo base_url('starters/scala_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
