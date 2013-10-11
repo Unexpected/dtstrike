@@ -1,0 +1,38 @@
+Créer sur Apache les alias suivants :
+(fichier /etc/apache2/conf.d/challenge.conf)
+(pensez à adapter le chemin vers le dossier de checkout)
+
+Alias /challenge/visualizer "/project/dtstrike/visualizer"
+<Directory "/project/dtstrike/visualizer">
+        Options FollowSymLinks Indexes
+        AllowOverride All
+        Allow from all
+</Directory>
+Alias /challenge/maps "/project/dtstrike/maps"
+Alias /challenge/api/maps "/project/dtstrike/maps"
+<Directory "/project/dtstrike/maps">
+        Options Indexes FollowSymLinks MultiViews
+        AddEncoding x-gzip .mapgz
+        AddType text/plain .mapgz .map
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+</Directory>
+Alias /challenge/replays "/project/dtstrike/replays"
+<Directory "/project/dtstrike/replays">
+        Options Indexes FollowSymLinks MultiViews
+        AddEncoding x-gzip .replaygz
+        AddType application/json .replay .replaygz
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+</Directory>
+Alias /challenge "/project/dtstrike/website"
+<Directory "/project/dtstrike/website">
+        Options FollowSymLinks Indexes
+        AllowOverride All
+        Allow from all
+</Directory>
+
+
+
