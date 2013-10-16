@@ -89,12 +89,12 @@ class Auth extends CI_Controller {
 						$this->Usermodel->insert();
 						
 						// Send confirmation mail to user.
-						if ($this->sendmail($data['email'], true)) {
+						if ($this->sendmail($data['email'], $confirmation_code, true)) {
+							$register = true;
+						} else {
 							// Send mail error
 							$data['register_fail_msg'] = 'Erreur lors de l\'envoi du mail de confirmation, merci de vous réinscrire ultérieurement.';
 							$this->Usermodel->delete('username', $data['username']);
-						} else {
-							$register = true;
 						}
 					}
 				}
