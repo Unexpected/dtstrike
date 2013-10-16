@@ -1,8 +1,11 @@
 				</section>
 			</div>
+<?php if (!isset($no_menu)) { ?>
 			<?php include 'menu.php'; ?>
+<?php } ?>
 		</div>
 	</div>
+<?php if (!isset($no_footer)) { ?>
 	<footer class="navbar navbar-fixed-bottom">
 		<div class="navbar-inner">
 			<div class="pull-left" style="padding-top: 8px;">
@@ -24,5 +27,16 @@
 			</form>
 		</div>
 	</footer>
+<?php } ?>
+<?php if (isset($no_header)) { ?>
+<script type="text/javascript">
+$('body').css('padding', '0');
+if ($('#container').width() > $('.container').width()) {
+	$('.container').css('width', ($('#container').width()+40)+'px');
+}
+$('.span9').css('width', 'auto');
+$('.span9').css('float', 'none');
+</script>
+<?php } ?>
 </body>
 </html>

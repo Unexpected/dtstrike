@@ -18,6 +18,7 @@
 	<script type="text/javascript" src="<?php echo base_url("static/js/challenge.js") ?>"></script>
 </head>
 <body>
+<?php if (!isset($no_header)) { ?>
 	<header class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<h1 class="pull-left">
@@ -31,6 +32,7 @@
 			</div>
 		</div>
 	</header>
+<?php } ?>
 	<div class="container">
 		<div class="row-fluid">
 			<div class="span9 pull-right">

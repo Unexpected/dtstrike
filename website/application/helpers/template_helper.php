@@ -4,6 +4,11 @@ if ( ! function_exists('render'))
 {
 	function render($context, $view, $data = NULL)
 	{
+		if (isset($_REQUEST['removeAll'])) {
+			$data['no_header'] = TRUE;
+			$data['no_footer'] = TRUE;
+			$data['no_menu'] = TRUE;
+		}
 		$context->load->view('all_header', $data);
 		$context->load->view($view, $data);
 		$context->load->view('all_footer');
