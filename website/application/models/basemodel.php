@@ -186,7 +186,7 @@ Class Basemodel extends CI_Model {
 	 * Suppression de la donnée spécifiée.
 	 */
 	function delete($idField, $idValue) {
-		return $this->db->delete($this->getTableName(), $this, array($idField => $idValue));
+		return $this->db->delete($this->getTableName(), array($idField => $idValue));
 	}
 }
 
