@@ -8,7 +8,7 @@
 $config['protocol'] = 'smtp';
 
 // SMTP parameters
-$config['smtp_host'] = 'smtp.uk.logica.com';
+$config['smtp_host'] = '10.83.159.68';
 $config['smtp_port'] = 25;
 $config['smtp_user'] = '';
 $config['smtp_pass'] = '';
