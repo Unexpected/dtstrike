@@ -35,7 +35,7 @@ class Auth extends CI_Controller {
 		$rules->set_rules('country_code', 'Confirmation', 'required');
 
 		// Données soumises
-		$data['email'] = isset($_POST['email']) ? $_POST['email'] : "@logica.com";
+		$data['email'] = isset($_POST['email']) ? $_POST['email'] : "";
 		$data['username'] = isset($_POST['username']) ? $_POST['username'] : "";
 		$data['password'] = isset($_POST['password']) ? $_POST['password'] : "";
 		$data['password2'] = isset($_POST['password2']) ? $_POST['password2'] : "";
