@@ -1,11 +1,5 @@
 <code>Merci de vous inscrire pour le concours !</code><br/>
 <p>
-Vous pouvez maintenant vous identifier avec votre compte.<br/>
-</p>
-<p><a href="<?php echo site_url('welcome') ?>">Retour à la page d'accueil.</a></p>
-<?php
-/*
-<p>
 Un message de confirmation sera envoyé à l'adresse email que vous avez fourni.<br/>
 Vous devez cliquer sur le lien dans le message pour activer votre compte.<br/>
 </p>
@@ -18,5 +12,4 @@ Avant même de penser à nous contacter en demandant de l'aide, <b>vérifiez vot
 </p>
 
 <p><a href="<?php echo site_url('welcome') ?>">Retour à la page d'accueil.</a></p>
-*/ ?>
 

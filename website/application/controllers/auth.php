@@ -35,7 +35,7 @@ class Auth extends CI_Controller {
 		$rules->set_rules('country_code', 'Confirmation', 'required');
 
 		// Données soumises
-		$data['email'] = isset($_POST['email']) ? $_POST['email'] : "";
+		$data['email'] = isset($_POST['email']) ? $_POST['email'] : "@logica.com";
 		$data['username'] = isset($_POST['username']) ? $_POST['username'] : "";
 		$data['password'] = isset($_POST['password']) ? $_POST['password'] : "";
 		$data['password2'] = isset($_POST['password2']) ? $_POST['password2'] : "";
@@ -88,9 +88,23 @@ class Auth extends CI_Controller {
 						
 						$this->Usermodel->insert();
 						
+						
 						// Send confirmation mail to user.
 						if ($this->sendmail($data['email'], $confirmation_code, true)) {
-							$register = true;
+							// And create role
+							$user_id_arr = $this->Usermodel->search('user_id', array(array("username", $data['username'])));
+							if (is_array($user_id_arr) && count($user_id_arr) == 1) {
+								$user_id = $user_id_arr[0]->user_id;
+								$this->User_rolesmodel->user_id = $user_id;
+								$this->User_rolesmodel->role_name = 'USER';
+								$this->User_rolesmodel->insert();
+								
+								$register = true;
+							} else {
+								log_message('error', 'Error during user role creation');
+								$data['register_fail_msg'] = 'Erreur lors de la création de l\'utilisateur en base.';
+								$this->Usermodel->delete('username', $data['username']);
+							}
 						} else {
 							// Send mail error
 							$data['register_fail_msg'] = 'Erreur lors de l\'envoi du mail de confirmation, merci de vous réinscrire ultérieurement.';
@@ -128,8 +142,7 @@ class Auth extends CI_Controller {
 	 * @return boolean
 	 */
 	private function sendmail($to, $confirmation_code, $register) {
-		// FIXME : URL ?
-		$BASE_URL = "http://toy.groupinfra.com/sixchallenge/";
+		$BASE_URL = site_url();
 		$BR = "<br/>\n\n";
 		
 		$this->email->from('cgichallenge@logica.com', 'CGI Challenge');
