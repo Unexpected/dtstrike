@@ -23,6 +23,7 @@
 		<div class="navbar-inner">
 			<h1 class="pull-left">
 				<a href="<?php echo base_url() ?>">CGI <i class="icon-rocket icon-large"></i> Challenge</a>
+				<img src="<?php echo base_url("static/images/beta.png") ?>"/>
 			</h1>
 			<div class="logo pull-right">
 				<img id="logo_cgi" src="<?php echo base_url("static/images/logo/logo.png") ?>" style="position: absolute; z-index: 1;" />
