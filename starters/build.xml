@@ -44,12 +44,6 @@
 	<target name="pkg_all" depends="build_engine">
 		<!-- Build all starters -->
 		<foreach list="${starterList}" target="zipStarter" param="var" />
-		
-		<!--
-		<zip destfile="LocalTester.zip">
-			 <fileset file="dist/**" />
-		</zip>
-		-->
 	</target>
 	
 </project>
