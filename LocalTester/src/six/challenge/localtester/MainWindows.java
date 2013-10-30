@@ -4,12 +4,20 @@ import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowStateListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.InvalidPropertiesFormatException;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -67,6 +75,29 @@ public class MainWindows {
 	 */
 	public MainWindows() {
 		initialize();
+		
+		// Restore fields values
+		Properties probLib = new Properties();
+		try {
+			File propFile = new File("props.xml");
+			FileInputStream reader =new FileInputStream(propFile);
+			probLib.loadFromXML(reader);
+			
+			// Restore
+			mapField.setText(probLib.getProperty("map", ""));
+			bot1Field.setText(probLib.getProperty("bot1", ""));
+			bot2Field.setText(probLib.getProperty("bot2", ""));
+			bot3Field.setText(probLib.getProperty("bot3", ""));
+			bot4Field.setText(probLib.getProperty("bot4", ""));
+			turnsField.setText(probLib.getProperty("turns", turnsField.getText()));
+			timeField.setText(probLib.getProperty("time", timeField.getText()));
+		} catch (FileNotFoundException e) {
+			// No properties
+		} catch (InvalidPropertiesFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -186,6 +217,54 @@ public class MainWindows {
 		});
 		frmSixchallengeLocaltester.getContentPane().add(btnGenerateNewMap, "cell 0 1");
 
+		frmSixchallengeLocaltester.addWindowListener(new WindowListener() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// Window closing, store pref
+				Properties probLib = new Properties();
+				probLib.put("map", mapField.getText());
+				probLib.put("bot1", bot1Field.getText());
+				probLib.put("bot2", bot2Field.getText());
+				probLib.put("bot3", bot3Field.getText());
+				probLib.put("bot4", bot4Field.getText());
+				probLib.put("turns", turnsField.getText());
+				probLib.put("time", timeField.getText());
+				
+				// Save file
+				try {
+					File propFile = new File("props.xml");
+					FileOutputStream writer = new FileOutputStream(propFile);
+					probLib.storeToXML(writer, "");
+					writer.close();
+				} catch (FileNotFoundException fnfe) {
+					// No properties
+				} catch (InvalidPropertiesFormatException ee) {
+					ee.printStackTrace();
+				} catch (IOException ee) {
+					ee.printStackTrace();
+				}
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+			}
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+		});
 	}
 
 	private String chooseMap() {
@@ -249,7 +328,6 @@ public class MainWindows {
 			System.setErr(errorStream);
 
 		} catch (IOException e2) {
-			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 
