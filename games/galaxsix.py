@@ -42,7 +42,7 @@ class GalaxSix(Game):
         self.bonus = [0]*self.num_players
         
         for player in range(self.num_players):
-            self.score[player] = len(self.eco_planets_for_player(player + 1))
+	    self.score[player] = self.player_score(player)
 
 	self.score_history = [[s] for s in self.score]
 
@@ -183,7 +183,9 @@ class GalaxSix(Game):
     def do_orders(self):
         """ Create fleets for each player order
 	"""
-	for orders in self.orders:
+	for player, orders in enumerate(self.orders):
+	    if not self.is_alive(player):
+		continue
 	    for order in orders:
 		source_id = order[0]
 		target_id = order[1]
@@ -277,6 +279,9 @@ class GalaxSix(Game):
     def eco_planets_for_player(self, player):
         return [p for p in self.planets if isinstance(p, EconomicPlanet) and p.owner == player]
 	
+    def eco_planets(self): 
+	return [p for p in self.planets if isinstance(p, EconomicPlanet)]
+
     def remaining_players(self):
         """ Return the players still alive """
         return [p+1 for p in range(self.num_players) if self.is_alive(p)]
@@ -300,7 +305,8 @@ class GalaxSix(Game):
         result = []
 	for i in range(1, 1 + self.num_players): 
 	    switched_index = s[i]
-	    result.append(data[switched_index - 1])
+	    if switched_index - 1 < len(data):
+		result.append(data[switched_index - 1])
 	return result
 
     def game_over(self):
@@ -331,7 +337,8 @@ class GalaxSix(Game):
 		f.num_ships = 0
 		f.turns_remaining = 0
 	
-	self.score[player] = 0	
+	self.score[player] = 0
+	self.orders[player] = []
 	
     def start_game(self):
         """ Called by engine at the start of the game """
@@ -356,13 +363,22 @@ class GalaxSix(Game):
 	for p in self.planets:
 	    self.planets_ships[p.id] = p.num_ships
 
+	self.orders = [[] for i in range(self.num_players)]
+
+    def player_score(self, player):
+	player_score = len(self.eco_planets_for_player(player + 1))
+	if self.is_alive(player):
+	    player_score += len(self.eco_planets())
+	return player_score
+
+
     def finish_turn(self):
         """ Called by engine at the end of the turn """
         self.do_orders()
 	self.do_timestep()
 
 	for player in range(self.num_players):
-	    self.score[player] = len(self.eco_planets_for_player(player + 1))
+	    self.score[player] = self.player_score(player)
 
         # record score in score history
         for i, s in enumerate(self.score):
@@ -384,6 +400,8 @@ class GalaxSix(Game):
 	    if len(self.fleets) > 0:
 		turn_history = turn_history + ',' + ','.join(fleets_history)
 	    self.replay_history.append(turn_history)
+
+	self.orders = [[] for i in range(self.num_players)]
 
     def calc_significant_turns(self):
         ranking_bots = [sorted(self.score, reverse=True).index(x) for x in self.score]
@@ -442,7 +460,10 @@ class GalaxSix(Game):
         """
 	player_number = player + 1
 	for p in self.planets: 
-	    if p.owner == player_number:
+	    if isinstance(p, MilitaryPlanet) and p.owner == player_number:
+		return True
+	for f in self.fleets: 
+	    if f.owner == player_number:
 		return True
         return False
 
@@ -455,7 +476,10 @@ class GalaxSix(Game):
 
     def do_moves(self, player, moves):
         """ Called by engine to give latest player orders """
-        p = player + 1 # players id start at 0 in engine
+	if not self.is_alive(player):
+	    self.orders[player] = []
+	    return [], [], []
+	p = player + 1 # players id start at 0 in engine
 	valid, ignored, invalid = self.parse_orders(p, moves)
         orders, valid, ignored, invalid = self.validate_orders(p, moves, valid, ignored, invalid)
         self.orders[player] = orders
