@@ -11,7 +11,7 @@
 		<mkdir dir="dist/temp/" />
 		<mkdir dir="dist/temp/test"  />
 		
-		<property name="starterList" value="c,c#,Go,java,js,php,prolog,py,scala" />
+		<property name="starterList" value="c#,Go,java,js,php,py,scala" />
 	</target>
 	
 	<!--
