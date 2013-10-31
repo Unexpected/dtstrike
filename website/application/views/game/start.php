@@ -21,7 +21,7 @@ Les kits de démarrage sont tous des fichiers ZIP, et vous devriez maintenant av
 
 <h3>3. Soumettre le Kit</h3>
 <p>
-Ne vous embêtez pas décompresser ou de modifier le kit de démarrage vous venez de télécharger.<br/>
+Ne vous embêtez pas à décompresser ou à modifier le kit de démarrage vous venez de télécharger.<br/>
 Assurez-vous que vous êtes <a href="<?php echo site_url('auth/login'); ?>">connecté</a> au site web, 
 allez sur la <a href="<?php echo site_url('user/bot_upload'); ?>">page d'upload</a> et 
 soumettez le kit de démarrage (fichier ZIP) que vous venez de télécharger.
