@@ -1,7 +1,7 @@
 <ul>
 	<li>Le classement final sera déterminé à l'aide d'un tournoi informatisé conçu 
 	par l'organisateur du concours. Les résultats officiels seront définitifs.</li>
-	<li>Vous ne pouvez avoir qu'un seul compte lié à votre compte Groupinfra.</li>
+	<li>Vous ne pouvez avoir qu'un seul compte.</li>
 	<li>Votre programme ne peut pas prendre plus d'une seconde pour prendre toute 
 	initiative individuelle. Si vous voulez faire des calculs intensifs, n'oubliez 
 	pas d'ajouter du code qui vérifie l'heure à intervalles réguliers de sorte 

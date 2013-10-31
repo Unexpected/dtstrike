@@ -5,7 +5,7 @@ Voici les premières étapes pour vous lancer dans l'aventure.<br/>
 
 <h3>1. Vous connecter</h3>
 <p>
-Utilisez vos informations d'authentification Groupinfra pour <a href="<?php echo site_url('auth/login'); ?>">vous connecter</a> sur le site.
+Utilisez votre compte pour <a href="<?php echo site_url('auth/login'); ?>">vous connecter</a> sur le site.
 </p>
 <br/>
 
