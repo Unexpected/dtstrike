@@ -5,6 +5,7 @@
 		, array("Classement actuel", site_url("game/rank"))
 		, array("Dernières parties", site_url("game"))
 		, array("Les règles du concours", site_url("game/rules"))
+		, array("Le forum", base_url("forum"))
 		, array('Le concours', '', 'gamepad')
 		, array("Démarrage rapide", site_url("game/start"))
 		, array("Les kits de démarrage", site_url("game/kits"))
