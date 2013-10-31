@@ -40,7 +40,7 @@ public class MapGenerator {
 	public final int basesPerGamer;
 	public final double mapHeight = 640;
 	public final double mapWidth = 640;
-	public final double colonyRadius = 20;
+	public final double colonyRadius = 10;
 	public final double minDistanceFromColony;
 	public final double minDistanceFromEdge;
 	public final boolean debug;

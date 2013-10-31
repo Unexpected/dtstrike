@@ -30,6 +30,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.miginfocom.swing.MigLayout;
 import six.challenge.engine.Engine;
+import javax.swing.JScrollPane;
 
 public class MainWindows {
 
@@ -53,6 +54,7 @@ public class MainWindows {
 	private JTextField timeField;
 	private JTextPane errorPane;
 	private JButton btnGenerateNewMap;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -91,6 +93,7 @@ public class MainWindows {
 			bot4Field.setText(probLib.getProperty("bot4", ""));
 			turnsField.setText(probLib.getProperty("turns", turnsField.getText()));
 			timeField.setText(probLib.getProperty("time", timeField.getText()));
+			
 		} catch (FileNotFoundException e) {
 			// No properties
 		} catch (InvalidPropertiesFormatException e) {
@@ -114,7 +117,7 @@ public class MainWindows {
 		lblLocalLauncher = new JLabel("Local Launcher ");
 		frmSixchallengeLocaltester.getContentPane().add(lblLocalLauncher, "cell 0 0");
 
-		JLabel lblSelectionDeLa = new JLabel("Selection de la map : ");
+		JLabel lblSelectionDeLa = new JLabel("Map Selection: ");
 		frmSixchallengeLocaltester.getContentPane().add(lblSelectionDeLa, "flowx,cell 0 1");
 
 		mapField = new JTextField();
@@ -176,10 +179,10 @@ public class MainWindows {
 		bot4Field.setColumns(10);
 		frmSixchallengeLocaltester.getContentPane().add(bot4Field, "cell 0 5,growx");
 
-		lblNombreDeTours = new JLabel("Nombre de tours Max");
+		lblNombreDeTours = new JLabel("Max Number of turns");
 		frmSixchallengeLocaltester.getContentPane().add(lblNombreDeTours, "flowx,cell 0 6");
 
-		lblMillisecondesParT = new JLabel("Millisecondes par tours");
+		lblMillisecondesParT = new JLabel("Millisecondes per turn");
 		frmSixchallengeLocaltester.getContentPane().add(lblMillisecondesParT, "flowx,cell 0 7");
 
 		btnStart = new JButton("> Start");
@@ -202,9 +205,12 @@ public class MainWindows {
 		timeField.setText("1000");
 		frmSixchallengeLocaltester.getContentPane().add(timeField, "cell 0 7");
 		timeField.setColumns(10);
+		
+		scrollPane = new JScrollPane();
+		frmSixchallengeLocaltester.getContentPane().add(scrollPane, "cell 0 9,grow");
 
 		errorPane = new JTextPane();
-		frmSixchallengeLocaltester.getContentPane().add(errorPane, "cell 0 9,grow");
+		scrollPane.setViewportView(errorPane);
 		errorPane.setAutoscrolls(true);
 		
 		btnGenerateNewMap = new JButton("Generate New Map");
@@ -291,6 +297,9 @@ public class MainWindows {
 		 */
 
 		File replayFolder = new File("replay");
+		if (!replayFolder.exists()){
+			replayFolder.mkdir();
+		}
 		String[] replays = replayFolder.list();
 		int maxvalue = 0;
 		try {

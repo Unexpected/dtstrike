@@ -129,7 +129,7 @@ public class BotLibrary extends JDialog {
 		{
 			JPanel panel = new JPanel();
 			contentPanel.add(panel, BorderLayout.NORTH);
-			panel.setLayout(new MigLayout("", "[77px][383.00px][][5px][160px][89px]", "[25px][25px]"));
+			panel.setLayout(new MigLayout("", "[77px][383.00px,grow][][5px][89px]", "[25px][][25px]"));
 			{
 				JLabel lblBotName = new JLabel("Bot Name :");
 				panel.add(lblBotName, "cell 0 0,alignx left,aligny center");
@@ -140,16 +140,19 @@ public class BotLibrary extends JDialog {
 				botNameField.setColumns(10);
 			}
 			{
-				JLabel lblBotExecutable = new JLabel("Bot executable");
+				JLabel lblBotExecutable = new JLabel("Executable");
 				panel.add(lblBotExecutable, "cell 0 1,alignx left,aligny center");
 			}
 			{
-				exeBot = new JTextField();
-				exeBot.setColumns(10);
-				panel.add(exeBot, "cell 1 1,growx,aligny center");
+				{
+					exeBot = new JTextField();
+					exeBot.setColumns(10);
+					panel.add(exeBot, "cell 1 1,growx,aligny center");
+				}
 			}
 			{
 				JButton btnSelectBot = new JButton("Select executable");
+				btnSelectBot.setToolTipText("If it's a compiled language, just select the binary to run\nIf it's an (J)VM or interpreted language, the type the exact launch sequence of the bot.\nExample in the java example bots : java -jar xxxx/mybot.jar");
 				btnSelectBot.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						File maps = new File( "sampleBots" );
@@ -182,29 +185,7 @@ public class BotLibrary extends JDialog {
 				panel.add(btnSelectBot, "cell 2 1,alignx left,aligny top");
 			}
 			{
-				JButton btnDeleteSelected = new JButton("Delete");
-				btnDeleteSelected.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						List<String> values = new ArrayList<String>();
-						botLib.remove(botNameField.getText());
-						availableBots.setListData(botLib.keySet().toArray(new String[]{}));
-						File propFile = new File("bots.xml");
-						try {
-							FileOutputStream writer =new FileOutputStream(propFile);
-							botLib.storeToXML(writer, "");
-						} catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				});
-				panel.add(btnDeleteSelected, "cell 5 1,alignx right,aligny top");
-			}
-			{
-				JButton btnAddBot = new JButton("Add as new Bot");
+				JButton btnAddBot = new JButton("Update/Add as new Bot");
 				btnAddBot.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						List<String> values = new ArrayList<String>();
@@ -224,8 +205,28 @@ public class BotLibrary extends JDialog {
 						}
 					}
 				});
-				panel.add(btnAddBot, "cell 5 0,alignx right,aligny top");
+				panel.add(btnAddBot, "cell 4 1,alignx right,aligny top");
 			}
+			JButton btnDeleteSelected = new JButton("Delete selected one");
+			btnDeleteSelected.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					List<String> values = new ArrayList<String>();
+					botLib.remove(botNameField.getText());
+					availableBots.setListData(botLib.keySet().toArray(new String[]{}));
+					File propFile = new File("bots.xml");
+					try {
+						FileOutputStream writer =new FileOutputStream(propFile);
+						botLib.storeToXML(writer, "");
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+			panel.add(btnDeleteSelected, "cell 4 2,alignx right,aligny top");
 		}
 		{
 			JPanel panel = new JPanel();
@@ -279,6 +280,11 @@ public class BotLibrary extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}

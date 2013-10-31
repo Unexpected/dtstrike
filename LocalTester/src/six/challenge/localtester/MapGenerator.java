@@ -27,6 +27,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.awt.event.InputMethodListener;
 import java.awt.event.InputMethodEvent;
+import javax.swing.JScrollBar;
+import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 
 public class MapGenerator extends JDialog {
 
@@ -35,11 +38,10 @@ public class MapGenerator extends JDialog {
 	private JTextField textFieldMili;
 	private JTextField textFieldNeutralEco;
 	private JTextField textFieldNutralMili;
-	private JTextPane textPane;
-	private JSlider slider;
+	private JTextArea textPane;
 	private JTextField txtMymaptxt;
 	private JTextField mapFieldFile;
-	private JLabel labelPlayer;
+	private JTextField labelPlayer;
 
 	/**
 	 * Launch the application.
@@ -67,31 +69,13 @@ public class MapGenerator extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new MigLayout("", "[grow][grow]", "[][][][][][][grow][]"));
+		contentPanel.setLayout(new MigLayout("", "[grow][grow]", "[][][][][][][][grow]"));
 		{
-			JLabel lblNumberOfPlayer = new JLabel("Number of Player");
+			JLabel lblNumberOfPlayer = new JLabel("Number of Player (1-4)");
 			contentPanel.add(lblNumberOfPlayer, "cell 0 0,alignx right");
 		}
 		{
-			slider = new JSlider();
-			slider.addInputMethodListener(new InputMethodListener() {
-				public void caretPositionChanged(InputMethodEvent arg0) {
-					labelPlayer.setText(Integer.toString(slider.getValue()));
-				}
-				public void inputMethodTextChanged(InputMethodEvent arg0) {
-					labelPlayer.setText(Integer.toString(slider.getValue()));
-				}
-			});
-			slider.setSnapToTicks(true);
-			slider.setPaintTicks(true);
-			slider.setPaintLabels(true);
-			slider.setMinimum(2);
-			slider.setMaximum(4);
-			slider.setValue(2);
-			contentPanel.add(slider, "flowx,cell 1 0,aligny center");
-		}
-		{
-			JLabel lblNumberOfMilitary = new JLabel("Number of Start Military Planets for each player");
+			JLabel lblNumberOfMilitary = new JLabel("Number of Start Military Planets for each player (1-2)");
 			contentPanel.add(lblNumberOfMilitary, "cell 0 1,alignx right");
 		}
 		{
@@ -100,7 +84,7 @@ public class MapGenerator extends JDialog {
 			contentPanel.add(textFieldMili, "cell 1 1,growx");
 		}
 		{
-			JLabel lblNumberOfStart = new JLabel("Number of Start Economic Planets for each player");
+			JLabel lblNumberOfStart = new JLabel("Number of Start Economic Planets for each player (1-2)");
 			contentPanel.add(lblNumberOfStart, "cell 0 2,alignx right");
 		}
 		{
@@ -109,7 +93,7 @@ public class MapGenerator extends JDialog {
 			textFieldEco.setColumns(10);
 		}
 		{
-			JLabel lblNumberOfPlanets = new JLabel("Number of neutral Military Planets");
+			JLabel lblNumberOfPlanets = new JLabel("Number of neutral Military Planets (0-3)");
 			contentPanel.add(lblNumberOfPlanets, "cell 0 3,alignx right");
 		}
 		{
@@ -118,7 +102,7 @@ public class MapGenerator extends JDialog {
 			contentPanel.add(textFieldNutralMili, "cell 1 3,growx");
 		}
 		{
-			JLabel lblNumberOfNeutral = new JLabel("Number of neutral Economic Planets");
+			JLabel lblNumberOfNeutral = new JLabel("Number of neutral Economic Planets (0-3)");
 			contentPanel.add(lblNumberOfNeutral, "cell 0 4,alignx right");
 		}
 		{
@@ -133,7 +117,7 @@ public class MapGenerator extends JDialog {
 				public void actionPerformed(ActionEvent e) {
 
 					//(boolean debug, int pNbGamers, int pBasesPerGamer, int pColoniesPerGamer, int pneutralMilitary,	int pneutralEconomic)
-					com.cgi.itwar.map.MapGenerator gene = new com.cgi.itwar.map.MapGenerator(false,slider.getValue(),Integer.parseInt(textFieldMili.getText()), Integer.parseInt(textFieldEco.getText()),Integer.parseInt(textFieldNutralMili.getText()),Integer.parseInt(textFieldNeutralEco.getText()));
+					com.cgi.itwar.map.MapGenerator gene = new com.cgi.itwar.map.MapGenerator(true,Integer.parseInt(labelPlayer.getText()),Integer.parseInt(textFieldMili.getText()), Integer.parseInt(textFieldEco.getText()),Integer.parseInt(textFieldNutralMili.getText()),Integer.parseInt(textFieldNeutralEco.getText()));
 					
 					ArrayList<Colony> colonies = gene.getColonies();
 					StringBuffer MapFileBuffer = new StringBuffer();
@@ -148,22 +132,28 @@ public class MapGenerator extends JDialog {
 			btnGenerate.setActionCommand("OK");
 		}
 		{
-			textPane = new JTextPane();
-			contentPanel.add(textPane, "flowy,cell 0 6 2 1,grow");
-		}
-		{
 			JLabel lblFilename = new JLabel("FileName");
-			contentPanel.add(lblFilename, "cell 0 7,alignx trailing");
+			contentPanel.add(lblFilename, "cell 0 6,alignx trailing");
 		}
 		{
 			txtMymaptxt = new JTextField();
 			txtMymaptxt.setText("mymap.txt");
 			txtMymaptxt.setColumns(10);
-			contentPanel.add(txtMymaptxt, "cell 1 7,growx");
+			contentPanel.add(txtMymaptxt, "cell 1 6,growx");
 		}
 		{
-			labelPlayer = new JLabel("2");
-			contentPanel.add(labelPlayer, "cell 1 0,aligny center");
+			JScrollPane scrollPane = new JScrollPane();
+			contentPanel.add(scrollPane, "cell 0 7 2 1,grow");
+			{
+				textPane = new JTextArea();
+				scrollPane.setViewportView(textPane);
+			
+			}
+		}
+		{
+			labelPlayer = new JTextField();
+			labelPlayer.setColumns(10);
+			contentPanel.add(labelPlayer, "cell 1 0");
 		}
 
 		{
@@ -197,6 +187,11 @@ public class MapGenerator extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
