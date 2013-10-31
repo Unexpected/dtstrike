@@ -5,9 +5,9 @@
 	echo form_open('auth/reset_validate', array('id' => 'resetform', 'class' => 'form-horizontal'));
 	echo '<h3>Complétez tous les champs</h3>';
 
-	form_hidden('confirmation_code', $confirmation_code);
-	$this->bootstrap->password('Mot de passe :', array('name' => 'password', 'id' => 'password', 'class' => 'formfield', 'placeholder' => 'Mot de passe'), $password);
-	$this->bootstrap->password('Confirmation :', array('name' => 'password2', 'id' => 'password2', 'class' => 'formfield', 'placeholder' => 'Mot de passe'), $password2);
+	echo form_hidden('confirmation_code', $confirmation_code);
+	$this->bootstrap->password('Mot de passe :', array('name' => 'password', 'id' => 'password', 'class' => 'formfield', 'placeholder' => 'Mot de passe'), "");
+	$this->bootstrap->password('Confirmation :', array('name' => 'password2', 'id' => 'password2', 'class' => 'formfield', 'placeholder' => 'Mot de passe'), "");
 	
 	$this->bootstrap->submit('reinit', "Sauvegarder");
 	echo form_close();

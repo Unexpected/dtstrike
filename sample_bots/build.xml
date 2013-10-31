@@ -1,0 +1,52 @@
+<?xml version="1.0" ?> 
+<project name="SampleBotsBuild" default="clean" basedir=".">
+	
+	<property name="ant-contrib.jar" location="../ant_lib/ant-contrib-1.0b3.jar" />
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${ant-contrib.jar}" />
+	
+
+	<target name="init">
+		<delete dir="dist"/>
+		
+		<mkdir dir="dist" />
+		<mkdir dir="temp" />
+		
+		<!-- Get all bots-->
+		<property name="sampleBotsList" value="CrazyBot,DedicatedBot,DefensiveBot,DispersionBot,FlightyBot,LooterRageBot,PatientBot,WarriorRageBot" />
+		  
+	</target>
+	
+	<target name="buildEngine" depends="init">
+		<!-- Build engine -->
+		<ant dir="../server/ITWarsEngine/" antfile="ant/engine.xml" target="dist"/>
+	</target>
+	
+	<target name="compileAllBots" depends="buildEngine" >
+		<foreach list="${sampleBotsList}" target="compileBot" param="var" />
+	</target>
+	
+	<target name="jarAllBots" depends="compileAllBots" >
+		<foreach list="${sampleBotsList}" target="jarBot" param="var" />
+	</target>
+	
+	<target name="compileBot">
+		<mkdir dir="temp/${var}" />
+		<javac destdir="temp/${var}" debug="true" srcdir="${var}/src" includeantruntime="false" encoding="iso-8859-1" />
+        <copy todir="temp/${var}" overwrite="true">
+            <fileset file="${var}/src/*" />
+        </copy>
+	</target>
+	
+	<target name="jarBot">
+		<jar destfile="dist/${var}.jar" basedir="temp/${var}">
+			<manifest>
+				<attribute name="Main-Class" value="MyBot" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="clean" depends="jarAllBots" >
+        <delete dir="temp"/>
+	</target>
+	
+</project>

@@ -31,12 +31,12 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	<tr>
 		<td>C#</td>
 		<td>Nos serveurs fonctionnent sous Mono 2.10.8</td>
-		<td><a href="<?php echo base_url('starters/cSharp_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+		<td><a href="<?php echo base_url('starters/c#_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
 		<td>Go</td>
 		<td>Nos serveurs fonctionnent sous Go 1.1</td>
-		<td><a href="<?php echo base_url('starters/go_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+		<td><a href="<?php echo base_url('starters/Go_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
 		<td>Java</td>
@@ -46,7 +46,7 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	<tr>
 		<td>JavaScript</td>
 		<td>Nos serveurs fonctionnent sous node 0.10</td>
-		<td><a href="<?php echo base_url('starters/javascript_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+		<td><a href="<?php echo base_url('starters/js_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
 		<td>PHP</td>
@@ -56,7 +56,7 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	<tr>
 		<td>Python</td>
 		<td>Nos serveurs fonctionnent sous Python 3.2</td>
-		<td><a href="<?php echo base_url('starters/python_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+		<td><a href="<?php echo base_url('starters/py_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
 		<td>Scala</td>

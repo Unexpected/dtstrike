@@ -1,73 +1,72 @@
 <?xml version="1.0" ?> 
 <project name="LocalTesterBuild" default="clean" basedir="..">
 	
-	<property name="ant-contrib.jar" location="lib/ant-contrib-1.0b3.jar" />
+	<property name="ant-contrib.jar" location="../ant_lib/ant-contrib-1.0b3.jar" />
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${ant-contrib.jar}" />
 	
 
 	<target name="init">
 		<delete dir="dist"/>
 		<!-- temp creation-->
-		<mkdir dir="temp" />
 		<mkdir dir="bin" />
-		<mkdir dir="temp/botsCompile" />
 		
 		<!-- finished artifacts creation-->
 		<mkdir dir="dist" />
 		<mkdir dir="dist/sampleBots" />
 		<mkdir dir="dist/replay" />
-		
-		<!-- Get all bots-->
-		<property name="sampleBotsList" value="CrazyBot,DedicatedBot,DefensiveBot,DispersionBot,FlightyBot,LooterRageBot,PatientBot,WarriorRageBot" />
 		  
 	</target>
 
-	
-<target name="copyFiles" depends="init">
-    <copy todir="dist" overwrite="true">
-        <fileset file="scripts/*" />
-    </copy>
-    <copy todir="dist" overwrite="true">
-        <fileset file="bots.xml" />
-    </copy>
-    <copy todir="dist/replay/inc" overwrite="true">
-        <fileset file="../visualizer/index.html" />
-    </copy>
-    <copy todir="dist/replay/inc" overwrite="true">
-        <fileset file="../visualizer/inc/*" />
-    </copy>
-</target>
+		
+	<target name="copyFiles">
+		<copy todir="dist" overwrite="true">
+			<fileset file="scripts/*" />
+		</copy>
+		<copy todir="dist" overwrite="true">
+			<fileset file="bots.xml" />
+		</copy>
+		<copy todir="dist/replay/inc" overwrite="true">
+			<fileset file="../visualizer/index.html" />
+		</copy>
+		<copy todir="dist/replay/inc" overwrite="true">
+			<fileset file="../visualizer/inc/*" />
+		</copy>
+	</target>
 	
 	<target name="copyMaps" depends="copyFiles">
 		<mkdir dir="dist/maps/" />
         <copy todir="dist/maps" overwrite="true">
             <fileset file="../maps/map*" />
         </copy>
-        <copy todir="dist/maps" overwrite="true">
+        <!--
+		<copy todir="dist/maps" overwrite="true" failonerror="false">
             <fileset file="../server/ITWarsEngine/dist/maps/**" />
         </copy>
+		-->
 	</target>
 	
-	<target name="buildEngine" depends="copyMaps">
-		<!-- chained the build executions ?-->
+	<target name="buildEngine">
+		<!-- chained the build executions -->
+		<ant dir="../server/ITWarsEngine/" antfile="ant/engine.xml" target="dist"/>
+		<ant dir="../server/ITWarsEngine/" antfile="ant/mapsgen.xml" target="dist"/>
 	</target>
 		
 	<target name="compileTester" depends="buildEngine">
 		<unjar src="lib/miglayout15-swing.jar" dest="bin">
-	    <patternset>
-	      <exclude name="META-INF/*"/>
-	    </patternset>
-			</unjar>
+			<patternset>
+				<exclude name="META-INF/*"/>
+			</patternset>
+		</unjar>
 		<unjar src="../server/ITWarsEngine/dist/engine.jar" dest="bin" >
 		    <patternset>
-		      <exclude name="META-INF/*"/>
+				<exclude name="META-INF/*"/>
 		    </patternset>
-				</unjar>
+		</unjar>
 		<unjar src="../server/ITWarsEngine/dist/mapgen.jar" dest="bin" >
 		    <patternset>
-		      <exclude name="META-INF/*"/>
+				<exclude name="META-INF/*"/>
 		    </patternset>
-				</unjar>
+		</unjar>
 		<javac destdir="bin" debug="true" srcdir="src" classpath="." includeantruntime="false" encoding="iso-8859-1" />
 	</target>
 	
@@ -79,32 +78,16 @@
 		</jar>
 	</target>
 	
-	<target name="compileAllBots" depends="jarTester" >
-		<foreach list="${sampleBotsList}" target="compileBot" param="var" />
-	</target>
-	
-	<target name="jarAllBots" depends="compileAllBots" >
-		<foreach list="${sampleBotsList}" target="jarBot" param="var" />
-	</target>
-	
-	<target name="compileBot">
-		<mkdir dir="temp/botsCompile/${var}" />
-		<javac destdir="temp/botsCompile/${var}" debug="true" srcdir="../sample_bots/${var}/src" includeantruntime="false" encoding="iso-8859-1" />
-        <copy todir="temp/botsCompile/${var}" overwrite="true">
-            <fileset file="../sample_bots/${var}/src/*" />
+	<target name="copyBots">
+		<!-- Build the bots -->
+		<ant dir="../sample_bots/" antfile="build.xml" target="clean"/>
+		<!-- Copy the bots -->
+        <copy todir="dist/sampleBots/" overwrite="true">
+            <fileset file="../sample_bots/dist/*" />
         </copy>
 	</target>
-	
-	<target name="jarBot">
-	<jar destfile="dist/sampleBots/${var}.jar" basedir="temp/botsCompile/${var}">
-        <manifest>
-            <attribute name="Main-Class" value="MyBot" />
-        </manifest>
-	</jar>
-	</target>
 
-	<target name="clean" depends="jarAllBots" >
-        <delete dir="temp"/>
+	<target name="clean" depends="init,jarTester,copyBots,copyMaps" >
 		<delete dir="bin"/>
 		<zip destfile="LocalTester.zip">
 			 <fileset file="dist/**" />

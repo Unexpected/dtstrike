@@ -42,6 +42,7 @@ class Auth extends CI_Controller {
 		$data['country_code'] = isset($_POST['country_code']) ? $_POST['country_code'] : "FR";
 		$data['org_id'] = isset($_POST['org_id']) ? $_POST['org_id'] : "";
 		$data['org_name'] = isset($_POST['org_name']) ? $_POST['org_name'] : "";
+		$data['bio'] = isset($_POST['bio']) ? $_POST['bio'] : "";
 
 		$register = false;
 		$error = '';
@@ -69,7 +70,7 @@ class Auth extends CI_Controller {
 						
 						if ($data['org_name'] != "") {
 							// Create new organisation
-							$this->Organizationmodel->name = $data['org_name'];
+							$this->Organizationmodel->name = htmlentities($data['org_name']);
 							$ret = $this->Organizationmodel->insert();
 			
 							$org = $this->Organizationmodel->getOne('name', $data['org_name']);
@@ -82,6 +83,7 @@ class Auth extends CI_Controller {
 						$this->Usermodel->password = crypt_password($data['password']);
 						$this->Usermodel->country_code = $data['country_code'];
 						$this->Usermodel->org_id = $data['org_id'];
+						$this->Usermodel->bio = htmlentities($data['bio']);
 						$this->Usermodel->created = new DateTime();
 						$this->Usermodel->activation_code = $confirmation_code;
 						$this->Usermodel->activated = 0;
@@ -235,7 +237,7 @@ class Auth extends CI_Controller {
 			$confirmation_code = md5(salt(64));
 			$userdata['activated'] = 0;
 			$userdata['activation_code'] = $confirmation_code;
-			$ret = $this->update('email', $data['email'], $userdata);
+			$ret = $this->Usermodel->update('email', $data['email'], $userdata);
 			
 			if (!$ret) {
 				// Email non reconnu
@@ -311,7 +313,7 @@ class Auth extends CI_Controller {
 					$userdata['activated'] = 1;
 					$userdata['password'] = crypt_password($data['password']);
 					$userdata['activation_code'] = NULL;
-					$ret = $this->update('user_id', $user_id, $userdata);
+					$ret = $this->Usermodel->update('user_id', $user_id, $userdata);
 					
 					if ($ret) {
 						$this->session->set_flashdata('message', "Mot de passe modifié, vous pouvez vous connecter.");

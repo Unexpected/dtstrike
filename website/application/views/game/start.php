@@ -5,7 +5,7 @@ Voici les premières étapes pour vous lancer dans l'aventure.<br/>
 
 <h3>1. Vous connecter</h3>
 <p>
-Utilisez vos informations d'authentification Groupinfra pour <a href="<?php echo site_url('auth/login'); ?>">vous connecter</a> sur le site.
+Utilisez votre compte pour <a href="<?php echo site_url('auth/login'); ?>">vous connecter</a> sur le site.
 </p>
 <br/>
 
@@ -21,7 +21,7 @@ Les kits de démarrage sont tous des fichiers ZIP, et vous devriez maintenant av
 
 <h3>3. Soumettre le Kit</h3>
 <p>
-Ne vous embêtez pas décompresser ou de modifier le kit de démarrage vous venez de télécharger.<br/>
+Ne vous embêtez pas à décompresser ou à modifier le kit de démarrage vous venez de télécharger.<br/>
 Assurez-vous que vous êtes <a href="<?php echo site_url('auth/login'); ?>">connecté</a> au site web, 
 allez sur la <a href="<?php echo site_url('user/bot_upload'); ?>">page d'upload</a> et 
 soumettez le kit de démarrage (fichier ZIP) que vous venez de télécharger.
@@ -39,10 +39,6 @@ Cela peut prendre jusqu'à une heure pour que votre nom apparaisse, mais ne pren
 <p>
 Maintenant que vous avez soumis votre première entrée de travail de base, 
 il est temps de vous salir les mains, et commencer à personnaliser votre propre stratégie.<br/>
-Pour cela, je vous conseille de commencer par :
-<ul>
-	<li>Lire <a href="<?php echo site_url('game/tuto'); ?>">les tutoriels et les stratégies</a></li>
-	<li>Prendre en compte <a href="<?php echo site_url('game/tuto'); ?>">les spécifications</a></li>
-</ul>
+Pour cela, je vous conseille de commencer par lire <a href="<?php echo site_url('game/tuto'); ?>">les tutoriels et les stratégies</a>. 
 </p>
 <br/>

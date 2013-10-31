@@ -27,3 +27,12 @@ pre.error,
 	font-style: italic;
 	color: #aaa;
 }
+
+.formtexarea {
+	height: 50px;
+	width: 300px;
+}
+
+.table_label {
+	vertical-align: top;
+}

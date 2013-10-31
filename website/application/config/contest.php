@@ -29,3 +29,5 @@ $config['api_log'] = $config['repo_dir'].'logs/api.log';
 /* Game result errors file */
 $config['game_result_errors'] = $config['repo_dir'].'logs/game_result.log';
 
+/* Mail sender */
+$config['mailer_address'] = "challenge@cgi.com";

@@ -277,7 +277,7 @@ class User extends CI_Controller {
 				// New org
 				$org_name = $data['org_name'];
 
-				$this->Organizationmodel->name = $org_name;
+				$this->Organizationmodel->name = htmlentities($org_name);
 				$ret = $this->Organizationmodel->insert();
 
 				$org = $this->Organizationmodel->getOne('name', $org_name);
@@ -285,7 +285,8 @@ class User extends CI_Controller {
 			} else {
 				$userdata['org_id'] = $data['org_id'];
 			}
-			$userdata['email'] = $data['email'];
+			$userdata['email'] = htmlentities($data['email']);
+			$userdata['bio'] = htmlentities($data['bio']);
 			$this->Usermodel->update('user_id', $user_id, $userdata);
 		}
 	

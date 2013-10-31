@@ -7,12 +7,16 @@
 	$this->bootstrap->input('E-mail :', array('id' => 'email', 'name' => 'email', 'class' => 'formfield'), $user->email);
 	$this->bootstrap->select('Pays :', array('id' => 'country_code', 'name' => 'country_code', 'class' => 'formfield'), 'country_code', $countries, $user->country_code);
 
-	echo form_fieldset('Choix de l\'organisation');
-	$this->bootstrap->select('Existante :', array('id' => 'org_id', 'name' => 'org_id', 'class' => 'formfield'), 'org_id', $orgas, $user->org_id);
-	echo $this->bootstrap->start('ou') . $this->bootstrap->end();
-	$this->bootstrap->input('Création :', array('id' => 'org_name', 'name' => 'org_name', 'class' => 'formfield'), '');
-	?>
+	// Organisations
+	echo $this->bootstrap->start('Organisation :', array('id' => 'org_id', 'name' => 'org_id', 'class' => 'formfield'))."\t\t";
+	// Ajout lignes supplémentaires
+	$orgas = array_merge($orgas, array('-' => '<b>== Créer votre organisation ==</b>'));
+	echo form_dropdown('org_id', $orgas, $user->org_id, ' id="org_id" onchange="orgSelect();"') . "\n";
+	echo form_input(array('id' => 'org_name', 'name' => 'org_name', 'class' => 'formfield', 'placeholder' => 'Organisation'), '', ' style="display: none;"');
+	echo $this->bootstrap->end();
 
+	$this->bootstrap->textarea('Bio :', array('name' => 'bio', 'id' => 'bio', 'class' => 'formtexarea'), html_entity_decode($user->bio));
+?>
 <?php $this->bootstrap->submit('save', 'Sauvegarder'); ?>
 <?php echo form_fieldset_close(); ?>
 <?php echo form_close(); ?>
