@@ -1,4 +1,4 @@
-package myBot
+package main
 
 import (
 	"fmt"

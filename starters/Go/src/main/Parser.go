@@ -1,10 +1,10 @@
-package myBot
+package main
 
 import (
 	"bufio"
 	"strconv"
 	"strings"
-		"fmt"
+	"fmt"
 	)
 
 
