@@ -11,6 +11,11 @@ class Bootstrap {
 	{// A revoir, c'est aussi illisible que les renderers JSF...
 		echo $this->start($label_text, $attributes) . "\t\t" . form_input($attributes, $value) . "\n" . $this->end();
 	}
+	
+	public function textarea($label_text = '', $attributes = array(), $value = '')
+	{
+		echo $this->start($label_text, $attributes) . "\t\t" . form_textarea($attributes, $value) . "\n" . $this->end();
+	}
 
 	public function password($label_text = '', $attributes = array(), $value = '')
 	{

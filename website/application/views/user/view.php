@@ -21,11 +21,15 @@
 	</tr>
 	<tr>
 		<td class="table_label">Organisation :</td>
-		<td class="table_value"d><?php echo $user->org_name; ?></td>
+		<td class="table_value"><?php echo $user->org_name; ?></td>
 	</tr>
 	<tr>
 		<td class="table_label">Pays :</td>
 		<td class="table_value"><?php echo $user->country_name; ?></td>
+	</tr>
+	<tr>
+		<td class="table_label">Bio :</td>
+		<td class="table_value"><?php echo nl2br($user->bio, true); ?></td>
 	</tr>
 	<tr>
 		<td class="table_label">Meilleur classement :</td>

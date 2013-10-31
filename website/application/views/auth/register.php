@@ -20,8 +20,10 @@
 		echo form_dropdown('org_id', $orgas, $org_id, ' id="org_id" onchange="orgSelect();"') . "\n";
 		echo form_input(array('id' => 'org_name', 'name' => 'org_name', 'class' => 'formfield', 'placeholder' => 'Organisation'), $org_name, ' style="display: none;"');
 		echo $this->bootstrap->end();
-		echo form_fieldset_close();
+
+		$this->bootstrap->textarea('Bio :', array('name' => 'bio', 'id' => 'bio', 'class' => 'formtexarea', 'placeholder' => 'Quelques mots sur vous'), $bio);
 		
+		echo form_fieldset_close();
 		$this->bootstrap->submit('register', "Créer son compte");
 		
 		if (false) {
