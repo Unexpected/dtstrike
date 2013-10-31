@@ -39,10 +39,6 @@ Cela peut prendre jusqu'à une heure pour que votre nom apparaisse, mais ne pren
 <p>
 Maintenant que vous avez soumis votre première entrée de travail de base, 
 il est temps de vous salir les mains, et commencer à personnaliser votre propre stratégie.<br/>
-Pour cela, je vous conseille de commencer par :
-<ul>
-	<li>Lire <a href="<?php echo site_url('game/tuto'); ?>">les tutoriels et les stratégies</a></li>
-	<li>Prendre en compte <a href="<?php echo site_url('game/tuto'); ?>">les spécifications</a></li>
-</ul>
+Pour cela, je vous conseille de commencer par lire <a href="<?php echo site_url('game/tuto'); ?>">les tutoriels et les stratégies</a>. 
 </p>
 <br/>
