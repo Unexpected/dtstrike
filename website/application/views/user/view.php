@@ -15,10 +15,12 @@
 		<td class="table_label">Username :</td>
 		<td class="table_value"><?php echo $user->username; ?></td>
 	</tr>
+<?php if (verify_user_role($this, "admin", TRUE)) { ?>
 	<tr>
 		<td class="table_label">E-mail :</td>
 		<td class="table_value"><?php echo $user->email; ?></td>
 	</tr>
+<?php } ?>
 	<tr>
 		<td class="table_label">Organisation :</td>
 		<td class="table_value"><?php echo $user->org_name; ?></td>
