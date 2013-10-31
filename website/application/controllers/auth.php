@@ -237,7 +237,7 @@ class Auth extends CI_Controller {
 			$confirmation_code = md5(salt(64));
 			$userdata['activated'] = 0;
 			$userdata['activation_code'] = $confirmation_code;
-			$ret = $this->usermodel->update('email', $data['email'], $userdata);
+			$ret = $this->Usermodel->update('email', $data['email'], $userdata);
 			
 			if (!$ret) {
 				// Email non reconnu
@@ -313,7 +313,7 @@ class Auth extends CI_Controller {
 					$userdata['activated'] = 1;
 					$userdata['password'] = crypt_password($data['password']);
 					$userdata['activation_code'] = NULL;
-					$ret = $this->usermodel->update('user_id', $user_id, $userdata);
+					$ret = $this->Usermodel->update('user_id', $user_id, $userdata);
 					
 					if ($ret) {
 						$this->session->set_flashdata('message', "Mot de passe modifié, vous pouvez vous connecter.");
