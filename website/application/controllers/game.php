@@ -33,7 +33,7 @@ class Game extends CI_Controller {
 		
 		
 		// Recup des 20 dernières parties
-		$page_size = 20;
+		$page_size = 100;
 		$data['games'] = $this->Gamemodel->get_game_list($page, $page_size, $user_id, $submission_id);
 
 		
@@ -147,7 +147,7 @@ class Game extends CI_Controller {
 
 		
 		// Récupération des données
-		$page_size = 20;
+		$page_size = 100;
 		$data['rankings'] = $this->Submissionmodel->get_rank_list($page, $page_size, $org_id, $country_code, $language_id);
 		
 		
