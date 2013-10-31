@@ -9,13 +9,7 @@
 	<footer class="navbar navbar-fixed-bottom">
 		<div class="navbar-inner">
 			<div class="pull-left" style="padding-top: 8px;">
-				En cas de problème, n'hésitez pas à <a id="contact" href="#" onclick="contactUs();">nous contacter</a> !
-				<script type="text/javascript">
-					function contactUs() {
-						window.location=base64.decode('bWFpbHRvOnNlYmFzdGllbi5zY2htaXR0QGNnaS5jb207ZnJhbmNpcy5iZWxsYW5nZXJAY2dpLmNvbT9zdWJqZWN0PVtTaXhDaGFsbGVuZ2VdIENvbnRhY3Q=');
-						return false;
-					}
-				</script>
+				En cas de problème, n'hésitez pas à <a href="<?php echo base_url("forum") ?>">nous contacter</a> !
 			</div>
 		
 			<form class="navbar-search pull-right" action="">
