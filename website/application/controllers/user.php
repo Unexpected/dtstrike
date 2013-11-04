@@ -246,7 +246,7 @@ class User extends CI_Controller {
 		$data['user'] = $user[0];
 	
 		// Lecture des référentiels
-		$data['orgas'] = $this->Organizationmodel->getAllForCombo('org_id', 'name');
+		$data['orgas'] = $this->Organizationmodel->getAllForCombo('org_id', 'name', FALSE, '#');
 		$data['countries'] = $this->Countrymodel->getAllForCombo('country_code', 'name');
 	
 		// Affichage
