@@ -26,19 +26,19 @@ class Bot {
     }
 
     def getMyStrongestPlanet() {
-        return game.planets.my_military().max({ a,b ->
+        return game.planets.military.my().max({ a,b ->
             a.num_ships <=> b.num_ships
         })
     } 
 
     def getMyWeakestPlanet() {
-        return game.planets.my_all().min({ a,b ->
+        return game.planets.my().min({ a,b ->
             a.num_ships <=> b.num_ships
         })
     }
 
     def getOpposantWeakestPlanet() {
-        return game.planets.others_all().min({ a,b ->
+        return game.planets.others().min({ a,b ->
             a.num_ships <=> b.num_ships
         })
     }

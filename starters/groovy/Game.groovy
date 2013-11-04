@@ -84,8 +84,8 @@ class Game {
         Sum all ships of one player (in fleet and planets)
     */
     def num_ships(playerID) {
-        num_ships = planets.for_id_all(playerID).sum{ it.num_ships }
-        num_ships += fleets.for_id_all(playerID).sum{ it.num_ships }
+        num_ships = planets.forId(playerID).sum{ it.num_ships }
+        num_ships += fleets.forId(playerID).sum{ it.num_ships }
         return num_ships
     }
     
@@ -96,7 +96,7 @@ class Game {
             - Or have in fly fleets
     */
     def is_alive(playerID) {
-        return (planets.for_id_military(playerID).size() > 0) || (fleets.for_id_all(playerID).size() > 0)
+        return (planets.military.forId(playerID).size() > 0) || (fleets.forId(playerID).size() > 0)
     }
 
 
@@ -148,29 +148,38 @@ class PlanetsList extends ArrayList {
     final NEUTRAL_ID = Constant.NEUTRAL_ID
     final MY_ID = Constant.MY_ID
 
+
     def all() { this }
-    def military() { this.findAll{ it.isMilitary() } }
-    def economic() { this.findAll{ it.isEconomic() } }
 
-    def my_all() { this.all().findAll{ it.owner == MY_ID } }
-    def my_military() { this.military().findAll{ it.owner == MY_ID } }
-    def my_economic() { this.economic().findAll{ it.owner == MY_ID } }
+    private def isMy = { it.owner == MY_ID }
+    private def isNeutral = { it.owner == NEUTRAL_ID }
+    private def isOthers = { it.owner != MY_ID }
+    private def isEnnemy = { it.owner > MY_ID }
+    private def isForId = { id -> it.owner = id  }
 
-    def neutral_all() { this.all().findAll{ it.owner == NEUTRAL_ID } }
-    def neutral_military() { this.military().findAll{ it.owner == NEUTRAL_ID } }
-    def neutral_economic() { this.economic().findAll{ it.owner == NEUTRAL_ID } }
+    def military = [
+        all: { this.findAll{ it.isMilitary() } },
+        my : { this.military.all().findAll(isMy) },
+        neutral : { this.military.all().findAll(isNeutral) },
+        others : { this.military.all().findAll(isOthers) },
+        ennemy : { this.military.all().findAll(isEnnemy) },
+        forId : { id -> this.military.all().findAll(isForId(id))}
+    ]
 
-    def ennemy_all() { this.all().findAll{ it.owner > MY_ID } }
-    def ennemy_military() { this.military().findAll{ it.owner > MY_ID } }
-    def ennemy_economic() { this.economic().findAll{ it.owner > MY_ID } }
+    def economic = [
+        all: { this.findAll{ it.isEconomic() } },
+        my : { this.economic.all().findAll(isMy) },
+        neutral : { this.economic.all().findAll(isNeutral) },
+        others : { this.economic.all().findAll(isOthers) },
+        ennemy : { this.military.all().findAll(isEnnemy) },
+        forId : { id -> this.military.all().findAll(isForId(id))}
+    ]
 
-    def others_all() { this.all().findAll{ it.owner != MY_ID } }
-    def others_military() { this.military().findAll{ it.owner != MY_ID } }
-    def others_economic() { this.economic().findAll{ it.owner != MY_ID } }
-
-    def for_id_all(id) { this.all().findAll{ it.owner > id } }
-    def for_id_military(id) { this.military().findAll{ it.owner > id } }
-    def for_id_economic(id) { this.economic().findAll{ it.owner > id } }
+    def my() { this.all().findAll(isMy) }
+    def neutral() { this.all().findAll(isNeutral) }
+    def ennemy() { this.all().findAll(isEnnemy) }
+    def others() { this.all().findAll(isOthers) }
+    def forId(id) { this.all().findAll(isForId(id))}
 
 }
 
@@ -183,10 +192,11 @@ class FleetList extends ArrayList {
     final MY_ID = Constant.MY_ID
 
     def all() { this }
-    def my_all() { this.all().findAll{ it.owner == MY_ID } }
-    def ennemy_all() { this.all().findAll{ it.owner > MY_ID } }
+    def my() { this.all().findAll{ it.owner == MY_ID } }
+    def ennemy() { this.all().findAll{ it.owner > MY_ID } }
 
-    def for_id_all(id) { this.all().findAll{ it.owner > id } }
+    def forId(id) { this.all().findAll{ it.owner > id } }
+    def toId(id) { this.all().findAll{ it.destinationPlanet == id}; }
     
 }
 
