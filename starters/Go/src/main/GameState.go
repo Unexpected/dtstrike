@@ -38,7 +38,6 @@ type GameState struct {
 Get remaining time until end of turn
 ******************************************************************************/
 func (l GameState) RemainingTime() int {
-
 	return time.Now().Nanosecond() - l.starttime
 }
 
@@ -216,5 +215,3 @@ func (l *GameState) Init(params map[string]int) {
 	l.turns = params["turns"]
 
 }
-
-

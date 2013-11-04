@@ -52,4 +52,3 @@ func main() {
 	ProcessInputLoop(bio, bout, game)
 
 }
-

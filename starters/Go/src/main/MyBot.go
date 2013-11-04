@@ -18,6 +18,19 @@ func DoTurn(world *GameState) {
 
 	world.Log("My view of the world is : %s\n", world)
 
+	// (0) If we currently have a fleet in flight, just do nothing.
+	for key := range world.listFleet {
+		if world.listFleet[key].Owner == 1 { // if it's mine
+			if world.GetAllPlanets()[world.listFleet[key].Source].Owner == 1 {
+				// and it's from my planet
+				if !world.GetAllPlanets()[world.listFleet[key].Source].Type {
+					// and is a military
+					return // do nothing
+				}
+			}
+		}
+	}
+
 	// (1) Find my strongest military planet.
 	var source *Planet
 	var target *Planet
@@ -36,13 +49,13 @@ func DoTurn(world *GameState) {
 		world.Log("Source Planet will be : %s", source)
 
 		if source != nil {
-			// (2) Find the weakest enemy or neutral planet and the closest also
+			// (2) Find the weakest enemy or neutral planet
 			// the "best" between those is the target
 			targetScore := math.MaxInt32
 			targetPlanets := world.GetOtherPlanets()
 			//world.Log("Potentials Target : ", targetPlanets)
 			for key := range targetPlanets {
-				score := targetPlanets[key].NumShips + 2*world.Distance(source.Id, targetPlanets[key].Id) + targetPlanets[key].Id
+				score := targetPlanets[key].NumShips
 				if score < targetScore {
 					targetScore = score
 					target = targetPlanets[key]

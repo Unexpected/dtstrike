@@ -2,11 +2,10 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"strconv"
 	"strings"
-	"fmt"
-	)
-
+)
 
 /******************************************************************************
 Main loop, here is done and waited everything
@@ -82,7 +81,6 @@ func ProcessInputLoop(bio *bufio.Reader, bout *bufio.Writer, game *GameState) {
 		}
 	}
 }
-
 
 /*
 This parse the input line correclty,
