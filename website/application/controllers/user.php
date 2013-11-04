@@ -47,7 +47,7 @@ class User extends CI_Controller {
 		verify_user_logged($this, 'user/bots');
 
 		$user_id = current_user_id();
-		$this->Submissionmodel->db->select('submission_id, version, status, language.language_id, language.name as "language_name", rank', false);
+		$this->Submissionmodel->db->select('submission_id, version, status, language.language_id, language.name as "language_name", rank, errors', false);
 		$this->Submissionmodel->db->from('submission');
 		$this->Submissionmodel->db->join('language', 'language.language_id = submission.language_id');
 		$this->Submissionmodel->db->order_by("submission_id", "desc");
