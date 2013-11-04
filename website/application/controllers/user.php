@@ -285,6 +285,9 @@ class User extends CI_Controller {
 			} else {
 				$userdata['org_id'] = $data['org_id'];
 			}
+			if (strpos($userdata['org_id'], "#") === 0) {
+				$userdata['org_id'] = substr($userdata['org_id'], 1);
+			}
 			$userdata['email'] = htmlentities($data['email']);
 			$userdata['bio'] = htmlentities($data['bio']);
 			$this->Usermodel->update('user_id', $user_id, $userdata);

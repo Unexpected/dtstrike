@@ -76,6 +76,9 @@ class Auth extends CI_Controller {
 							$org = $this->Organizationmodel->getOne('name', $data['org_name']);
 							$data['org_id'] = $org->org_id;
 						}
+						if (strpos($data['org_id'], "#") === 0) {
+							$data['org_id'] = substr($data['org_id'], 1);
+						}
 						
 						// Create user
 						$this->Usermodel->email = $data['email'];
@@ -122,7 +125,7 @@ class Auth extends CI_Controller {
 		
 		if (!$register) {
 			// Préparation des données
-			$data['orgas'] = $this->Organizationmodel->getAllForCombo('org_id', 'name', true);
+			$data['orgas'] = $this->Organizationmodel->getAllForCombo('org_id', 'name', true, '#');
 			$data['countries'] = $this->Countrymodel->getAllForCombo('country_code', 'name');
 			
 			$data['page_title'] = 'Création de compte';
