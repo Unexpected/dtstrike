@@ -238,7 +238,7 @@ class Auth extends CI_Controller {
 		if ($rules->run()) {
 			// Update user
 			$confirmation_code = md5(salt(64));
-			$userdata['activated'] = 0;
+			//$userdata['activated'] = 0;
 			$userdata['activation_code'] = $confirmation_code;
 			$ret = $this->Usermodel->update('email', $data['email'], $userdata);
 			
