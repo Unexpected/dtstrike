@@ -27,7 +27,7 @@
 				echo '<br/>';
 			}
 			echo '</td>';
-			echo '<td><a href="'.site_url("map/".$game['map_id']).'">'.$game['map_name'].'</a></td>';
+			echo '<td><a href="'.site_url("maps/map".$game['map_id']).'.txt">'.$game['map_name'].'</a></td>';
 			echo '<td>'.nice_viewer($game['game_id'], $game['game_length'], $game['cutoff'], $game['winning_turn']).'</td>';
 			echo '</tr>';
 		}
