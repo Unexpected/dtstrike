@@ -39,6 +39,11 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 		<td><a href="<?php echo base_url('starters/Go_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
+		<td>Groovy</td>
+		<td>Nos serveurs fonctionnent sous Groovy 1.8.6 avec une JVM 1.7</td>
+		<td><a href="<?php echo base_url('starters/groovy_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+	<tr>
 		<td>Java</td>
 		<td>Nos serveurs fonctionnent sous OpenJDK 1.7</td>
 		<td><a href="<?php echo base_url('starters/java_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
