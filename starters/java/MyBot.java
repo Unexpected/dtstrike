@@ -74,4 +74,14 @@ public class MyBot extends Bot {
 			}
 		}
 	}
+
+	/**
+	 * Method called at the init phase of the Game
+	 * (ie before first turn)
+	 * !! No orders could be given here !!
+	 */
+	@Override
+	public void doReadyTurn() {
+		
+	}
 }

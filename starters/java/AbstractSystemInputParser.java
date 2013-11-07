@@ -46,7 +46,7 @@ public abstract class AbstractSystemInputParser extends
 	public void processLine(String line) {
 		if (line.equals(READY)) {
 			parseSetup(input);
-			doTurn();
+			doReadyTurn();
 			finishTurn();
 			input.clear();
 		} else if (line.equals(GO)) {
@@ -228,6 +228,11 @@ public abstract class AbstractSystemInputParser extends
 	 * send orders.
 	 */
 	public abstract void doTurn();
+
+	/**
+	 * Subclasses are supposed to use this method to process the game init
+	 */
+	public abstract void doReadyTurn();
 
 	/**
 	 * Finishes turn.
