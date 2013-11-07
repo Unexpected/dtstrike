@@ -79,7 +79,7 @@ class Admin extends CI_Controller {
 		$data['user_roles'] = $user_rolesArray;
 		
 		// Lecture des référentiels
-		$data['orgas'] = $this->Organizationmodel->getAllForCombo('org_id', 'name');
+		$data['orgas'] = $this->Organizationmodel->getAllForCombo('org_id', 'name', false, '#');
 		$data['countries'] = $this->Countrymodel->getAllForCombo('country_code', 'name');
 		$data['roles'] = $this->Rolesmodel->getAllForCombo('name', 'descr');
 

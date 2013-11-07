@@ -31,12 +31,17 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	<tr>
 		<td>C#</td>
 		<td>Nos serveurs fonctionnent sous Mono 2.10.8</td>
-		<td><a href="<?php echo base_url('starters/c#_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+		<td><a href="<?php echo base_url('starters/cSharp_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
 		<td>Go</td>
 		<td>Nos serveurs fonctionnent sous Go 1.1</td>
 		<td><a href="<?php echo base_url('starters/Go_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
+	</tr>
+	<tr>
+		<td>Groovy</td>
+		<td>Nos serveurs fonctionnent sous Groovy 1.8.6 avec une JVM 1.7</td>
+		<td><a href="<?php echo base_url('starters/groovy_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
 		<td>Java</td>

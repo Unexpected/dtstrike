@@ -33,3 +33,7 @@ function orgSelect() {
 		$("#org_name").show();
 	}
 }
+
+function toggleBlock(id) {
+	$("#"+id).toggle();
+}

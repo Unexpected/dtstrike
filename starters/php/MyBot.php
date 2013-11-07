@@ -6,10 +6,12 @@ define('PHP_INT_MIN', ~PHP_INT_MAX);
 class MyBot
 {
 	/**
+	 * Method called at each turn
+	 * 
 	 * @param Game $game
 	 */
-    public function doTurn( $game )
-    {
+	public function doTurn( $game )
+	{
 		// (1) If we currently have a fleet in flight, just do nothing.
 		if (count($game->myMilitaryFleets()) >= 1) {
 			return;
@@ -45,13 +47,24 @@ class MyBot
 			$numShips = (int) ($source->numShips / 2);
 			$game->issueOrder($source->id, $dest->id, $numShips);
 		}
-    }
-    
+	}
+
+	/**
+	 * Method called at the init phase of the Game
+	 * (ie before first turn)
+	 * !! No orders could be given here !!
+	 * 
+	 * @param Game $game
+	 */
+	public function doReadyTurn( $game )
+	{
+		
+	}
 }
 
 /**
  * Don't run bot when unit-testing
  */
 if( !defined('PHPUnit_MAIN_METHOD') ) {
-    game::run( new MyBot() );
+	game::run( new MyBot() );
 }

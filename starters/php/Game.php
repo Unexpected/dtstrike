@@ -293,6 +293,7 @@ class Game
             $current_line = trim($current_line);
             if ($current_line === 'ready') {
                 $game->setup($data);
+                $bot->doReadyTurn($game);
                 $game->finishTurn();
                 $data = array();
             } elseif ($current_line === 'go') {

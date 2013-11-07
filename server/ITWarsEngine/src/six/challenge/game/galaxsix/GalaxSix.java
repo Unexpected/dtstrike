@@ -71,7 +71,7 @@ public class GalaxSix extends Game {
 	 */
 	public boolean isAlive(int id) {
 		for (Planet p : planets) {
-			if (p.owner == id)
+			if (p instanceof MilitaryPlanet &&  p.owner == id)
 				return true;
 		}
 		for (Fleet f : fleets) {
@@ -334,12 +334,23 @@ public class GalaxSix extends Game {
 	@Override
 	public List<Integer> getScores() {
 		List<Integer> scores = new ArrayList<Integer>();
+		
+		int ecoPlanetsCounts = 0;
+		for (Planet planet : planets) {
+			if (planet instanceof EconomicPlanet) {
+				ecoPlanetsCounts++;
+			}
+		}
+		
 		for (Player p : players) {
 			int score = 0;
 			for (Planet planet : planets) {
 				if (planet instanceof EconomicPlanet && planet.owner == p.id) {
 					score++;
 				}
+			}
+			if (isAlive(p.id)) {
+				score += ecoPlanetsCounts;
 			}
 			scores.add(score);
 		}
@@ -501,8 +512,6 @@ public class GalaxSix extends Game {
 
 		replay.put("challenge_rank", getPlayerStubData(true));
 		replay.put("challenge_skill", getPlayerStubData(true));
-		replay.put("user_url", "http://localhost/user/~");
-		replay.put("game_url", "http://localhost/game/~");
 		replay.put("date", new Date().toString());
 		replay.put("game_id", 0);
 		replay.put("worker_id", 1);
@@ -562,7 +571,7 @@ public class GalaxSix extends Game {
 	private List<String> getStatuses() {
 		List<String> statuses = new ArrayList<String>();
 		for (Player p : players) {
-			statuses.add(p.status.toString());
+			statuses.add(p.status.toString().toLowerCase());
 		}
 		return statuses;
 	}
@@ -590,7 +599,7 @@ public class GalaxSix extends Game {
 		m.put("loadtime", getOptions().get("loadtime"));
 		m.put("bonus", getPlayerStubData(true));
 		m.put("turns", getOptions().get("turns"));
-		m.put("winning_turn", 0);
+		m.put("winning_turn", turn);
 		m.put("players", players.size());
 		m.put("turntime", getOptions().get("turntime"));
 		m.put("scores", scoreHistory);

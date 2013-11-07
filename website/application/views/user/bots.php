@@ -6,6 +6,7 @@
 		foreach ($heading as $head) {
 			echo '<th>'.$head.'</th>';
 		}
+		echo '<th>Actions</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
 		echo '</tbody>';
@@ -16,7 +17,13 @@
 			echo '<td>'.nice_status($bot->status).'</td>';
 			echo '<td>'.nice_language($bot->language_id, $bot->language_name).'</td>';
 			echo '<td>'.$bot->rank.'</td>';
+			echo '<td>'.($bot->status == 70 ? '<a href="#" onclick="toggleBlock(\'errors'.$bot->submission_id.'\'); return false;">Voir les erreurs</a>' : '').'</td>';
 			echo '</tr>';
+			if ($bot->status == 70) {
+				echo '<tr id="errors'.$bot->submission_id.'" style="display: none;">';
+				echo '<td colspan="6"><div class="code">'.$bot->errors.'</div></td>';
+				echo '</tr>';
+			}
 		}
 		echo '</table>';
 	} else {

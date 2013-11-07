@@ -1,0 +1,9 @@
+========================================
+=====   Pour installer le worker   =====
+========================================
+
+Pré-requis :
+	- Linux
+
+Installation :
+	- Voir Francis ...

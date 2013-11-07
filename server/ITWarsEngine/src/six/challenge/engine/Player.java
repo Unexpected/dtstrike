@@ -24,7 +24,14 @@ public class Player {
 	public boolean hasPlayed = false;
 
 	public enum Status {
-		NOT_INITIALIZED, STARTED, CRASHED, PLAYING, LOST, TIMEOUT, ENDED,
+		NOT_INITIALIZED, // Default status
+		STARTED, // If bot was successfully started 
+		PLAYING, // Bot is running fine
+		CRASHED, // Bot has crashed
+		TIMEOUT, // Bot timed out during turn
+		INVALID, // Bot issue an invlaid command
+		LOST, // Bot has lost
+		SURVIVED // Bot survived to the all game
 	}
 
 	/**
@@ -69,12 +76,8 @@ public class Player {
 		if (process != null) {
 			process.destroy();
 			process = null;
-			status = s;
 		}
-	}
-
-	public void kill() {
-		kill(Status.ENDED);
+		status = s;
 	}
 
 	public void sendMessage(String text) {

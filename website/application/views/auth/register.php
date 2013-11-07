@@ -17,7 +17,7 @@
 		echo $this->bootstrap->start('Organisation :', array('id' => 'org_id', 'name' => 'org_id', 'class' => 'formfield'))."\t\t";
 		// Ajout lignes supplémentaires
 		$orgas = array_merge($orgas, array('-' => '<b>== Créer votre organisation ==</b>'));
-		echo form_dropdown('org_id', $orgas, $org_id, ' id="org_id" onchange="orgSelect();"') . "\n";
+		echo form_dropdown('org_id', $orgas, (($org_id != '' ? '#' : '').$org_id), ' id="org_id" onchange="orgSelect();"') . "\n";
 		echo form_input(array('id' => 'org_name', 'name' => 'org_name', 'class' => 'formfield', 'placeholder' => 'Organisation'), $org_name, ' style="display: none;"');
 		echo $this->bootstrap->end();
 

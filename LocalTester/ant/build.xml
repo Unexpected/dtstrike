@@ -34,15 +34,25 @@
 	</target>
 	
 	<target name="copyMaps" depends="copyFiles">
-		<mkdir dir="dist/maps/" />
-        <copy todir="dist/maps" overwrite="true">
-            <fileset file="../maps/map*" />
-        </copy>
-        <!--
-		<copy todir="dist/maps" overwrite="true" failonerror="false">
-            <fileset file="../server/ITWarsEngine/dist/maps/**" />
-        </copy>
-		-->
+		<!-- Copy maps -->
+	    <mkdir dir="dist/maps/2" />
+	    <mkdir dir="dist/maps/3" />
+	    <mkdir dir="dist/maps/4" />
+		<copy todir="dist/maps/2">
+			<fileset dir="../maps" includes="map*.txt">
+				<filename regex="map([1-9]|[12][0-9]|3[0-3]).txt" />
+			</fileset>
+		</copy>
+		<copy todir="dist/maps/3">
+			<fileset dir="../maps" includes="map*.txt">
+				<filename regex="map(3[4-9]|[45][0-9]|6[0-6]).txt" />
+			</fileset>
+		</copy>
+		<copy todir="dist/maps/4">
+			<fileset dir="../maps" includes="map*.txt">
+				<filename regex="map(6[7-9]|[7-9][0-9]).txt" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="buildEngine">
