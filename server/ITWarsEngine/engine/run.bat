@@ -68,22 +68,24 @@ del visu\replay.js 2>NUL
 
 echo var replayJson=>visu\replay.js
 java -Duser.language=en -jar engine.jar %map% 1000 1000 replay_log.txt %run_cmd% 1>>visu\replay.js 2>%err_file%
-if not "%errorlevel%" == "0" goto error
+set winner=%errorlevel%
 
 REM Check if replay_err is empty
 for %%A in (%err_file%) do if not %%~zA==0 goto error
 
-REM Launch replay
-REM FIXE start explorer visu/index.html
 echo.
 echo ====================================================================
 echo ====================================================================
-echo                    La partie est terminee.
-echo Vous pouvez regarder le replay en ouvrant le fichier visu/index.html
+if %winner% == 1 echo                 VICTOIRE
+if not %winner% == 1 echo                 defaite
 echo ====================================================================
 echo ====================================================================
 echo.
+echo (appuyez sur une touche pour lancer la lecture du replay)
 pause
+
+REM Launch replay
+start visu/index.html
 goto end
 
 :error
