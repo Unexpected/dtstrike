@@ -5,7 +5,6 @@ echo.
 
 REM TODO :
 REM    - specialiser le run pour chaque StarterKit
-REM    - Corriger l'ouverture du navigateur sur le replay
 
 
 REM Exemple d'appel : run map1.txt "node MyBot.js" "php MyBot.php"
