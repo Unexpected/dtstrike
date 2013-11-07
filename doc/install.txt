@@ -1,7 +1,20 @@
-Créer sur Apache les alias suivants :
-(fichier /etc/apache2/conf.d/challenge.conf)
-(pensez à adapter le chemin vers le dossier de checkout)
+========================================
+=====  Pour installer le Site Web  =====
+========================================
 
+Pré-requis :
+	- Mysql
+	- PHP
+	- Apache
+
+Installation :
+	- Créer une base de données (avec un user)
+	
+	- Exécuter les scripts présents dans le dossier sql/ (et les sous-dossiers)
+	
+	- Créer sur Apache les alias suivants :
+		(fichier /etc/apache2/conf.d/challenge.conf)
+		(pensez à adapter le chemin vers le dossier de checkout)
 Alias /challenge/visualizer "/project/dtstrike/visualizer"
 <Directory "/project/dtstrike/visualizer">
         Options FollowSymLinks Indexes
@@ -34,5 +47,7 @@ Alias /challenge "/project/dtstrike/website"
         Allow from all
 </Directory>
 
+	- Modifier le fichier de config : website/application/config/contest.php
+		Renseigner le chemin vers le "repo_dir" (ie là où vous avez fait le checkout)
 
-
+	- Inscrivez vous sur le site puis au besoin, modifiez votre compte (table user) pour vous passer Admin.
