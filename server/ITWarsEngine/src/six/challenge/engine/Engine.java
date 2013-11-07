@@ -76,11 +76,6 @@ public class Engine {
 				errorAtStartup = true;
 			}
 		}
-		if (errorAtStartup) {
-			for (Player p : players) {
-				p.kill();
-			}
-		}
 	}
 
 	public void play() {
@@ -176,7 +171,10 @@ public class Engine {
 	 */
 	public String end() {
 		for (Player p : players) {
-			p.kill(Status.ENDED);
+			if (game.isAlive(p.id))
+				p.kill(Status.SURVIVED);
+			else if (p.status == Status.PLAYING)
+				p.kill(Status.LOST);
 		}
 		// Save game Log
 		String replayData = game.getReplay();
@@ -196,7 +194,22 @@ public class Engine {
 			e.play();
 			String replayData=e.end();
 			System.out.println(replayData);
+			System.exit(e.getWinner());
 		}
 		System.exit(0);
+	}
+	
+	public int getWinner() {
+		int winner = 0;
+		int maxScore = -1;
+		List<Integer> scores = game.getScores();
+		for (int i=0; i<scores.size(); i++) {
+			int score = scores.get(i).intValue();
+			if (score > maxScore) {
+				winner = (i + 1);
+				maxScore = score;
+			}
+		}
+		return winner;
 	}
 }
