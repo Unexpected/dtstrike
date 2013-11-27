@@ -12,7 +12,8 @@ public class Colony {
 	public final double maxX;
 	public final double maxY;
 
-	public Colony(double x, double y, int player, boolean isBase, double maxX, double maxY) {
+	public Colony(double x, double y, int player, boolean isBase, double maxX,
+			double maxY) {
 		this.x = x;
 		this.y = y;
 		this.gamer = player;
@@ -22,7 +23,8 @@ public class Colony {
 		this.maxY = maxY;
 	}
 
-	public Colony(double x, double y, int player, boolean isBase, int numShip, double maxX, double maxY) {
+	public Colony(double x, double y, int player, boolean isBase, int numShip,
+			double maxX, double maxY) {
 		this.x = x;
 		this.y = y;
 		this.gamer = player;
@@ -47,8 +49,8 @@ public class Colony {
 	 */
 	public String toMap() {
 		return (isBase ? "M" : "E") // Type
-				+ " " + (24d * x / maxX) // X
-				+ " " + (24d * y / maxY) // Y
+				+ " " + (24d * (MapGenerator.nbGamers / 2) * x / maxX) // X
+				+ " " + (24d * (MapGenerator.nbGamers / 2) * y / maxY) // Y
 				+ " " + (gamer + 1) // Owner
 				+ " " + numShip // NumShip
 				+ (isBase ? "" : " " + growthRate) // GrowthRate

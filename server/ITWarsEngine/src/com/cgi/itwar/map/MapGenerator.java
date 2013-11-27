@@ -39,7 +39,7 @@ import java.util.Hashtable;
  * 
  */
 public class MapGenerator {
-	public final int nbGamers;
+	public static int nbGamers;
 	public final int basesPerGamer;
 	public final double mapHeight = 640;
 	public final double mapWidth = 640;
@@ -71,7 +71,7 @@ public class MapGenerator {
 			System.out.println("");
 		}
 		/* Initialize variables */
-		this.nbGamers = pNbGamers;
+		MapGenerator.nbGamers = pNbGamers;
 		this.basesPerGamer = pBasesPerGamer;
 		minDistanceFromColony = 1.8 * colonyRadius;
 		minDistanceFromEdge = 1 * colonyRadius;
@@ -186,7 +186,7 @@ public class MapGenerator {
 	}
 
 	private final static int MIN_PLAYER = 2;
-	private final static int MAX_PLAYER = 5;
+	private final static int MAX_PLAYER = 8;
 
 	/**
 	 * @param args
