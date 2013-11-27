@@ -18,11 +18,11 @@ var Visualizer = {
       planet_font: 'bold 15px Arial,Helvetica',
       fleet_font: 'normal 12px Arial,Helvetica',
       showFleetText: true,
-      display_margin: 50,
+      display_margin: 65,
       turnsPerSecond: 8,
-      teamColor: ['#455','#E31937','#FF6A00','#F2A200','#A1C4D0'],
-	  E_planet_size: 20,
-	  M_planet_size: 40
+      teamColor: ['#455','#E31937','#FF6A00','#F76DCB','#1ABBDB','#05A826','#972BD6'],
+	  E_planet_size: 13,
+	  M_planet_size: 26
     },
     
     setup: function() {
@@ -30,9 +30,6 @@ var Visualizer = {
         this.canvas = document.getElementById('display');
         this.ctx = this.canvas.getContext('2d');
         this.ctx.textAlign = 'center';
-        
-        // Calculated configs
-        this.config.unit_to_pixel = (this.canvas.height - this.config.display_margin * 2) / 24;
     },
     
     init: function() {
@@ -367,6 +364,10 @@ var Visualizer = {
     	var user_ids = gameResult.user_ids;
     	
     	var playersNbr = gameResult.replaydata.players;
+		// Calculated configs
+        this.config.unit_to_pixel = (this.canvas.height - this.config.display_margin * 2) / (12 * playersNbr);
+		this.config.turnsPerSecond = 4 * playersNbr;
+		
     	this.players = new Array();
     	for (var i=0; i<playersNbr; i++) {
     		this.players[i] = {
@@ -473,7 +474,7 @@ function initStaticData() {
 	var playersHtml = '';
     for (var i = 0; i < Visualizer.players.length; i++) {
 		playersHtml += '<a style="color: '+ Visualizer.config.teamColor[i+1] +'"';
-		if ('survived' == Visualizer.players[i].status) {
+		if ('SURVIVED' == Visualizer.players[i].status) {
 			playersHtml += ' class="winner"';
 		} else {
 			playersHtml += ' class="looser"';
