@@ -9,7 +9,8 @@
 		<delete dir="dist/" />
 		<mkdir dir="dist/" />
 		<mkdir dir="dist/temp/" />
-		<mkdir dir="dist/temp/test"  />
+		<mkdir dir="dist/temp/test" />
+		<mkdir dir="dist/temp/test/bots" />
 		
 		<property name="starterList" value="cSharp,Go,groovy,java,js,php,py,scala" />
 	</target>
@@ -37,6 +38,12 @@
 			<fileset dir="../server/ITWarsEngine/dist">
 				<exclude name="build"/>
 			</fileset>
+		</copy>
+		<!-- Build bots -->
+		<ant dir="../sample_bots/" antfile="build.xml" target="clean"/>
+		<!-- Copy bots -->
+		<copy todir="dist/temp/test/bots" overwrite="true">
+			<fileset dir="../sample_bots/dist/" />
 		</copy>
 	</target>
 	

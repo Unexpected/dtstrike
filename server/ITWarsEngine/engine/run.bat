@@ -5,10 +5,6 @@ echo.
 
 REM TODO :
 REM    - specialiser le run pour chaque StarterKit
-REM    - Corriger l'ouverture du navigateur sur le replay
-
-
-REM Example: run map1.txt "node MyBot.js" "php MyBot.php"
 
 
 REM Load config
@@ -45,10 +41,14 @@ if errorlevel 1 (
 )
 
 REM Define other bots -- you may replace these commands with your own bots
-set bot1="java -cp engine.jar six.challenge.bot.BullyBot"
-set bot2="java -cp engine.jar six.challenge.bot.LooterBot"
-set bot3="java -cp engine.jar six.challenge.bot.RageBot"
-set bot4="java -cp engine.jar six.challenge.bot.RandomBot"
+set bot1="java -jar bots/CrazyBot.jar"
+set bot2="java -jar bots/DedicatedBot.jar"
+set bot3="java -jar bots/DefensiveBot.jar"
+set bot4="java -jar bots/DispersionBot.jar"
+set bot5="java -jar bots/FlightyBot.jar"
+set bot6="java -jar bots/LooterRageBot.jar"
+set bot7="java -jar bots/PatientBot.jar"
+set bot8="java -jar bots/WarriorRageBot.jar"
 
 echo Starting game with %nb_players% players on map %map%
 echo.
@@ -61,7 +61,7 @@ if %nb_players% == 2 set run_cmd="%bot_cmd%" %bot1%
 if %nb_players% == 3 set run_cmd="%bot_cmd%" %bot1% %bot2%
 if %nb_players% == 4 set run_cmd="%bot_cmd%" %bot1% %bot2% %bot3%
 if %nb_players% == 5 set run_cmd="%bot_cmd%" %bot1% %bot2% %bot3% %bot4%
-if %nb_players% == 6 set run_cmd="%bot_cmd%" %bot1% %bot2% %bot3% %bot4% %bot2%
+if %nb_players% == 6 set run_cmd="%bot_cmd%" %bot1% %bot2% %bot3% %bot4% %bot5%
 
 REM Cleaning previous game
 del %err_file% 2>NUL
@@ -76,7 +76,7 @@ REM Check if replay_err is empty
 for %%A in (%err_file%) do if not %%~zA==0 goto error
 
 REM Launch replay
-REM FIXE start explorer visu/index.html
+start visu/index.html
 echo.
 echo ====================================================================
 echo ====================================================================
