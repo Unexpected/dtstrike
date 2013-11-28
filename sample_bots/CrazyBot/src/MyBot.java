@@ -44,6 +44,7 @@ public class MyBot extends Bot {
 		List<Planet> planets = game.getPlanets();
 
 		for (Planet p : game.getMyMilitaryPlanets()) {
+			if (p.numShips == 0) continue;
 			int sending = random.nextInt(p.numShips);
 			if (sending == 0)
 				continue;
