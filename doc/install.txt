@@ -21,9 +21,9 @@ Alias /challenge/visualizer "/project/dtstrike/visualizer"
         AllowOverride All
         Allow from all
 </Directory>
-Alias /challenge/maps "/project/dtstrike/maps"
-Alias /challenge/api/maps "/project/dtstrike/maps"
-<Directory "/project/dtstrike/maps">
+#Alias /challenge/maps "/project/dtstrike/maps"
+Alias /challenge/api/maps "/project/dtstrike/website/maps"
+<Directory "/project/dtstrike/website/maps">
         Options Indexes FollowSymLinks MultiViews
         AddEncoding x-gzip .mapgz
         AddType text/plain .mapgz .map
