@@ -1,0 +1,20 @@
+========================================
+=====      Pour tout préparer      =====
+========================================
+
+Pré-requis, avoir dans le PATH :
+	- ant
+	- java 1.6
+
+
+Lancer dans l'ordre :
+	cd server\ITWarsEngine\ant
+	ant -f engine.xml
+	cd ..\..\..\sample_bots
+	ant
+	cd ..\LocalTester\ant
+	ant
+	cd ..\..\starters
+	ant copy_to_site
+
+Commiter les starters mis à jour
