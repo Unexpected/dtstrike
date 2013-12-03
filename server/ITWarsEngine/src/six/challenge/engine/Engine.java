@@ -208,7 +208,7 @@ public class Engine {
 					.println("Error : wrong number of command-line arguments.");
 			System.err
 					.println("Usage : engine map_file_name max_turn_time max_num_turns log_filename player_one player_two [more_players]");
-			System.exit(1);
+			System.exit(-1);
 		}
 		Engine e = new Engine(args);
 		if (!e.errorAtStartup) {
