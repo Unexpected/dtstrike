@@ -151,3 +151,23 @@ section {
 		background-image: url('../images/light/480.jpg');
 	}
 }
+
+.news {
+	border: 1px solid #ccc;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.news_date {
+	font-style: italic;
+}
+.news_title {
+	color: #0088cc;
+	font-weight: bold;
+}
+.news_content {
+	border: 1px dashed #ccc;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}

@@ -36,3 +36,19 @@ pre.error,
 .table_label {
 	vertical-align: top;
 }
+
+.news {
+	margin-bottom: 10px;
+	padding: 5px;
+}
+.news_date {
+	float: left;
+	width: 50px;
+}
+.news_title {
+	margin-left: 60px;
+}
+.news_content {
+	margin-top: 10px;
+	padding: 5px 5px 15px 5px;
+}

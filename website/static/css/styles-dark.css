@@ -429,3 +429,22 @@ legend {
 	color: inherit;
 }
 
+.news {
+	border: 1px solid #ccc;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.news_date {
+	font-style: italic;
+}
+.news_title {
+	color: #BF0000;
+	font-weight: bold;
+}
+.news_content {
+	border: 1px dashed #ccc;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
