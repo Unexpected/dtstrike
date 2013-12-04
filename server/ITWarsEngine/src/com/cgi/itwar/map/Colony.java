@@ -49,8 +49,8 @@ public class Colony {
 	 */
 	public String toMap() {
 		return (isBase ? "M" : "E") // Type
-				+ " " + (24d * (MapGenerator.nbGamers / 2) * x / maxX) // X
-				+ " " + (24d * (MapGenerator.nbGamers / 2) * y / maxY) // Y
+				+ " " + (24d * (MapGenerator.nbGamers / 2d) * x / maxX) // X
+				+ " " + (24d * (MapGenerator.nbGamers / 2d) * y / maxY) // Y
 				+ " " + (gamer + 1) // Owner
 				+ " " + numShip // NumShip
 				+ (isBase ? "" : " " + growthRate) // GrowthRate
