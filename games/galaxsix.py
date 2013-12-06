@@ -38,11 +38,11 @@ class GalaxSix(Game):
                 
         # initialize scores
         # points start at # of hills to prevent negative scores
-        self.score = [1]*self.num_players
+        self.score = [0]*self.num_players
         self.bonus = [0]*self.num_players
         
-        for player in range(self.num_players):
-	    self.score[player] = self.player_score(player)
+        #for player in range(self.num_players):
+	#    self.score[player] = self.player_score(player)
 
 	self.score_history = [[s] for s in self.score]
 
@@ -337,7 +337,7 @@ class GalaxSix(Game):
 		f.num_ships = 0
 		f.turns_remaining = 0
 	
-	self.score[player] = 0
+	# self.score[player] = 0
 	self.orders[player] = []
 	
     def start_game(self):
@@ -378,7 +378,8 @@ class GalaxSix(Game):
 	self.do_timestep()
 
 	for player in range(self.num_players):
-	    self.score[player] = self.player_score(player)
+	    if self.is_alive(player): 
+		self.score[player] = self.turn
 
         # record score in score history
         for i, s in enumerate(self.score):
