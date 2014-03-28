@@ -240,20 +240,23 @@ class Auth extends CI_Controller {
 			$confirmation_code = md5(salt(64));
 			//$userdata['activated'] = 0;
 			$userdata['activation_code'] = $confirmation_code;
-			$ret = $this->Usermodel->update('email', $data['email'], $userdata);
-			
-			if (!$ret) {
+            $user = $this->Usermodel->getOne('email', $data['email']);
+
+            if (!isset($user)) {
 				// Email non reconnu
 				$data['error_msg'] = 'Email non reconnu !';
 				$data['page_title'] = 'Réinitialisation d\'un compte';
 				$data['page_icon'] = 'user';
 				render($this, 'auth/forgot_form', $data);
 			} else {
+                $ret = $this->Usermodel->update('email', $data['email'], $userdata);
+                $username = $user->username;
 				// Send confirmation mail to user.
 				$this->sendmail($data['email'], $confirmation_code, FALSE);
 				
 				$data['page_title'] = 'Réinitialisation en cours !';
 				$data['page_icon'] = 'user';
+                $data['username'] = $username;
 				render($this, 'auth/forgot_ok', $data);
 			}
 		} else {
