@@ -95,6 +95,13 @@ class Game extends CI_Controller {
 		render($this, 'game/specs', $data);
 	}
 
+	public function game_rules()
+	{
+		$data['page_title'] = 'Règles du jeu';
+		$data['page_icon'] = 'play-sign';
+		render($this, 'game/game_rules', $data);
+	}
+
 	public function view($game_id)
 	{
 		if (!isset($game_id)) {

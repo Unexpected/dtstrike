@@ -14,6 +14,7 @@
 		, array("Les kits de démarrage", site_url("game/kits"))
 		, array("Tutoriels et Stratégies", site_url("game/tuto"))
 		, array("Spécifications", site_url("game/specs"))
+		, array("Règle du jeu", site_url("game/game_rules"))
 		//, array("Les cartes officielles", site_url("game/maps"))
 	);
 	if (verify_user_role($this, "league", TRUE)) {
