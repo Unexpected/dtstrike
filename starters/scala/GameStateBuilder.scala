@@ -2,8 +2,8 @@ import scala.collection.mutable
 
 class GameStateBuilder {
 
-  private val economicPlanetRegex = ("""E\d* (\d*\.?\d*) (\d*\.?\d*) (\d+) (\d+) (\d+)""").r
-  private val militaryPlanetRegex = ("""M\d* (\d*\.?\d*) (\d*\.?\d*) (\d+) (\d+)""").r
+  private val economicPlanetRegex = ("""E\d* (\-?\d+\.?\d*) (\-?\d+\.?\d*) (\d+) (\d+) (\d+)""").r
+  private val militaryPlanetRegex = ("""M\d* (\-?\d+\.?\d*) (\-?\d+\.?\d*) (\d+) (\d+)""").r
   private val economicFleetRegex = """R (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)""".r
   private val militaryFleetRegex = """F (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)""".r
 
@@ -11,7 +11,7 @@ class GameStateBuilder {
   private val goRegex = "go".r
   private val endRegex = "end".r
 
-  private var turnNumber: Option[Int] = None
+  private var turnNumber: Option[Int] = Option(0)
   private var indexedPlanets: Option[IndexedSeq[Planet]] = None
   private var planets = mutable.ListBuffer[Planet]()
   private var fleets = mutable.ListBuffer[Fleet]()
@@ -29,9 +29,6 @@ class GameStateBuilder {
   }
 
   def parse(str: String): GameStateBuilderStatus.Value = {
-    var goFound = false
-    var endfound = false
-
     str match {
       case economicPlanetRegex(x, y, owner, numShips, revenue) =>
         planets += EconomicPlanet(planets.length, owner.toInt, numShips.toInt, (x.toDouble, y.toDouble), revenue.toInt)
@@ -46,8 +43,8 @@ class GameStateBuilder {
       case goRegex() =>
         startTime = Some(System.currentTimeMillis())
         return GameStateBuilderStatus.GO
-      case endRegex() => return GameStateBuilderStatus.END
-      // case _ => System.err.println("Could not parse : [" + str + "]")
+      case endRegex() =>
+        return GameStateBuilderStatus.END
     }
 
     GameStateBuilderStatus.CONTINUE
