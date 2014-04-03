@@ -5,6 +5,8 @@ var Visualizer = {
     feedline: 0,
     playing: false,
     haveDrawnBackground: false,
+    backgroundStarsNumber: -1,
+    backgroundStarsPositions: [],
     frameDrawStarted: null,
     frameDrawEnded: null,
 	game_id: -1,
@@ -18,12 +20,14 @@ var Visualizer = {
       planet_font: 'bold 15px Arial,Helvetica',
       fleet_font: 'normal 12px Arial,Helvetica',
       showFleetText: true,
-      display_margin: 65,
+      display_margin: 80,
       turnsPerSecond: 8,
       teamColor: ['#455','#E31937','#FF6A00','#F76DCB','#1ABBDB','#05A826','#972BD6'],
 	  E_planet_size: 13,
 	  M_planet_size: 26
     },
+    E_planet_image: null,
+    M_planet_image: null,
     
     setup: function() {
         // Setup Context
@@ -60,6 +64,26 @@ var Visualizer = {
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.haveDrawnBackground = true;
       }
+
+      // Draw stars on the background
+      if (this.backgroundStarsNumber == -1) {
+          this.backgroundStarsNumber = Math.floor(Math.random()*150) + 50;
+          for (var i = 0; i < this.backgroundStarsNumber; i++) {
+              this.backgroundStarsPositions[2*i] = Math.random() * this.canvas.width;
+              this.backgroundStarsPositions[2*i+1] = Math.random() * this.canvas.height;
+          }
+      }
+      for (var i = 0; i < this.backgroundStarsNumber; i++) {
+          ctx.beginPath();
+          ctx.rect(this.backgroundStarsPositions[2*i], this.backgroundStarsPositions[2*i+1], 1, 1);
+          ctx.closePath();
+          if (Math.floor(Math.random() * 10) != 0) {
+              ctx.fillStyle = '#FFF';
+          }
+		  ctx.fill();
+          ctx.fillStyle = '#000';
+      }
+
       for(var i = 0; i < this.dirtyRegions.length; i++) {
         var region = this.dirtyRegions[i];
         ctx.fillRect(
