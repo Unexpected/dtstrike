@@ -22,7 +22,7 @@ var Visualizer = {
       showFleetText: true,
       display_margin: 80,
       turnsPerSecond: 8,
-      teamColor: ['#455','#E31937','#FF6A00','#F76DCB','#1ABBDB','#05A826','#972BD6'],
+      teamColor: ['#445555','#E31937','#FF6A00','#F76DCB','#1ABBDB','#05A826','#972BD6'],
 	  E_planet_size: 13,
 	  M_planet_size: 26
     },
@@ -49,6 +49,10 @@ var Visualizer = {
     	    this.start();
     	    this.drawChart();
     	}
+        this.E_planet_image = new Image();
+        this.E_planet_image.src = '/challenge/visualizer/resources/globe_blue_grey.png';
+        this.M_planet_image = new Image();
+        this.M_planet_image.src = '/challenge/visualizer/resources/death_star_white.png';
     },
     
     unitToPixel: function(unit) {
@@ -97,7 +101,8 @@ var Visualizer = {
       
     },
     
-    drawFrame: function(frame) { 
+    drawFrame: function(frame) {
+        // TODO when a planet receive a fleet there is a color bug
         var disp_x = 0, disp_y = 0;
         var ctx = this.ctx;
         var frameNumber = Math.floor(frame);
@@ -120,42 +125,47 @@ var Visualizer = {
 						
 			if (planet.type == 'E') {
 				var planetSize = this.config.E_planet_size;
-				
-				// Add shadow
+
+                // Draw image
+                if (this.E_planet_image) {
+                    ctx.drawImage(this.E_planet_image,
+                                  disp_x + 0.5 - (planetSize + 1),
+                                  this.canvas.height - disp_y + 0.5 - (planetSize + 1),
+                                  (planetSize + 1) * 2,
+                                  (planetSize + 1) * 2);
+                }
+				// Add overlay
 				ctx.beginPath();
-				ctx.arc(disp_x + 0.5, this.canvas.height - disp_y + 0.5, planetSize + 1, 0, Math.PI*2, true);
+				ctx.arc(disp_x + 0.5, this.canvas.height - disp_y + 0.5, planetSize - 1, 0, Math.PI*2, true);
 				ctx.closePath();
-				ctx.fillStyle = "#000";
-				ctx.fill();
-				
-				// Draw circle
-				ctx.beginPath();
-				ctx.arc(disp_x, this.canvas.height - disp_y, planetSize, 0, Math.PI*2, true);
-				ctx.closePath();
+                ctx.globalAlpha = 0.5;
 				ctx.fillStyle = this.config.teamColor[planet.owner];
-				// TODO: hightlight planet when a fleet has reached them
 				ctx.fill();
-			} else if (planet.type == 'M') {
+                ctx.globalAlpha = 1;
+
+            } else if (planet.type == 'M') {
 				var planetSize = this.config.M_planet_size;
 				var halfSize = parseInt(planetSize / 2);
-				
-				// Add shadow
-				ctx.beginPath();
-				ctx.rect(disp_x - halfSize - 2, this.canvas.height - disp_y - halfSize - 2, planetSize + 4, planetSize + 4);
-				ctx.closePath();
-				ctx.fillStyle = "#000";
-				ctx.fill();
-				
-				// Draw square
-				ctx.beginPath();
-				ctx.rect(disp_x - halfSize, this.canvas.height - disp_y - halfSize, planetSize, planetSize);
-				ctx.closePath();
-				ctx.fillStyle = this.config.teamColor[planet.owner];
-				// TODO: hightlight planet when a fleet has reached them
-				ctx.fill();
-			}
 
-            ctx.fillStyle = "#fff";
+                // Draw image
+                if (this.M_planet_image) {
+                    ctx.drawImage(this.M_planet_image,
+                                  disp_x - halfSize - 2,
+                                  this.canvas.height - disp_y - halfSize - 2,
+                                  planetSize + 4,
+                                  planetSize + 4);
+                }
+				// Add overlay
+				ctx.beginPath();
+				ctx.arc(disp_x, this.canvas.height - disp_y, halfSize + 2, 0, Math.PI*2, true);
+				ctx.closePath();
+                ctx.globalAlpha = 0.5;
+				ctx.fillStyle = this.config.teamColor[planet.owner];
+				ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+
+            ctx.fillStyle = '#FFF';
             ctx.fillText(planet.numShips, disp_x, this.canvas.height - disp_y + 5);
         }
         
