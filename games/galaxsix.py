@@ -153,16 +153,16 @@ class GalaxSix(Game):
                 invalid.append((line,'invalid source planet'))
                 continue
 
-	    try:
-		self.planets[target_id]
-            except IndexError:
-                invalid.append((line,'invalid target planet'))
-                continue
+	#    try:
+	#	self.planets[target_id]
+        #    except IndexError:
+        #        invalid.append((line,'invalid target planet'))
+        #        continue
 
 	    source_planet = self.planets[source_id]
-	    if not isinstance(source_planet, MilitaryPlanet):
-		invalid.append((line,'source planet not military'))
-		continue
+	#    if not isinstance(source_planet, MilitaryPlanet):
+	#	invalid.append((line,'source planet not military'))
+	#	continue
 
 	    if self.planets_ships[source_planet.id] < order[2]:
                 ignored.append((line,'not enough ships on source planet'))
@@ -192,7 +192,10 @@ class GalaxSix(Game):
 		num_ships = order[2]
 		distance = self.distance(source_id, target_id)
 		p = self.planets[source_id]
-		f = Fleet(p.owner, num_ships, source_id, target_id, distance, distance, 'F')
+		if isinstance(p, EconomicPlanet): 
+		    f = Fleet(p.owner, num_ships, source_id, target_id, distance, distance, 'R')
+		else:
+		    f = Fleet(p.owner, num_ships, source_id, target_id, distance, distance, 'F')
 		self.planets[source_id].num_ships = self.planets[source_id].num_ships - num_ships
 		self.fleets.append(f)
 
@@ -203,15 +206,16 @@ class GalaxSix(Game):
         """
         for p in self.planets:
 	    if isinstance(p, EconomicPlanet) and p.owner > 0:
-	        military_planets = self.military_planets_for_player(p.owner)
-		if (len(military_planets) > 0):
-		    distance = maxint
-		    target = military_planets[0]
-		    for m in military_planets:
-			if (self.distance(m.id, p.id) < distance):
-			    distance = self.distance(m.id, p.id)
-			    target = m
-		    self.fleets.append(Fleet(p.owner, p.growth_rate, p.id, target.id, distance, distance, 'R'))
+		p.num_ships = p.num_ships + p.growth_rate
+	#        military_planets = self.military_planets_for_player(p.owner)
+	#	if (len(military_planets) > 0):
+	#	    distance = maxint
+	#	    target = military_planets[0]
+	#	    for m in military_planets:
+	#		if (self.distance(m.id, p.id) < distance):
+	#		    distance = self.distance(m.id, p.id)
+	#		    target = m
+	#	    self.fleets.append(Fleet(p.owner, p.growth_rate, p.id, target.id, distance, distance, 'R'))
 	for f in self.fleets:
 	    f.do_timestep();
 	for p in self.planets:
@@ -227,7 +231,8 @@ class GalaxSix(Game):
 	        battle_fleets = battle_fleets + 1
 		if not f.owner in battleships:
 		    battleships[f.owner] = 0
-		battleships[f.owner] = battleships[f.owner] + f.num_ships
+		if f.type == 'F' or f.owner == p.owner: 
+		    battleships[f.owner] = battleships[f.owner] + f.num_ships
 	    else:
 		remaining_fleets.append(f)
 
