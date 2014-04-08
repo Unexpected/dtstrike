@@ -380,20 +380,6 @@ public class GalaxSix extends Game {
 
 	@Override
 	public void finishTurn() {
-		for (Planet p : planets) {
-			if (p instanceof EconomicPlanet && p.owner > 0) {
-				Set<MilitaryPlanet> mPlanets = getMilitaryPlanets(p.owner);
-				if (mPlanets.size() > 0) {
-					Planet dest = getClosestPlanet(p, mPlanets);
-					if (dest != null) {
-						int distance = distance(p.id, dest.id);
-						fleets.add(new Fleet(p.owner,
-								((EconomicPlanet) p).revenue, p.id, dest.id,
-								distance, distance, false));
-					}
-				}
-			}
-		}
 
 		for (Fleet f : fleets) {
 			f.doTimeStep();
@@ -463,7 +449,7 @@ public class GalaxSix extends Game {
 				if (numShips == 0) {
 					continue;
 				}
-				Planet localPlanet = (Planet) this.planets.get(sourcePlanet);
+				Planet localPlanet = this.planets.get(sourcePlanet);
 				if (localPlanet.owner != id) {
 					writeLogMessage("invalid order - planet doesn't belong to player "
 							+ id + ": " + order + "\n");
@@ -475,15 +461,22 @@ public class GalaxSix extends Game {
 					continue;
 				}
 				if (localPlanet instanceof EconomicPlanet) {
-					writeLogMessage("invalid order - source planet must be a military planet"
-							+ order + "\n");
-					continue;
+					final int distance = distance(localPlanet.id, destPlanet);
+					final Fleet localFleet = new Fleet(
+							localPlanet.owner,
+							((EconomicPlanet) localPlanet).revenue,
+							localPlanet.id, destPlanet,
+							distance, distance, false);
+					this.fleets.add(localFleet);
+
 				}
-				localPlanet.numShips -= numShips;
-				int distance = distance(sourcePlanet, destPlanet);
-				Fleet localFleet = new Fleet(localPlanet.owner, numShips,
-						sourcePlanet, destPlanet, distance, distance, true);
-				this.fleets.add(localFleet);
+				if (localPlanet instanceof MilitaryPlanet) {
+					localPlanet.numShips -= numShips;
+					int distance = distance(sourcePlanet, destPlanet);
+					Fleet localFleet = new Fleet(localPlanet.owner, numShips,
+							sourcePlanet, destPlanet, distance, distance, true);
+					this.fleets.add(localFleet);
+				}
 			} catch (Exception e) {
 				writeLogMessage("invalid order for player " + id + ": " + order
 						+ "\n" + e.getMessage());
