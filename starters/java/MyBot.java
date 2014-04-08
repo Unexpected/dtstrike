@@ -1,4 +1,8 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class MyBot extends Bot {
 	/**
@@ -28,13 +32,26 @@ public class MyBot extends Bot {
 	 * You can use it as a starting point, or you can throw it out entirely and
 	 * replace it with your own.
 	 * </p>
-	 * 
-	 * @param game
-	 *            the Game instance
 	 */
 	@Override
 	public void doTurn() {
+
 		Game game = getGame();
+
+		/******************************************
+		 * Economic planets and fleets management *
+		 ******************************************/
+
+		// Send reinforcements to the closest military planet
+		final List<Planet> myMilitaryPlanets = game.getMyMilitaryPlanets();
+		for (Planet origin : game.getMyEconomicPlanets()) {
+			Planet target = game.getClosestPlanet(origin, myMilitaryPlanets);
+			game.issueOrder(origin, target, origin.numShips);
+		}
+
+		/******************************************
+		 * Military planets and fleets management *
+		 ******************************************/
 
 		// (1) If we currently have a fleet in flight, just do nothing.
 		for (Fleet f : game.getMyMilitaryFleets()) {
@@ -46,7 +63,7 @@ public class MyBot extends Bot {
 		// (2) Find my strongest military planet.
 		Planet source = null;
 		int sourceShips = Integer.MIN_VALUE;
-		for (Planet p : game.getMyMilitaryPlanets()) {
+		for (Planet p : myMilitaryPlanets) {
 			int score = p.numShips;
 			if (score > sourceShips) {
 				sourceShips = score;

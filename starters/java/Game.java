@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -180,15 +181,47 @@ public class Game {
 	}
 
 	/**
-	 * Return a list of all the planets owned by the current player. By
+	 * Return a list of all military planets owned by the current player. By
 	 * convention, the current player is always player number 1.
-	 * 
+	 *
 	 * @return the planet list
 	 */
 	public List<Planet> getMyMilitaryPlanets() {
 		List<Planet> r = new ArrayList<Planet>();
 		for (Planet p : planets) {
 			if (p.owner == 1 && p instanceof MilitaryPlanet) {
+				r.add(p);
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * Return a list of all economical planets owned by the current player. By
+	 * convention, the current player is always player number 1.
+	 *
+	 * @return the planet list
+	 */
+	public List<Planet> getMyEconomicPlanets() {
+		List<Planet> r = new ArrayList<Planet>();
+		for (Planet p : planets) {
+			if (p.owner == 1 && p instanceof EconomicPlanet) {
+				r.add(p);
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * Return a list of all economical planets owned by the current player. By
+	 * convention, the current player is always player number 1.
+	 *
+	 * @return the planet list
+	 */
+	public List<Planet> getMyEconomicalPlanets() {
+		List<Planet> r = new ArrayList<Planet>();
+		for (Planet p : planets) {
+			if (p.owner == 1 && p instanceof EconomicPlanet) {
 				r.add(p);
 			}
 		}
@@ -423,6 +456,26 @@ public class Game {
 		double dx = source.x - destination.x;
 		double dy = source.y - destination.y;
 		return (int) Math.ceil(Math.sqrt(dx * dx + dy * dy));
+	}
+
+	/**
+	 * Returns the planet from destinations the closest to origin
+	 * @param origin a planet
+	 * @param destinations possible destination
+	 * @return the closest planet to origin that belongs to destinations
+	 */
+	public Planet getClosestPlanet(Planet origin, Collection<? extends Planet> destinations) {
+		Planet destination = null;
+		int distance = Integer.MAX_VALUE;
+
+		for (Planet d : destinations) {
+			int newDistance = distance(origin.id, d.id);
+			if (newDistance < distance) {
+				distance = newDistance;
+				destination = d;
+			}
+		}
+		return destination;
 	}
 
 	/**
