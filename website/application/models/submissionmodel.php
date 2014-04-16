@@ -65,7 +65,7 @@ Class Submissionmodel extends Basemodel {
 			return 0;
 		} else {
 			$arr = $result_id->result_array();
-			if ($arr !== NULL && isset($arr->attachments[0])) {
+			if ($arr !== NULL && isset($arr->attachments[0])) { 
 				return $arr[0]['cnt'];
 			} else {
 				return 0;
