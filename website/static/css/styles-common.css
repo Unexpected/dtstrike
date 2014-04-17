@@ -11,7 +11,7 @@ pre.error,
     font-family: Consolas, Inconsolata, monospace;
     text-align: left;
     padding: 5px;
-    width: 680px;
+    width: 100%;
     overflow: auto;
     background-color: #e0e0e0;
 	color: #000;

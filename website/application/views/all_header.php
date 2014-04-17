@@ -3,10 +3,12 @@
 <head>
 	<meta charset="utf-8">
 	<title>CGI Challenge</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/bootstrap.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/font-awesome.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-common.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-dark.css") ?>" id="skin" />
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/responsive.css") ?>" />	
 <!--[if lt IE 9]>
 	<script type="text/javascript">
 		alert("Attention, ce site ne fonctionne qu'avec IE 9 et supérieur ou un vrai navigateur.");

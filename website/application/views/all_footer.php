@@ -6,7 +6,7 @@
 		</div>
 	</div>
 <?php if (!isset($no_footer)) { ?>
-	<footer class="navbar navbar-fixed-bottom">
+	<footer class="navbar navbar-fixed-bottom nav-hide-on-mobile">
 		<div class="navbar-inner">
 			<div class="pull-left" style="padding-top: 8px;">
 				En cas de problème, n'hésitez pas à <a href="<?php echo base_url("forum") ?>">nous contacter</a> !

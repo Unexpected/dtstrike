@@ -1,0 +1,18 @@
+/*****************************************************************/
+/**                        Adaptation Mobile                     */
+/*****************************************************************/
+
+/* On masque le header sur les faibles résolutions < 767px de largeur */
+@media (max-width: 767px) {
+	header {display : none;}	
+	.nav-hide-on-mobile {display : none;}
+}
+@media (min-width: 768px) {
+	.nav-hide-on-mobile {display : block;}
+}
+
+/* on réduit la taille des titres de manière à ce que le logo CGI reste aligné*/
+.navbar-inner h1 {
+	letter-spacing: 0.1em;
+    word-spacing: 0.2em;
+}
