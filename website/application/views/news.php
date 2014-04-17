@@ -1,19 +1,9 @@
 ﻿<?php
 	$news = array();
 	$news[] = array(
-		"03/12/2013",
-		"Les starters packages ont été mis à jour ... encore",
-		"Il y avait un soucis avec l'engine local qui interprettait mal le code de sortie."
-	);
-	$news[] = array(
-		"02/12/2013",
-		"Les skils ont été resettés!",
-		"Cela signifie que vos bots actuels recommencent tous avec le même classement et les matchs vont redéterminer l'ordre."
-	);
-	$news[] = array(
-		"02/12/2013",
-		"Les starters packages ont été mis à jour",
-		"Avec notamment les dernières versions des bots d'exemples mais également le support des maps à 5 et 6 joueurs."
+		"17/04/2014",
+		"TODO",
+		"Penser à écrire une première news utile."
 	);
 	
 	if (defined("NEWS_INCLUDED")) {
