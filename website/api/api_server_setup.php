@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once('mysql_login.php');
 require_once('server_info.php');
@@ -34,8 +34,9 @@ if (substr($api_url, strlen( $api_url ) - 1) != '/') {
 	$api_url .= '/';
 }
 
+/*
+	curl '<?php echo $api_url?>worker_init.py' > /root/worker_init.py
+	python /root/worker_init.py <?php echo $api_url.' '.$new_key ?> $@
+*/
 ?>
-
-curl '<?php echo $api_url?>worker_init.py' > /root/worker_init.py
-python /root/worker_init.py <?php echo $api_url.' '.$new_key ?> $@
-
+<?php echo $new_key ?>
