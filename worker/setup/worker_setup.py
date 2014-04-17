@@ -167,15 +167,16 @@ def setup_contest_files(options):
     if not os.path.exists(map_dir):
         os.mkdir(map_dir)
         run_cmd("chown {0}: {1}".format(options.username, map_dir))
-    if not os.path.exists(options.log_dir):
-        os.mkdir(options.log_dir)
-        run_cmd("chown {0}: {1}".format(options.username, options.log_dir))
+    log_dir = os.path.join(contest_root, "logs")
+    if not os.path.exists(log_dir):
+        os.mkdir(log_dir)
+        run_cmd("chown {0}: {1}".format(options.username, log_dir))
     worker_dir = os.path.join(contest_root, local_repo, "worker")
     si_filename = os.path.join(TEMPLATE_DIR, "worker_server_info.py.template")
     with open(si_filename, 'r') as si_file:
         si_template = si_file.read()
     si_contents = si_template.format(contest_root=contest_root,
-            repo_dir=local_repo, log_dir=options.log_dir,
+            repo_dir=local_repo, log_dir=log_dir,
             map_dir=map_dir, compiled_dir=compiled_dir,
             api_url=options.api_url, api_key=options.api_key)
     with CD(worker_dir):
@@ -210,7 +211,7 @@ def setup_base_chroot(options):
                 apt-get update; apt-get upgrade -y\"")
         run_cmd("schroot -p -c aic-base -- apt-get install -y python")
     run_cmd("schroot -p -c aic-base -- %s/setup/worker_setup.py --chroot-base"
-            % (os.path.join(options.root_dir, options.local_repo),))
+            % (os.path.join(options.root_dir, options.local_repo, "worker"),))
 
 def create_jail_group(options):
     """ Create user group for jail users and set limits on it """
@@ -276,7 +277,7 @@ exit 0
 def setup_base_jail(options):
     """ Create and configure base jail """
     run_cmd("schroot -p -c aic-base -- %s/setup/worker_setup.py --chroot-setup --api-url %s"
-            % (os.path.join(options.root_dir, options.local_repo),
+            % (os.path.join(options.root_dir, options.local_repo, "worker"),
                 options.api_url))
     create_jail_group(options)
     iptablesload_path = "/etc/network/if-pre-up.d/iptablesload"
@@ -341,7 +342,7 @@ def interactive_options(options):
 def get_options(argv):
     """ Get all the options required for setup """
     top_level='/home'
-    root_dir = os.path.join(top_level, 'contest')
+    root_dir = os.path.join(top_level, 'cgi')
     map_dir = os.path.join(root_dir, 'maps')
     replay_dir = os.path.join(root_dir, 'games')
     upload_dir = os.path.join(root_dir, 'uploads')
@@ -355,7 +356,7 @@ def get_options(argv):
         "install_pkg_languages": True,
         "install_jailguard": False,
         "packages_only": False,
-        "username": "root",
+        "username": "cgi",
         "root_dir": root_dir,
         "map_dir": map_dir,
         "replay_dir": replay_dir,
