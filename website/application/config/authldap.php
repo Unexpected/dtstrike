@@ -47,11 +47,11 @@
  * against OpenLDAP server
  */
 $config['dev_bypass'] = FALSE; // If TRUE, ldap isn't called
-$config['ldap_uri'] = array('ldap://fr-dc019.groupinfra.com:389/');
+$config['ldap_uri'] = array('');
 $config['use_tls'] = false; // Encrypted without using SSL
-$config['search_base'] = 'OU=FR,OU=Landlord FR,OU=Corporate,DC=groupinfra,DC=com';
-$config['user_search_base'] = array('OU=Users,OU=FR,OU=Landlord FR,OU=Corporate,DC=groupinfra,DC=com');  // Leave empty to use $config['search_base']
-$config['group_search_base'] = array('OU=Groups,OU=FR,OU=Landlord FR,OU=Corporate,DC=groupinfra,DC=com');  // Leave empty to use $config['search_base']
+$config['search_base'] = '';
+$config['user_search_base'] = array('');  // Leave empty to use $config['search_base']
+$config['group_search_base'] = array('');  // Leave empty to use $config['search_base']
 $config['user_object_class'] = 'user';
 $config['group_object_class'] = 'group';
 $config['user_search_filter'] = '';  // Additional search filters to use for user lookups
