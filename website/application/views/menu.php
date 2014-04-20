@@ -1,14 +1,14 @@
 <?php
 	$menu = array(
-		array('CGI Challenge', '', 'globe', '')
+		array('HAL Challenge', '', 'globe', '')
 		, array("Accueil", site_url("welcome"), '', '')
 		, array("Classement actuel", site_url("game/rank"), '', '')
 		, array("Dernières parties", site_url("game"), '', 'nav-hide-on-mobile')
 		, array("Les règles du concours", site_url("game/rules"), '', '')
 		, array('Communauté', '', 'group', 'nav-hide-on-mobile')
 		, array("Le forum", base_url("forum"), '', 'nav-hide-on-mobile')
-		, array("IRC", 'irc://irc.freenode.net/cgichallenge', '', 'nav-hide-on-mobile')
-		, array("IRC webclient", 'http://webchat.freenode.net?channels=%23cgichallenge', '', 'nav-hide-on-mobile')
+		, array("IRC", 'irc://irc.freenode.net/halchallenge', '', 'nav-hide-on-mobile')
+		, array("IRC webclient", 'http://webchat.freenode.net?channels=%23halchallenge', '', 'nav-hide-on-mobile')
 		, array('Le concours', '', 'gamepad', '')
 		, array("Démarrage rapide", site_url("game/start"), '', 'nav-hide-on-mobile')
 		, array("Les kits de démarrage", site_url("game/kits"), '', 'nav-hide-on-mobile')

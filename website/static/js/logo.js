@@ -44,7 +44,7 @@ var CgiLogo = {
 			this.frontImageObj.onload = function() {
 				CgiLogo.animate.apply(CgiLogo);
 			};
-			this.frontImageObj.src = document.getElementById('logo_cgi').src;
+			this.frontImageObj.src = document.getElementById('logo').src;
 
 			for (var i=0; i<this.nbImage; i++) {
 				this.backImageObj[i] = new Image();
@@ -56,11 +56,11 @@ var CgiLogo = {
 				this.lastPos = JSON.parse(val);
 			}
 
-			document.getElementById('logo_cgi').style.display = 'none';
+			document.getElementById('logo').style.display = 'none';
 		} catch (e) {
 			// old browsers support
 			if (window.console && console.log) console.log(e.message);
-			document.getElementById('logo_cgi').style.display = 'block';
+			document.getElementById('logo').style.display = 'block';
 		};
 	},
 

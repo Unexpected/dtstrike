@@ -4,10 +4,10 @@
 ?>
 <?php define("NEWS_INCLUDED", TRUE); include 'news.php'; ?>
 <p>
-	Le CGI Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA) qui va lutter contre celle des autres joueurs dans d'épiques batailles spatiales. <br/><br/>
+	Le HAL Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA) qui va lutter contre celle des autres joueurs dans d'épiques batailles spatiales. <br/><br/>
 
 	Grâce aux Kits de démarrage "clé en main", que vous soyez débutant ou développeur experimenté, vous pouvez en moins de <code>5 minutes</code>, choisir votre langage de programmation préféré, soumettre le kit de démarrage correspondant et regarder vos vaisseaux 
-	affronter d'autres joueurs de CGI pour conquérir la galaxie.
+	affronter d'autres joueurs du monde entier pour conquérir la galaxie.
 </p>
 
 <p class="nav-hide-on-mobile">
@@ -27,4 +27,4 @@
 </p>
 <br/>
 <code>Stay Tuned</code>
-<p style="text-align: right;"><br/>May the DT be with you.</p>
+<p style="text-align: right;"><br/>May the Troll be with you.</p>

@@ -147,19 +147,19 @@ class Auth extends CI_Controller {
 	 * @return boolean
 	 */
 	private function sendmail($to, $confirmation_code, $register) {
-		$BASE_URL = site_url();
+		$BASE_URL = site_url() + "fr/";
 		$BR = "<br/>\n\n";
 		
-		$this->email->from('cgichallenge@logica.com', 'CGI Challenge');
+		$this->email->from('no-reply@game-of-trolls.org', 'HAL Challenge');
 		$this->email->to($to);
 		
 		if ($register) {
 			// Confirmation register
-			$this->email->subject('CGI Challenge : inscription');
+			$this->email->subject('HAL Challenge : inscription');
 			$activation_url = $BASE_URL . "auth/register_validate?confirmation_code=" . $confirmation_code;
 			$peer_message = "";
 			$this->email->message("<html><body>" . 
-					"Bienvenu au CGI Challenge !" . $BR .
+					"Bienvenue au HAL Challenge !" . $BR .
 					$BR .
 					"Cliquez sur le lien ci-dessous pour activer votre compte :" . $BR .
 					"<a href=\"" . $activation_url . "\">".$activation_url ."</a>" . $BR .
@@ -173,10 +173,10 @@ class Auth extends CI_Controller {
 					"</body></html>");
 		} else {
 			// Password Lost
-			$this->email->subject('CGI Challenge : Reset du compte');
+			$this->email->subject('HAL Challenge : Reset du compte');
 			$reset_url = $BASE_URL . "auth/reset?confirmation_code=" . $confirmation_code;
 			$this->email->message("<html><body>" . 
-					"Réinitialissation de votre compte CGI Challenge !" . $BR .
+					"Réinitialissation de votre compte HAL Challenge !" . $BR .
 					$BR .
 					"Cliquez sur le lien ci-dessous pour réinitialiser votre compte :" . $BR .
 					"<a href=\"" . $reset_url . "\">".$reset_url ."</a>" . $BR .
