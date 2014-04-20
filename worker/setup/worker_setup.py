@@ -343,7 +343,7 @@ def interactive_options(options):
 def get_options(argv):
     """ Get all the options required for setup """
     top_level='/home'
-    root_dir = os.path.join(top_level, 'cgi')
+    root_dir = os.path.join(top_level, 'worker')
     map_dir = os.path.join(root_dir, 'maps')
     replay_dir = os.path.join(root_dir, 'games')
     upload_dir = os.path.join(root_dir, 'uploads')
@@ -355,10 +355,10 @@ def get_options(argv):
         "install_required": True,
         "install_utilities": True,
         "install_languages": False,
-        "install_pkg_languages": True,
+        "install_pkg_languages": False,
         "install_jailguard": False,
         "packages_only": False,
-        "username": "cgi",
+        "username": "worker",
         "root_dir": root_dir,
         "map_dir": map_dir,
         "replay_dir": replay_dir,
