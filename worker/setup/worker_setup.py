@@ -31,7 +31,8 @@ def install_basic_languages():
     """ Install base set of submission languages,
         currently C, C++, Java, and Python """
     pkg_list = ["gcc", "g++", "openjdk-7-jdk", "python-dev", "python3-dev",
-                "python-numpy", "python-scipy"]
+                "python-numpy", "python-scipy", "php5-cli", "scala", "groovy", "golang-go", 
+		"node-js", "mono-devel"]
     install_apt_packages(pkg_list)
 
 def install_extra_distribution_languages():
@@ -194,7 +195,7 @@ def setup_base_chroot(options):
     base_chroot_dir = os.path.join(chroot_dir, "aic-base")
     if not os.path.exists(base_chroot_dir):
         os.makedirs(base_chroot_dir)
-        run_cmd("debootstrap --variant=buildd --arch %s wheezy \
+        run_cmd("debootstrap --variant=buildd --arch %s saucy \
                 %s %s" % (options.arch, base_chroot_dir, options.os_url))
         with CD(TEMPLATE_DIR):
             run_cmd("cp chroot_configs/chroot.d/aic-base /etc/schroot/chroot.d/")
@@ -348,6 +349,7 @@ def get_options(argv):
     upload_dir = os.path.join(root_dir, 'uploads')
     compiled_dir = os.path.join(root_dir, 'compiled')
     log_dir = os.path.join(root_dir, 'logs')
+    repo_dir = os.path.join(root_dir, 'dtstrike')
     default_setup = {
         "update_system": True,
         "install_required": True,
@@ -363,11 +365,11 @@ def get_options(argv):
         "upload_dir": upload_dir,
         "compiled_dir": compiled_dir,
         "log_dir": log_dir,
-        "local_repo": top_level,
+        "local_repo": repo_dir,
         "create_jails": True,
         "api_url":  "http://"+ '.'.join(getfqdn().split('.')[1:]) +"/",
         "api_key": "",
-        "os_url": "http://ftp.fr.debian.org/debian/",
+        "os_url": "http://archive.ubuntu.com/ubuntu/",
         "install_cronjob": False,
         "run_worker": False,
         "interactive": True,
