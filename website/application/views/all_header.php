@@ -27,7 +27,7 @@
 				<a href="<?php echo base_url() ?>">HAL <i class="icon-rocket icon-large"></i> Challenge</a>
 			</h1>
 			<div class="logo pull-right">
-				<img id="logo" src="<?php echo base_url("static/images/logo/logo.png") ?>" style="position: absolute; z-index: 1;" />
+				<img id="logo_img" src="<?php echo base_url("static/images/logo/logo.png") ?>" style="position: absolute; z-index: 1;" />
 				<img id="planet_1" src="<?php echo base_url("static/images/logo/planet_1.png") ?>" style="display: none;" />
 				<img id="planet_2" src="<?php echo base_url("static/images/logo/planet_2.png") ?>" style="display: none;" />
 				<canvas id="logo" width="158" height="100"></canvas>

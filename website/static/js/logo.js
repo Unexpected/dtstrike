@@ -1,5 +1,5 @@
 /**
- * CGI - CGI logo animation
+ * HAL - HAL logo animation
  * @author sebastien.schmitt@cgi.com
  */
 
@@ -15,7 +15,7 @@ if (!window.requestAnimFrame) {
 	})();
 }
 
-var CgiLogo = {
+var HalLogo = {
 	width: 0,
 	height: 0,
 	canvas: null,
@@ -42,16 +42,16 @@ var CgiLogo = {
 
 			this.frontImageObj = new Image();
 			this.frontImageObj.onload = function() {
-				CgiLogo.animate.apply(CgiLogo);
+				HalLogo.animate.apply(HalLogo);
 			};
-			this.frontImageObj.src = document.getElementById('logo').src;
+			this.frontImageObj.src = document.getElementById('logo_img').src;
 
 			for (var i=0; i<this.nbImage; i++) {
 				this.backImageObj[i] = new Image();
 				this.backImageObj[i].src = document.getElementById('planet_'+(i+1)).src ;
 			}
 			
-			var val = localStorage.getItem("CgiLogo.lastPos");
+			var val = localStorage.getItem("HalLogo.lastPos");
 			if (val != null) {
 				this.lastPos = JSON.parse(val);
 			}
@@ -100,10 +100,10 @@ var CgiLogo = {
 		}
 	
 		// Save state
-		localStorage.setItem("CgiLogo.lastPos", JSON.stringify(this.lastPos));
+		localStorage.setItem("HalLogo.lastPos", JSON.stringify(this.lastPos));
 	
 		// request new frame
-		requestAnimFrame(function() {CgiLogo.animate.apply(CgiLogo);});
+		requestAnimFrame(function() {HalLogo.animate.apply(HalLogo);});
 	},
 	
 	drawPlanet: function(idx, up) {
