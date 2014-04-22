@@ -18,7 +18,21 @@ func DoTurn(world *GameState) {
 
 	world.Log("My view of the world is : %s\n", world)
 
-	// (0) If we currently have a fleet in flight, just do nothing.
+
+	// (0) Send my reinforcements to a target planet
+	myEconomicPlanets := world.GetMyEconomics()
+	// i get my non military planets
+	for inc := range myEconomicPlanets {// for each
+		if myEconomicPlanets[inc].NumShips > 50 { // if it's big enough
+				target:=world.GetMyNearestMilitary(myEconomicPlanets[inc]) 
+				if (target!=nil){
+					world.IssueOrder(myEconomicPlanets[inc].Id, target.Id, myEconomicPlanets[inc].NumShips-50)
+				}
+			}
+		}
+
+
+	// (1) If we currently have a fleet in flight, just do nothing.
 	for key := range world.listFleet {
 		if world.listFleet[key].Owner == 1 { // if it's mine
 			if world.GetAllPlanets()[world.listFleet[key].Source].Owner == 1 {
@@ -31,7 +45,7 @@ func DoTurn(world *GameState) {
 		}
 	}
 
-	// (1) Find my strongest military planet.
+	// (2) Find my strongest military planet.
 	var source *Planet
 	var target *Planet
 	sourceShips := 0

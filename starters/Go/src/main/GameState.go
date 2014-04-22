@@ -24,6 +24,7 @@ type GameState struct {
 	//initFlag     bool
 	nbPlanet int
 
+
 	// params
 	loadtime int
 	turntime int
@@ -42,7 +43,7 @@ func (l GameState) RemainingTime() int {
 }
 
 /******************************************************************************
-Get my planets that can send ships
+Get my planets that can attack
 ******************************************************************************/
 func (l *GameState) GetMyMilitary() (MyMilitary Planets) {
 	// get planets for user 1, me :-)
@@ -54,6 +55,37 @@ func (l *GameState) GetMyMilitary() (MyMilitary Planets) {
 	}
 	return
 }
+
+/******************************************************************************
+Get my planets that are Economic ones
+******************************************************************************/
+func (l *GameState) GetMyEconomics() (MyEconomics Planets) {
+	// get planets for user 1, me :-)
+	for key := range l.listOwner[1] {
+		if l.listOwner[1][key].Type {
+			//filter on Economic only
+			MyEconomics = append(MyEconomics, l.listOwner[1][key])
+		}
+	}
+	return
+}
+
+/******************************************************************************
+Get my nearest military one
+******************************************************************************/
+func (l *GameState) GetMyNearestMilitary(source *Planet) (target *Planet) {
+
+	minDist := math.MaxUint32
+	MyMilitary := l.GetMyMilitary()
+	for key := range MyMilitary {
+		if l.Distance(MyMilitary[key].Id, source.Id) < minDist{
+				target = MyMilitary[key]
+				minDist = l.Distance(MyMilitary[key].Id, source.Id)
+			}
+		}
+		return
+}
+
 
 /******************************************************************************
 Get planets of others
