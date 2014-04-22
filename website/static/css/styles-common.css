@@ -17,9 +17,23 @@ pre.error,
 	color: #000;
 }
 
+.navbar-inner h1,
+h2 {
+	font-family: 'Space Ranger';
+	letter-spacing: 0.2em;
+	word-spacing: 0.3em;
+}
+
+.navbar-inner h1 {
+	font-size: 2em;
+	padding: 0.1em;
+	text-align: center;
+	margin-left: 5em;
+}
+
 .logo {
-	width: 158px;
-	height: 100px;
+	width: 40px;
+	height: 40px;
 	display: inline-block;
 }
 

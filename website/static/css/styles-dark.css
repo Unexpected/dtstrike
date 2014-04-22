@@ -21,19 +21,6 @@ body {
 	border-color: #252525;
 }
 
-.navbar-inner h1 {
-	font-size: 4em;
-    padding: 0.25em;
-    text-align: center;
-}
-
-.navbar-inner h1,
-h2 {
-	font-family: 'Space Ranger';
-	letter-spacing: 0.2em;
-	word-spacing: 0.3em;
-}
-
 .navbar h1 a {
 	text-decoration: none;
 	text-shadow: 0 0 3px #ffffff;

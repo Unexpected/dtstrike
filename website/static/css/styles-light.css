@@ -13,15 +13,6 @@ body {
 	background-size: cover;
 }
 
-.navbar-inner h1 {
-	font-family: 'Space Ranger';
-	font-size: 4em;
-	letter-spacing: 0.2em;
-    word-spacing: 0.3em;
-    padding: 0.25em;
-    text-align: center;
-}
-
 .navbar h1 a {
 	text-decoration: none;
 	text-shadow: 0 0 3px #ffffff;

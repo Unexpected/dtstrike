@@ -1,6 +1,5 @@
 $(document).ready(function() {
 	initCssSelector();
-	HalLogo.initCanvas(158, 100);
 });
 
 function initCssSelector() {
