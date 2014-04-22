@@ -31,7 +31,8 @@ def install_basic_languages():
     """ Install base set of submission languages,
         currently C, C++, Java, and Python """
     pkg_list = ["gcc", "g++", "openjdk-7-jdk", "python-dev", "python3-dev",
-                "python-numpy", "python-scipy"]
+                "python-numpy", "python-scipy", "php5-cli", "scala", "groovy", "golang-go", 
+                "nodejs", "mono-devel"]
     install_apt_packages(pkg_list)
 
 def install_extra_distribution_languages():
@@ -167,15 +168,16 @@ def setup_contest_files(options):
     if not os.path.exists(map_dir):
         os.mkdir(map_dir)
         run_cmd("chown {0}: {1}".format(options.username, map_dir))
-    if not os.path.exists(options.log_dir):
-        os.mkdir(options.log_dir)
-        run_cmd("chown {0}: {1}".format(options.username, options.log_dir))
+    log_dir = os.path.join(contest_root, "logs")
+    if not os.path.exists(log_dir):
+        os.mkdir(log_dir)
+        run_cmd("chown {0}: {1}".format(options.username, log_dir))
     worker_dir = os.path.join(contest_root, local_repo, "worker")
     si_filename = os.path.join(TEMPLATE_DIR, "worker_server_info.py.template")
     with open(si_filename, 'r') as si_file:
         si_template = si_file.read()
     si_contents = si_template.format(contest_root=contest_root,
-            repo_dir=local_repo, log_dir=options.log_dir,
+            repo_dir=local_repo, log_dir=log_dir,
             map_dir=map_dir, compiled_dir=compiled_dir,
             api_url=options.api_url, api_key=options.api_key)
     with CD(worker_dir):
@@ -193,7 +195,7 @@ def setup_base_chroot(options):
     base_chroot_dir = os.path.join(chroot_dir, "aic-base")
     if not os.path.exists(base_chroot_dir):
         os.makedirs(base_chroot_dir)
-        run_cmd("debootstrap --variant=buildd --arch %s wheezy \
+        run_cmd("debootstrap --variant=buildd --arch %s saucy \
                 %s %s" % (options.arch, base_chroot_dir, options.os_url))
         with CD(TEMPLATE_DIR):
             run_cmd("cp chroot_configs/chroot.d/aic-base /etc/schroot/chroot.d/")
@@ -210,7 +212,7 @@ def setup_base_chroot(options):
                 apt-get update; apt-get upgrade -y\"")
         run_cmd("schroot -p -c aic-base -- apt-get install -y python")
     run_cmd("schroot -p -c aic-base -- %s/setup/worker_setup.py --chroot-base"
-            % (os.path.join(options.root_dir, options.local_repo),))
+            % (os.path.join(options.root_dir, options.local_repo, "worker"),))
 
 def create_jail_group(options):
     """ Create user group for jail users and set limits on it """
@@ -276,7 +278,7 @@ exit 0
 def setup_base_jail(options):
     """ Create and configure base jail """
     run_cmd("schroot -p -c aic-base -- %s/setup/worker_setup.py --chroot-setup --api-url %s"
-            % (os.path.join(options.root_dir, options.local_repo),
+            % (os.path.join(options.root_dir, options.local_repo, "worker"),
                 options.api_url))
     create_jail_group(options)
     iptablesload_path = "/etc/network/if-pre-up.d/iptablesload"
@@ -341,32 +343,33 @@ def interactive_options(options):
 def get_options(argv):
     """ Get all the options required for setup """
     top_level='/home'
-    root_dir = os.path.join(top_level, 'contest')
+    root_dir = os.path.join(top_level, 'worker')
     map_dir = os.path.join(root_dir, 'maps')
     replay_dir = os.path.join(root_dir, 'games')
     upload_dir = os.path.join(root_dir, 'uploads')
     compiled_dir = os.path.join(root_dir, 'compiled')
     log_dir = os.path.join(root_dir, 'logs')
+    repo_dir = os.path.join(root_dir, 'dtstrike')
     default_setup = {
         "update_system": True,
         "install_required": True,
         "install_utilities": True,
         "install_languages": False,
-        "install_pkg_languages": True,
+        "install_pkg_languages": False,
         "install_jailguard": False,
         "packages_only": False,
-        "username": "root",
+        "username": "worker",
         "root_dir": root_dir,
         "map_dir": map_dir,
         "replay_dir": replay_dir,
         "upload_dir": upload_dir,
         "compiled_dir": compiled_dir,
         "log_dir": log_dir,
-        "local_repo": top_level,
+        "local_repo": repo_dir,
         "create_jails": True,
         "api_url":  "http://"+ '.'.join(getfqdn().split('.')[1:]) +"/",
         "api_key": "",
-        "os_url": "http://ftp.fr.debian.org/debian/",
+        "os_url": "http://archive.ubuntu.com/ubuntu/",
         "install_cronjob": False,
         "run_worker": False,
         "interactive": True,

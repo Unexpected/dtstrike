@@ -6,20 +6,6 @@
 }
 
 body {
-	padding: 136px 0 55px 0;
-	background-attachment: fixed;
-	background-position: center;
-	background-repeat: repeat-x;
-	background-size: cover;
-}
-
-.navbar-inner h1 {
-	font-family: 'Space Ranger';
-	font-size: 4em;
-	letter-spacing: 0.2em;
-    word-spacing: 0.3em;
-    padding: 0.25em;
-    text-align: center;
 }
 
 .navbar h1 a {
@@ -150,4 +136,24 @@ section {
 	body {
 		background-image: url('../images/light/480.jpg');
 	}
+}
+
+.news {
+	border: 1px solid #ccc;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.news_date {
+	font-style: italic;
+}
+.news_title {
+	color: #0088cc;
+	font-weight: bold;
+}
+.news_content {
+	border: 1px dashed #ccc;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 }

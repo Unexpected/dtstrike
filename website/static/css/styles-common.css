@@ -1,3 +1,11 @@
+body {
+	padding: 70px 0 55px 0;
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: repeat-x;
+	background-size: cover;
+}
+
 .form_error {
 	color: red;
 }
@@ -11,15 +19,29 @@ pre.error,
     font-family: Consolas, Inconsolata, monospace;
     text-align: left;
     padding: 5px;
-    width: 680px;
+    width: 100%;
     overflow: auto;
     background-color: #e0e0e0;
 	color: #000;
 }
 
+.navbar-inner h1,
+h2 {
+	font-family: 'Space Ranger';
+	letter-spacing: 0.2em;
+	word-spacing: 0.3em;
+}
+
+.navbar-inner h1 {
+	font-size: 2em;
+	padding: 0.1em;
+	text-align: center;
+	margin-left: 5em;
+}
+
 .logo {
-	width: 158px;
-	height: 100px;
+	width: 40px;
+	height: 40px;
 	display: inline-block;
 }
 
@@ -35,4 +57,20 @@ pre.error,
 
 .table_label {
 	vertical-align: top;
+}
+
+.news {
+	margin-bottom: 10px;
+	padding: 5px;
+}
+.news_date {
+	float: left;
+	width: 50px;
+}
+.news_title {
+	margin-left: 60px;
+}
+.news_content {
+	margin-top: 10px;
+	padding: 5px 5px 15px 5px;
 }

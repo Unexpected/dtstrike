@@ -1,4 +1,4 @@
-<code>Le compte vient d'être réinitialiser !</code><br/>
+<code><?php echo $username ?>, votre compte vient d'être réinitialiser !</code><br/>
 <p>
 Un message de confirmation sera envoyé à l'adresse email que vous avez fourni.<br/>
 Vous devez cliquer sur le lien dans le message pour activer votre compte.<br/>

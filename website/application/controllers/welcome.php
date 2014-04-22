@@ -7,9 +7,8 @@ class Welcome extends CI_Controller {
         $this->load->model('Gamemodel');
     }
 
-	public function index()
-	{
-		$data['page_title'] = 'Bienvenue sur CGI Challenge!';
+	public function index() {
+		$data['page_title'] = 'Bienvenue au HAL Challenge!';
 		$data['page_icon'] = 'rocket';
 		
 		// Get replay path
@@ -19,6 +18,13 @@ class Welcome extends CI_Controller {
 		$data['error'] = $this->session->flashdata('error');
 		$data['message'] = $this->session->flashdata('message');
 		render($this, 'welcome_message', $data);
+	}
+
+	public function news() {
+		$data['page_title'] = 'Les dernières news';
+		$data['page_icon'] = 'exclamation';
+		
+		render($this, 'news', $data);
 	}
 }
 

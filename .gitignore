@@ -19,3 +19,5 @@ dist
 /LocalTester/maps
 /logs/*.log
 /website/forum/cache/*.php
+.idea
+*.iml

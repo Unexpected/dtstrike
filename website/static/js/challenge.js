@@ -1,6 +1,5 @@
 $(document).ready(function() {
 	initCssSelector();
-	CgiLogo.initCanvas(158, 100);
 });
 
 function initCssSelector() {

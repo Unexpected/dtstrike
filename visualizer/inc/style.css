@@ -1,16 +1,6 @@
-a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent; }
-a:hover, a:active { outline: none; }
-a, a:active, a:visited { color:#607890; }
-a:hover { color:#036; }
-
 #container {
     width: 640px;
     margin: 10px auto;
-}
-
-h1 {
-    font-size: 24px;
-    margin: 4px 0 8px 0;
 }
 
 #controls {

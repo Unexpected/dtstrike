@@ -25,7 +25,7 @@ public class Player {
 
 	public enum Status {
 		NOT_INITIALIZED, // Default status
-		STARTED, // If bot was successfully started 
+		STARTED, // If bot was successfully started
 		PLAYING, // Bot is running fine
 		CRASHED, // Bot has crashed
 		TIMEOUT, // Bot timed out during turn
@@ -92,6 +92,32 @@ public class Player {
 					+ " crashed when sending orders. ");
 			ex.printStackTrace(System.err);
 		}
+	}
+
+	public boolean isReady() {
+		StringBuilder readyStream = new StringBuilder();
+		try {
+			while (process.getInputStream().available() > 0) {
+				char c = (char) process.getInputStream().read();
+				if (c != '\n') {
+					// Read order until end of line
+					readyStream.append(c);
+				} else {
+					// Check that the bot is ready
+					String go = readyStream.toString();
+					go = go.toLowerCase().trim();
+					if ("go".equals(go)) {
+						return true;
+					}
+					readyStream = new StringBuilder();
+				}
+			}
+		} catch (Exception ex) {
+			kill(Status.CRASHED);
+			System.err.println("Error: player " + id + " crashed at startup. ");
+			ex.printStackTrace(System.err);
+		}
+		return false;
 	}
 
 	public void getIncomingOrders() {

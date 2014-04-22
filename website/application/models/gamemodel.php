@@ -172,7 +172,7 @@ Class Gamemodel extends Basemodel {
 		$this->db->limit(1);
 		
 		$query = $this->db->get();
-		if ($query->num_rows())  {
+		if ($query && $query->num_rows())  {
 			$rows = $query->result();
 		} else {
 			$rows = array();

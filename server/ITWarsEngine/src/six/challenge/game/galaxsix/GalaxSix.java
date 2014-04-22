@@ -380,23 +380,15 @@ public class GalaxSix extends Game {
 
 	@Override
 	public void finishTurn() {
-		for (Planet p : planets) {
-			if (p instanceof EconomicPlanet && p.owner > 0) {
-				Set<MilitaryPlanet> mPlanets = getMilitaryPlanets(p.owner);
-				if (mPlanets.size() > 0) {
-					Planet dest = getClosestPlanet(p, mPlanets);
-					if (dest != null) {
-						int distance = distance(p.id, dest.id);
-						fleets.add(new Fleet(p.owner,
-								((EconomicPlanet) p).revenue, p.id, dest.id,
-								distance, distance, false));
-					}
-				}
-			}
-		}
 
 		for (Fleet f : fleets) {
 			f.doTimeStep();
+		}
+		
+		for (Planet p : planets) {
+			if (p.owner != 0 && p instanceof EconomicPlanet) {
+				p.numShips = p.numShips + ((EconomicPlanet)p).revenue;
+			}
 		}
 
 		for (Planet p : planets) {
@@ -456,34 +448,31 @@ public class GalaxSix extends Game {
 		for (String order : orders) {
 			try {
 				String[] orderParts = order.split(" ");
-				int sourcePlanet = Integer.parseInt(orderParts[0]);
-				int destPlanet = Integer.parseInt(orderParts[1]);
+				int sourcePlanetId = Integer.parseInt(orderParts[0]);
+				int destPlanetId = Integer.parseInt(orderParts[1]);
 				int numShips = Integer.parseInt(orderParts[2]);
 
 				if (numShips == 0) {
 					continue;
 				}
-				Planet localPlanet = (Planet) this.planets.get(sourcePlanet);
-				if (localPlanet.owner != id) {
+				Planet sourcePlanet = this.planets.get(sourcePlanetId);
+				if (sourcePlanet.owner != id) {
 					writeLogMessage("invalid order - planet doesn't belong to player "
 							+ id + ": " + order + "\n");
 					continue;
 				}
-				if (numShips > localPlanet.numShips || numShips < 0) {
+				if (numShips > sourcePlanet.numShips || numShips < 0) {
 					writeLogMessage("invalid order - numShips must be positive and lower or equal to available ships "
 							+ order + "\n");
 					continue;
 				}
-				if (localPlanet instanceof EconomicPlanet) {
-					writeLogMessage("invalid order - source planet must be a military planet"
-							+ order + "\n");
-					continue;
-				}
-				localPlanet.numShips -= numShips;
-				int distance = distance(sourcePlanet, destPlanet);
-				Fleet localFleet = new Fleet(localPlanet.owner, numShips,
-						sourcePlanet, destPlanet, distance, distance, true);
+				
+				sourcePlanet.numShips -= numShips;
+				int distance = distance(sourcePlanetId, destPlanetId);
+				Fleet localFleet = new Fleet(sourcePlanet.owner, numShips,
+						sourcePlanetId, destPlanetId, distance, distance, (sourcePlanet instanceof MilitaryPlanet));
 				this.fleets.add(localFleet);
+				
 			} catch (Exception e) {
 				writeLogMessage("invalid order for player " + id + ": " + order
 						+ "\n" + e.getMessage());

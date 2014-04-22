@@ -81,9 +81,6 @@ public class Engine {
 	public void play() {
 		// Players are ready to rumble
 		game.startGame();
-		for (Player p : players) {
-			p.status = Status.PLAYING;
-		}
 
 		int turn = 0;
 		// Load turn
@@ -94,12 +91,32 @@ public class Engine {
 				p.sendMessage(startMessage);
 			}
 		}
-		try {
-			Thread.sleep(Integer.parseInt(game.getOptions().get("loadtime")));
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		long startTime = System.currentTimeMillis();
+		boolean everyoneIsReady = false;
+		while (!everyoneIsReady
+				&& (System.currentTimeMillis() - startTime) < Integer
+						.parseInt(game.getOptions().get("loadtime"))) {
+			// For each player that hasn't played
+			for (Player p : players) {
+				if (p.status == Status.PLAYING) {
+					continue;
+				}
+				if (p.isReady()) {
+					p.status = Status.PLAYING;
+				}
+			}
+			everyoneIsReady = true;
+			for (Player p : players) {
+				if (p.status != Status.PLAYING) {
+					everyoneIsReady = false;
+				}
+			}
+		}
+
+		for (Player p : players) {
+			if (p.status != Status.PLAYING) {
+				p.kill(Status.TIMEOUT);
+			}
 		}
 
 		// As long as there is no winner and that we have some turns left,
@@ -158,6 +175,10 @@ public class Engine {
 			}
 			for (Player p : players) {
 				if (game.isAlive(p.id)) {
+					game.writeLogMessage("player" + p.id + " > engine: ");
+					for (String order : p.orders) {
+						game.writeLogMessage(order);
+					}
 					game.doMoves(p.id, p.orders);
 				}
 			}
@@ -187,23 +208,23 @@ public class Engine {
 					.println("Error : wrong number of command-line arguments.");
 			System.err
 					.println("Usage : engine map_file_name max_turn_time max_num_turns log_filename player_one player_two [more_players]");
-			System.exit(1);
+			System.exit(-1);
 		}
 		Engine e = new Engine(args);
 		if (!e.errorAtStartup) {
 			e.play();
-			String replayData=e.end();
+			String replayData = e.end();
 			System.out.println(replayData);
 			System.exit(e.getWinner());
 		}
 		System.exit(0);
 	}
-	
+
 	public int getWinner() {
 		int winner = 0;
 		int maxScore = -1;
 		List<Integer> scores = game.getScores();
-		for (int i=0; i<scores.size(); i++) {
+		for (int i = 0; i < scores.size(); i++) {
 			int score = scores.get(i).intValue();
 			if (score > maxScore) {
 				winner = (i + 1);
