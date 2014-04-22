@@ -148,7 +148,6 @@ class Auth extends CI_Controller {
 	 */
 	private function sendmail($to, $confirmation_code, $register) {
 		$BASE_URL = site_url() + "fr/";
-		$BASE_URL = "http://hal-challenge.org/fr/";
 		$BR = "<br/>\n\n";
 		
 		$this->email->from('no-reply@game-of-trolls.org', 'HAL Challenge');
