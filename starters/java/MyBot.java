@@ -1,8 +1,4 @@
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class MyBot extends Bot {
 	/**
@@ -32,38 +28,38 @@ public class MyBot extends Bot {
 	 * You can use it as a starting point, or you can throw it out entirely and
 	 * replace it with your own.
 	 * </p>
+	 * 
+	 * @param game
+	 *            the Game instance
 	 */
 	@Override
 	public void doTurn() {
-
 		Game game = getGame();
-
-		/******************************************
-		 * Economic planets and fleets management *
-		 ******************************************/
-
-		// Send reinforcements to the closest military planet
-		final List<Planet> myMilitaryPlanets = game.getMyMilitaryPlanets();
-		for (Planet origin : game.getMyEconomicPlanets()) {
-			Planet target = game.getClosestPlanet(origin, myMilitaryPlanets);
-			game.issueOrder(origin, target, origin.numShips);
-		}
-
-		/******************************************
-		 * Military planets and fleets management *
-		 ******************************************/
-
-		// (1) If we currently have a fleet in flight, just do nothing.
-		for (Fleet f : game.getMyMilitaryFleets()) {
-			if (game.getPlanet(f.sourcePlanet) instanceof MilitaryPlanet) {
-				return;
+		
+		// (1) If an economic planet have more than 50 ships, send 50 ships to the closest military planet and go to the next step.
+		Planet source = null;
+		Planet dest = null;
+		for (Planet p : game.getMyEconomicPlanets()) {
+			int score = p.numShips;
+			if (score > 50) {
+				source = p;
+				dest = game.findClosestMilitaryPlanet(source);
+				if (dest != null) {
+					game.issueOrder(source, dest, score - 50);
+				}
+				break;
 			}
 		}
 
-		// (2) Find my strongest military planet.
-		Planet source = null;
+		// (2) If we currently have a fleet in flight, just do nothing.
+		if (!game.getMyMilitaryFleets().isEmpty()) {
+			return;
+		}
+
+		// (3) Find my strongest military planet.
+		source = null;
 		int sourceShips = Integer.MIN_VALUE;
-		for (Planet p : myMilitaryPlanets) {
+		for (Planet p : game.getMyMilitaryPlanets()) {
 			int score = p.numShips;
 			if (score > sourceShips) {
 				sourceShips = score;
@@ -71,8 +67,8 @@ public class MyBot extends Bot {
 			}
 		}
 
-		// (3) Find the weakest enemy or neutral planet.
-		Planet dest = null;
+		// (4) Find the weakest enemy or neutral planet.
+		dest = null;
 		int destScore = Integer.MAX_VALUE;
 		for (Planet p : game.getNotMyPlanets()) {
 			int score = p.numShips;
@@ -82,7 +78,7 @@ public class MyBot extends Bot {
 			}
 		}
 
-		// (4) Send half the ships from my strongest planet to the weakest
+		// (5) Send half the ships from my strongest planet to the weakest
 		// planet that I do not own.
 		if (source != null && dest != null) {
 			int numShips = source.numShips / 2;
