@@ -309,7 +309,7 @@ class Worker:
             log.error(traceback.format_exc())
             return False
 
-    def compile(self, submission_id=None, report_status=(False, False), run_test=True):
+    def compile(self, submission_id=None, report_status=(False, False), run_test=False):
         report_success, report_failure = report_status
         def report(status, language="Unknown", errors=None):
             # oooh, tricky, a terinary in an if
