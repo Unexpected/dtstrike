@@ -200,20 +200,26 @@ var Visualizer = {
 				ctx.restore();
 	
 				// Draw text
-				if(this.config.showFleetText==true){
-				angle = -1 * (angle + Math.PI/2); // switch the axis around a little
-				disp_x += -11 * Math.cos(angle);
-				disp_y += -11 * Math.sin(angle) - 5;
-				ctx.fillText(fleet.numShips, disp_x, this.canvas.height - disp_y);
+				if (this.config.showFleetText == true) {
+					angle = -1 * (angle + Math.PI/2); // switch the axis around a little
+					disp_x += -11 * Math.cos(angle);
+					disp_y += -11 * Math.sin(angle) - 5;
+					ctx.fillText(fleet.numShips, disp_x, this.canvas.height - disp_y);
 				}
 			} else if (fleet.source.type == 'E') {
 				// Draw dot
 				ctx.fillStyle = this.config.teamColor[fleet.owner];
 
+				var size = Math.max(fleet.numShips/5, 3);
 				ctx.beginPath();
-				ctx.arc(disp_x, this.canvas.height - disp_y, 2, 0, Math.PI*2, true);
+				ctx.arc(disp_x, this.canvas.height - disp_y, size, 0, Math.PI*2, true);
 				ctx.closePath();
 				ctx.fill();
+				
+				// Draw text
+				if (this.config.showFleetText == true) {
+					ctx.fillText(fleet.numShips, disp_x + (size+2), this.canvas.height - disp_y - (size+2));
+				}
 			}
 			
 			this.dirtyRegions.push([disp_x - 25 , this.canvas.height - disp_y - 35, 50, 50]);
