@@ -1,6 +1,7 @@
 package six.challenge.engine;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +75,12 @@ public class Engine {
 			game = new GalaxSix(new File(mapFile), options, players, logFile);
 			if (game.errorAtStartup) {
 				errorAtStartup = true;
+				try {
+					if (game.logWriter != null) {
+						game.logWriter.close();
+					}
+				} catch (IOException e) {
+				}
 			}
 		}
 	}
@@ -199,6 +206,13 @@ public class Engine {
 		}
 		// Save game Log
 		String replayData = game.getReplay();
+
+		try {
+			if (game.logWriter != null) {
+				game.logWriter.close();
+			}
+		} catch (IOException e) {
+		}
 		return replayData;
 	}
 

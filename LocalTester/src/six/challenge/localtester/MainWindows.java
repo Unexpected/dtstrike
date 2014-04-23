@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,21 +15,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.InvalidPropertiesFormatException;
-import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.miginfocom.swing.MigLayout;
 import six.challenge.engine.Engine;
-import javax.swing.JScrollPane;
 
 public class MainWindows {
 
@@ -53,7 +50,6 @@ public class MainWindows {
 	private JLabel lblMillisecondesParT;
 	private JTextField timeField;
 	private JTextPane errorPane;
-	private JButton btnGenerateNewMap;
 	private JScrollPane scrollPane;
 
 	/**
@@ -198,12 +194,12 @@ public class MainWindows {
 
 		turnsField = new JTextField();
 		turnsField.setText("1000");
-		frmSixchallengeLocaltester.getContentPane().add(turnsField, "cell 0 6,alignx right");
+		frmSixchallengeLocaltester.getContentPane().add(turnsField, "cell 0 6,align right");
 		turnsField.setColumns(10);
 
 		timeField = new JTextField();
 		timeField.setText("1000");
-		frmSixchallengeLocaltester.getContentPane().add(timeField, "cell 0 7");
+		frmSixchallengeLocaltester.getContentPane().add(timeField, "cell 0 7,align right");
 		timeField.setColumns(10);
 		
 		scrollPane = new JScrollPane();
@@ -212,16 +208,6 @@ public class MainWindows {
 		errorPane = new JTextPane();
 		scrollPane.setViewportView(errorPane);
 		errorPane.setAutoscrolls(true);
-		
-		btnGenerateNewMap = new JButton("Generate New Map");
-		btnGenerateNewMap.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				MapGenerator.main(mapField);
-				
-			}
-		});
-		frmSixchallengeLocaltester.getContentPane().add(btnGenerateNewMap, "cell 0 1");
 
 		frmSixchallengeLocaltester.addWindowListener(new WindowListener() {
 			@Override
@@ -274,7 +260,7 @@ public class MainWindows {
 	}
 
 	private String chooseMap() {
-		File maps = new File( System.getProperty("user.dir")+"/maps");
+		File maps = new File("maps");
 		JFileChooser chooser = new JFileChooser(maps);
 
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Maps", "txt");
@@ -319,6 +305,12 @@ public class MainWindows {
 		new File(runFolder).delete();
 		new File(runFolder).mkdir();
 		
+		try {
+			// Try to delete old log file
+			new File(runFolder, "/log.txt").delete();
+		} catch (Exception e) {
+		}
+
 		String[] params = null;
 		if ("".equals(bot3)) {
 			params = new String[] { map, maxTime, nbTurns, runFolder + "/log.txt", bot1, bot2 };
@@ -330,7 +322,7 @@ public class MainWindows {
 
 		File errorLog = new File(runFolder + "/GameError.txt");
 
-		PrintStream errorStream;
+		PrintStream errorStream = null;
 		try {
 			errorLog.createNewFile();
 			errorStream = new PrintStream(errorLog);
@@ -382,6 +374,12 @@ public class MainWindows {
 			displayErrorLog(errorLog);
 
 		}
+
+		// cleanup
+		if (errorStream != null) {
+			errorStream.close();
+		}
+		engine = null;
 
 		return true;
 
