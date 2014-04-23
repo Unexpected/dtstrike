@@ -31,13 +31,34 @@ class Game {
     
     def planets = new PlanetsList()
     def fleets = new FleetList()
-
+    def load_time
+    def turn_time
+    def turns
+    def turn_start_time
 
     /*
         Initialize game object with startup data
     */
     Game(data) {
         // Add the initialize logic
+        data.each{line ->
+            def tokens = line.split(":")
+
+            if (tokens.size() > 1) { // remove empty strings
+                switch (tokens[0]) {
+                    case "loadtime":
+                        load_time = tokens[2]
+                        break
+                    case "turntime":
+                        turn_time = tokens[2]
+                        break
+                    case "turns":
+                        turns = tokens[2]
+                        break
+                }
+
+            }
+        }
 
         // And go when bot is ready
         println "go\n"
@@ -48,6 +69,7 @@ class Game {
         - Parse new turn data
     */
     def start_turn(data) {
+        turn_start_time = System.currentTimeMillis()
         Logger.print "Initialize turn"
         planets = new PlanetsList()
         fleets = new FleetList()
@@ -99,15 +121,21 @@ class Game {
         return (planets.military.forId(playerID).size() > 0) || (fleets.forId(playerID).size() > 0)
     }
 
+    def time_remaining()  {
+        return turn_time  - (int) (System.currentTimeMillis() - turn_start_time);
+    }
+
 
     /*
         Calcul distance beetwen to planets
     */
-    def distance(source_planet_id, destination_planet_id) {
+    def distance(source, destination) {
         def dx = source.x - destination.x
         def dy = source.y - destination.y
         return Math.ceil(Math.sqrt(dx * dx + dy * dy))
-    }  
+    }
+
+
 
     /*
         Parse game data of a turn.
