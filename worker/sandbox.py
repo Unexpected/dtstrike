@@ -129,7 +129,7 @@ class Jail(object):
             raise SandboxError("Sandbox released while still alive")
         if not self.locked:
             raise SandboxError("Attempt to release jail that is already unlocked")
-        if os.system("sudo umount %s" % (os.path.join(self.base_dir, "root"),)):
+        if os.system("sudo umount -o nonempty %s" % (os.path.join(self.base_dir, "root"),)):
             raise SandboxError("Error returned from umount of jail %d"
                     % (self.number,))
         lock_dir = os.path.join(self.base_dir, "locked")
@@ -197,7 +197,7 @@ class Jail(object):
     def _signal(self, signal):
         if not self.locked:
             raise SandboxError("Attempt to send %s to unlocked jail" % (signal,))
-        result = subprocess.call("sudo -u {0} kill -{1} -1".format(
+        result = subprocess.call("sudo -u {0} kill -{1} -- -1".format(
             self.name, signal), shell=True)
         if result != 0:
             raise SandboxError("Error returned from jail %s sending signal %s"
