@@ -50,9 +50,9 @@ var Visualizer = {
     	    this.drawChart();
     	}
         this.E_planet_image = new Image();
-        this.E_planet_image.src = '/challenge/visualizer/resources/globe_blue_grey.png';
+        this.E_planet_image.src = '../resources/globe_blue_grey.png';
         this.M_planet_image = new Image();
-        this.M_planet_image.src = '/challenge/visualizer/resources/death_star_white.png';
+        this.M_planet_image.src = '../resources/death_star_white.png';
     },
     
     unitToPixel: function(unit) {
