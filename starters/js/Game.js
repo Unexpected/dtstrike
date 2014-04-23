@@ -1,27 +1,61 @@
 var fs = require('fs');
 
+
 exports.game = {
 	'bot' : null,
+	/** @type {number} */
 	'currentTurn' : 0,
+	/** @type {boolean} */
 	'turnEnded': true,
+	/** @type {Order[]} */
 	'orders' : [],
+	/** @type {Planet[]} */
 	'planets' : [],
+	/** @type {Fleet[]} */
 	'fleets' : [],
 
+	/**
+	 * Get total number of planets
+	 * 
+	 * @returns {number}
+	 */
 	'numPlanets' : function() {
 		return this.planets.length;
 	},
+	/**
+	 * Get a planet by id
+	 * 
+	 * @param {number} planetID
+	 * @returns {Planet}
+	 */
 	'getPlanet' : function(planetID) {
 		return this.planets[planetID];
 	},
 
+	/**
+	 * Get total number of fleets
+	 * 
+	 * @returns {number}
+	 */
 	'numFleets' : function() {
 		return this.fleets.length;
 	},
+	/**
+	 * Get a fleet by id
+	 * 
+	 * @param {number} fleetID
+	 * @returns {Fleet}
+	 */
 	'getFleet' : function(fleetID) {
 		return this.fleets[fleetID];
 	},
 
+	/**
+	 * Get all my planets
+	 * 
+	 * @this {Game}
+	 * @returns {Planet[]}
+	 */
 	'myPlanets' : function() {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
@@ -33,6 +67,12 @@ exports.game = {
 		return result;
 	},
 
+	/**
+	 * Get my military planets
+	 * 
+	 * @this {Game}
+	 * @returns {Planet[]}
+	 */
 	'myMilitaryPlanets' : function() {
 		var result = [];
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
@@ -139,6 +179,14 @@ exports.game = {
 		return result;
 	},
 
+	/**
+	 * Get distance between 2 objects
+	 * 
+	 * @this {Game}
+	 * @param {Planet|number} sourcePlanet, either planet objet or planet id
+	 * @param {Planet|number} destinationPlanet, either planet objet or planet id
+	 * @returns {number}
+	 */
 	'distance' : function(sourcePlanet, destinationPlanet) {
 		var source = null;
 		var destination = null;
@@ -159,6 +207,11 @@ exports.game = {
 		return Math.ceil(Math.sqrt(dx * dx + dy * dy));
 	},
 
+	/**
+	 * Get total number of ships of a player
+	 * @param {Integer} playerID, the id of the player
+	 * @returns {number} the number of ships
+	 */
 	'numShips' : function(playerID) {
 		var numShips = 0;
 		for ( var i = 0, len = this.planets.length; i < len; ++i) {
@@ -175,6 +228,28 @@ exports.game = {
 		}
 		return numShips;
 	},
+    
+	/**
+	 * Get the nearest military planet
+	 * 
+	 * @this {Game}
+	 * @param {Planet} ecoPlanet, the Planet objet
+	 * @returns {Planet} the nearest military planet
+	 */
+    'findNearestMilitaryPlanet' : function(ecoPlanet) {
+    	var min_dist = Number.MAX_VALUE;
+    	var target = null;
+		var planets = this.myMilitaryPlanets();
+		for ( var i = 0, len = planets.length; i < len; ++i) {
+			var p = planets[i];
+			var dist = this.distance(ecoPlanet, p);
+			if (dist < min_dist) {
+				min_dist = dist;
+				target = p;
+			}
+		}
+		return target;
+    },
 	
 	/**
 	 *  Do NOT touch the following methods

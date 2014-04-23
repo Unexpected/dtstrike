@@ -12,6 +12,18 @@ class MyBot
 	 */
 	public function doTurn( $game )
 	{
+		// (0) Send reinforcement from eco to military
+		$planets = $game->myEconomicPlanets();
+		foreach ($planets as $ecoPlanet) {
+			if ($ecoPlanet->numShips > 50) {
+				$target = $game->findNearestMilitaryPlanet($ecoPlanet);
+				if ($target != null) {
+					$numShips = (int) ($ecoPlanet->numShips / 2);
+					$game->issueOrder($ecoPlanet->id, $target->id, $numShips);
+				}
+			}
+		}
+		
 		// (1) If we currently have a fleet in flight, just do nothing.
 		if (count($game->myMilitaryFleets()) >= 1) {
 			return;

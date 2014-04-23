@@ -186,6 +186,25 @@ class Game
 
         return ceil(sqrt($dRow * $dRow + $dCol * $dCol));
     }
+    
+    /**
+     * 
+     * @param Planet $ecoPlanet
+     * @return Planet
+     */
+    public function findNearestMilitaryPlanet($ecoPlanet) {
+    	$min_dist = PHP_INT_MAX;
+    	$target = null;
+		$planets = $this->myMilitaryPlanets();
+		foreach ($planets as $p) {
+			$dist = $this->distanceWithPlanets($ecoPlanet, $p);
+			if ($dist < $min_dist) {
+				$min_dist = $dist;
+				$target = $p;
+			}
+		}
+		return $target;
+    }
 
 	/**
 	 *  Do NOT touch the following methods

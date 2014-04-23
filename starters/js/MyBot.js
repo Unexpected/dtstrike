@@ -1,3 +1,4 @@
+/** @type {Game} */
 var game = require('./Game').game;
 
 var bot = {
@@ -5,6 +6,18 @@ var bot = {
     	game.finishTurn();
     },
     'onTurn': function() {
+		// (0) Send reinforcement from eco to military
+		var planets = game.myEconomicPlanets();
+		for ( var i = 0, len = planets.length; i < len; ++i) {
+			if (ecoPlanet.numShips > 50) {
+				var target = game.findNearestMilitaryPlanet(ecoPlanet);
+				if (target != null) {
+					var numShips = (int) (ecoPlanet.numShips / 2);
+					game.issueOrder(ecoPlanet.id, target.id, numShips);
+				}
+			}
+		}
+		
 		// (1) If we currently have a fleet in flight, just do nothing.
 		if (game.myMilitaryFleets().length >= 1) {
 			game.finishTurn();
