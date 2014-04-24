@@ -36,8 +36,19 @@ public class MyBot extends Bot {
 	public void doTurn() {
 		Game game = getGame();
 
+    Planet dest = null;
+		for (Planet economic : game.getMyEconomicPlanets()) {
+			int score = economic.numShips;
+			if (score > 30) {
+				dest = game.findClosestMilitaryPlanet(economic);
+				if (dest != null) {
+					game.issueOrder(economic, dest, score - 10);
+				}
+			}
+		}
+		
 		// Find the weakest enemy or neutral planet.
-		Planet dest = null;
+		dest = null;
 		int destScore = Integer.MAX_VALUE;
 		for (Planet p : game.getNotMyPlanets()) {
 			int score = p.numShips;

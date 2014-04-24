@@ -39,7 +39,17 @@ public class MyBot extends Bot {
 	@Override
 	public void doTurn() {
 		Game game = getGame();
-
+		
+    Planet dest = null;
+		for (Planet economic : game.getMyEconomicPlanets()) {
+			int score = economic.numShips;
+			if (score > 30) {
+				dest = game.findClosestMilitaryPlanet(economic);
+				if (dest != null) {
+					game.issueOrder(economic, dest, score - 10);
+				}
+			}
+		}
 		// Count my production
 		int production = 0;
 		for (EconomicPlanet p : game.getMyEconomicPlanets()) {

@@ -35,6 +35,17 @@ public class MyBot extends Bot {
 	@Override
 	public void doTurn() {
 		Game game = getGame();
+		
+		Planet dest = null;
+		for (Planet economic : game.getMyEconomicPlanets()) {
+			int score = economic.numShips;
+			if (score > 30) {
+				dest = game.findClosestMilitaryPlanet(economic);
+				if (dest != null) {
+					game.issueOrder(economic, dest, score - 10);
+				}
+			}
+		}
 
 		// If we currently have a fleet in flight, just do nothing.
 		for (Fleet f : game.getMyMilitaryFleets()) {
