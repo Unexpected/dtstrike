@@ -210,7 +210,7 @@ var Visualizer = {
 				// Draw dot
 				ctx.fillStyle = this.config.teamColor[fleet.owner];
 
-				var size = Math.max(fleet.numShips/5, 3);
+				var size = Math.min(Math.max(fleet.numShips/5, 2), 7);
 				ctx.beginPath();
 				ctx.arc(disp_x, this.canvas.height - disp_y, size, 0, Math.PI*2, true);
 				ctx.closePath();
@@ -218,6 +218,7 @@ var Visualizer = {
 				
 				// Draw text
 				if (this.config.showFleetText == true) {
+					ctx.font = "9px Georgia";
 					ctx.fillText(fleet.numShips, disp_x + (size+2), this.canvas.height - disp_y - (size+2));
 				}
 			}
