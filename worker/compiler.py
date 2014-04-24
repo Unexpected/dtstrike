@@ -450,7 +450,7 @@ languages = (
             (["*.class"], ExternalCompiler(comp_args["Java"][1]))]
     ),
     Language("Javascript", BOT +".js", "MyBot.js",
-        "node MyBot.js",
+        "nodejs MyBot.js",
         [],
         [(["*.js"], ChmodCompiler("Javascript"))]
     ),

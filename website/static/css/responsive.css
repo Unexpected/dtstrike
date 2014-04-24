@@ -10,6 +10,11 @@
 @media (max-width: 767px) {
 	header {display : none;}	
 	.nav-hide-on-mobile {display : none;}
+	/* Visualizer */
+	#container { width: 500px !important; }
+	#display { width: 500px; height: 500px }
+	#chart { width: 500px; }
+	#feedline { width: 500px; }
 }
 @media (min-width: 768px) {
 	.nav-hide-on-mobile {display : block;}

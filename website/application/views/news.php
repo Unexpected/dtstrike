@@ -8,7 +8,7 @@
 	
 	if (defined("NEWS_INCLUDED")) {
 ?>
-<div style="padding-bottom: 20px; width: 400px; margin: auto; overflow: hidden;">
+<div class="news-div nav-hide-on-mobile">
 <table class="table table-striped table-hover table-condensed">
 <thead>
 	<tr>

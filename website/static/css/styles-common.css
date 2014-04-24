@@ -59,6 +59,13 @@ h2 {
 	vertical-align: top;
 }
 
+.news-div {
+	padding-bottom: 20px;
+	width: 400px;
+	margin: auto;
+	overflow: hidden;
+}
+
 .news {
 	margin-bottom: 10px;
 	padding: 5px;

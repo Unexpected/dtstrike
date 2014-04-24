@@ -1,7 +1,7 @@
 <?php 
 	$is_included = defined("VISUALIZER_INCLUDED");
 ?>
-<div id="container" class="nav-hide-on-mobile">
+<div id="container" class="">
 	<div id="players">Loading</div>
     
     <div id="main">
