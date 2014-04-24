@@ -68,6 +68,23 @@ exports.game = {
 	},
 
 	/**
+	 * Get my economic planets
+	 * 
+	 * @this {Game}
+	 * @returns {Planet[]}
+	 */
+	'myEconomicPlanets' : function() {
+		var result = [];
+		for ( var i = 0, len = this.planets.length; i < len; ++i) {
+			var p = this.planets[i];
+			if (p.owner == 1 && p.type == 'E') {
+				result.push(p);
+			}
+		}
+		return result;
+	},
+
+	/**
 	 * Get my military planets
 	 * 
 	 * @this {Game}
