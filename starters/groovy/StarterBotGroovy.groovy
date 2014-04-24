@@ -31,7 +31,7 @@ class StarterBotGroovy extends Bot {
             def target = getOpposantNearestPlanet(strongest)
 
             // (5) All ships from my strongest planet to the nearest
-            if (null != target)
+            if (null != target && null != strongest)
                 game.issue_order(strongest.id, target.id,strongest.num_ships)
         }
 
