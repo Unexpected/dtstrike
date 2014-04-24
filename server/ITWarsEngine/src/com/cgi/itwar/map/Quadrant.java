@@ -3,8 +3,8 @@ package com.cgi.itwar.map;
 import java.util.HashSet;
 
 /**
- * Un Quadrant représente une "part" de la zone de jeu.
- * Cette zone a été découpée en part égale en fonction du nombre de joueur.
+ * Un Quadrant reprï¿½sente une "part" de la zone de jeu.
+ * Cette zone a ï¿½tï¿½ dï¿½coupï¿½e en part ï¿½gale en fonction du nombre de joueur.
  * 
  * 
  * 
@@ -26,7 +26,10 @@ public class Quadrant {
 		long t = System.currentTimeMillis();
 		do {
 			x = getRandom(map.quadrantMinX, map.quadrantMaxX);
-			y = getRandom(map.quadrantMinY, map.quadrantMaxY);
+			
+			double ymax = Math.sqrt(map.quadrantMaxX * map.quadrantMaxX - x * x);
+			
+			y = getRandom(map.quadrantMinY, ymax > map.quadrantMaxY ? ymax : map.quadrantMaxY);
 			double alpha = Math.atan(y / x);
 			if (alpha < 0) alpha += Math.PI/2;
 			if (x < 0) alpha += Math.PI/2;
@@ -47,7 +50,7 @@ public class Quadrant {
 			// Check si le point est dans la cadrant
 			if (alpha > map.quadrantAngle) {
 				// Hors du quandrant
-				if (map.debug) System.out.println("  >> Out of Quandrant with "+alpha+"° > "+map.quadrantAngle+"° !");
+				if (map.debug) System.out.println("  >> Out of Quandrant with "+alpha+"ï¿½ > "+map.quadrantAngle+"ï¿½ !");
 				continue;
 			}
 			

@@ -8,34 +8,34 @@ import java.util.Arrays;
 import java.util.Hashtable;
 
 /**
- * <h1>G�n�rateur de map sym�triques</h1> <br>
- * Les param�tres sont les suivants :<br>
+ * <h1>Generateur de map symetriques</h1> <br>
+ * Les parametres sont les suivants :<br>
  * <ul>
  * <li>nbPlayers [4] : Nombre de joueurs sur la carte</li>
- * <li>gamerMilitary [1] : Nombre de plan�te militaire de base par joueur</li>
- * <li>gamerEconomic [1] : Nombre de plan�te �conomique de base par joueur</li>
- * <li>neutralMilitary [1] : Nombre de plan�te militaire neutre par joueur</li>
- * <li>neutralEconomic [3] : Nombre de plan�te �conomique neutre par joueur</li>
+ * <li>gamerMilitary [1] : Nombre de planete militaire de base par joueur</li>
+ * <li>gamerEconomic [1] : Nombre de planete economique de base par joueur</li>
+ * <li>neutralMilitary [1] : Nombre de planete militaire neutre par joueur</li>
+ * <li>neutralEconomic [3] : Nombre de planete economique neutre par joueur</li>
  * </ul>
- * Les 4 derni�rs param�tres correspondent aux nombres de colonies
- * g�n�r�es dans le 1er cadrant !<br>
+ * Les 4 derniers parametres correspondent aux nombres de colonies
+ * generees dans le 1er cadrant !<br>
  * <br>
  * 
  * <pre>
- * Cette classe g�n�re des maps pour de 2 � 4 joueurs de mani�re sym�trique.
+ * Cette classe genere des maps pour de 2 a 4 joueurs de maniere symetrique.
  * 
- * La g�n�ration est faite comme suit :
- *   - D�coupage du plateau (640 x 640) en 1 "part"
- *     Cette part correspond � un angle de 360� / Nb de joueurs.
- *   - G�n�ration al�atoire des bases pour 1 joueurs et les neutres dans ce cadrant.
- *   - Duplication du cadrant par rotation pour g�n�rer les autres joueurs.
+ * La generation est faite comme suit :
+ *   - Decoupage du plateau (640 x 640) en 1 "part"
+ *     Cette part correspond a un angle de 360 / Nb de joueurs.
+ *   - Generation aleatoire des bases pour 1 joueurs et les neutres dans ce cadrant.
+ *   - Duplication du cadrant par rotation pour generer les autres joueurs.
  * </pre>
  * 
- * FIXME : La d�tection de proximit� des "bords" pour une colonie ne prend
+ * FIXME : La detection de proximite des "bords" pour une colonie ne prend
  * pas en compte la bordure de fin de la "part".
  * 
  * @author Dimitri Vergos
- * @author S�bastien Schmitt
+ * @author Sebastien Schmitt
  * 
  */
 public class MapGenerator {
@@ -100,7 +100,7 @@ public class MapGenerator {
 		quadrantMinY = 0;
 		quadrantMaxY = mapHeight / 2;
 		if (debug) {
-			System.out.println("Angle calcul� pour les quadrants : "
+			System.out.println("Angle calcule pour les quadrants : "
 					+ quadrantAngle);
 			System.out.println("Dim X : " + quadrantMinX + " < X < "
 					+ quadrantMaxX);
@@ -113,7 +113,7 @@ public class MapGenerator {
 			System.out.println("");
 		if (debug)
 			System.out
-					.println("G�n�ration du premier quadrant al�atoire :");
+					.println("Generation du premier quadrant aleatoire :");
 		/* Populate Quadrant with gamer colonies */
 		for (int i = 0; i < pBasesPerGamer; i++) {
 			quadrant.tryPutColony(true, 0);
@@ -130,12 +130,12 @@ public class MapGenerator {
 		}
 		quadrants.add(quadrant);
 
-		/* Cr�ation des autres quadrants par rotation */
+		/* Creation des autres quadrants par rotation */
 		if (debug)
 			System.out.println("");
 		if (debug)
 			System.out
-					.println("G�n�ration des autres quadrants par rotation :");
+					.println("Generation des autres quadrants par rotation :");
 		Quadrant nextQuadrant;
 		for (int gamer = 1; gamer < nbGamers; gamer++) {
 			nextQuadrant = new Quadrant(gamer, this);
@@ -178,7 +178,7 @@ public class MapGenerator {
 		double sina = Math.sin(angleRadian);
 		double cosa = Math.cos(angleRadian);
 		if (angleRadian == -1 * Math.PI)
-			sina = 0; // Fix round error (with 180� rotation)
+			sina = 0; // Fix round error (with 180 rotation)
 		double x1 = ptDepart.getX() * cosa - ptDepart.getY() * sina;
 		double y1 = ptDepart.getX() * sina + ptDepart.getY() * cosa;
 
