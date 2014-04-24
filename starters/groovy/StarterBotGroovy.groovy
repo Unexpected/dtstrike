@@ -17,20 +17,22 @@ class StarterBotGroovy extends Bot {
               def aMil = military.min({ a,b ->
                   game.distance(economic, a) <=>  game.distance(economic, b)
               })
-            game.issue_order(economic.id, aMil.id,economic.num_ships - 50)
+              if (null != aMil)
+                game.issue_order(economic.id, aMil.id,50)
         }
 
-        // (2) If we currently have a fleet in flight, just do nothing.
-        def first = game.fleets.my().find{it.military}
-        if (null == first) {
+        // (2) If we currently have two fleet in flight, just do nothing.
+        def militaryFleet = game.fleets.my().findAll{it.military}
+        if (militaryFleet.size() < 3) {
             // (3) Find my strongest military planet.
             def strongest = getMyStrongestPlanet()
 
-            // (4) Find the weakest enemy or neutral planet.
-            def target = getOpposantWeakestPlanet()
+            // (4) Find the nearest enemy or neutral planet.
+            def target = getOpposantNearestPlanet(strongest)
 
-            // (5) Send half the ships from my strongest planet to the weakest
-            sendHalfShipInPlanet(strongest, target)
+            // (5) All ships from my strongest planet to the nearest
+            if (null != target)
+                game.issue_order(strongest.id, target.id,strongest.num_ships)
         }
 
 

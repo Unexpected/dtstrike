@@ -129,10 +129,12 @@ class Game {
     /*
         Calcul distance beetwen to planets
     */
-    def distance(source, destination) {
+    def distance(source, destination) {    
+        if (source == null || destination == null) 
+            return Integer.MAX_VALUE
         def dx = source.x - destination.x
         def dy = source.y - destination.y
-        return Math.ceil(Math.sqrt(dx * dx + dy * dy))
+        return (int) Math.floor(Math.sqrt(dx * dx + dy * dy))
     }
 
 

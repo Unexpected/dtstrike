@@ -43,6 +43,12 @@ class Bot {
         })
     }
 
+    def getOpposantNearestPlanet(source) {
+        return game.planets.others().min({ a,b ->
+            game.distance(source, a) <=>  game.distance(source, b)
+        })
+    }
+
     def sendHalfShipInPlanet(source, dest) {
         if ((source != null) && (dest != null)) {
             def num_ships = (source.num_ships / 2).toInteger()
