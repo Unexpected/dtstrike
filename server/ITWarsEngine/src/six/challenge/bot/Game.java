@@ -164,6 +164,39 @@ public class Game {
 		return planets;
 	}
 
+
+	/**
+	 * Return a list of all the economic planets owned by the current player. By
+	 * convention, the current player is always player number 1.
+	 * 
+	 * @return the planet list
+	 */
+	public List<Planet> getMyEconomicPlanets() {
+		List<Planet> r = new ArrayList<Planet>();
+		for (Planet p : planets) {
+			if (p.owner == 1 && p instanceof EconomicPlanet) {
+				r.add(p);
+			}
+		}
+		return r;
+	}
+
+	/**
+	 * Return a list of all the military planets owned by the current player. By
+	 * convention, the current player is always player number 1.
+	 * 
+	 * @return the planet list
+	 */
+	public List<MilitaryPlanet> getMyMilitaryPlanets() {
+		List<MilitaryPlanet> r = new ArrayList<MilitaryPlanet>();
+		for (Planet p : planets) {
+			if (p.owner == 1 && p instanceof MilitaryPlanet) {
+				r.add((MilitaryPlanet)p);
+			}
+		}
+		return r;
+	}
+	
 	/**
 	 * Return a list of all the planets owned by the current player. By
 	 * convention, the current player is always player number 1.
@@ -175,38 +208,6 @@ public class Game {
 		for (Planet p : planets) {
 			if (p.owner == 1) {
 				r.add(p);
-			}
-		}
-		return r;
-	}
-
-	/**
-	 * Return a list of all the planets owned by the current player. By
-	 * convention, the current player is always player number 1.
-	 * 
-	 * @return the planet list
-	 */
-	public List<MilitaryPlanet> getMyMilitaryPlanets() {
-		List<MilitaryPlanet> r = new ArrayList<MilitaryPlanet>();
-		for (Planet p : planets) {
-			if (p.owner == 1 && p instanceof MilitaryPlanet) {
-				r.add((MilitaryPlanet) p);
-			}
-		}
-		return r;
-	}
-
-	/**
-	 * Return a list of all the planets owned by the current player. By
-	 * convention, the current player is always player number 1.
-	 * 
-	 * @return the planet list
-	 */
-	public List<EconomicPlanet> getMyEconomicPlanets() {
-		List<EconomicPlanet> r = new ArrayList<EconomicPlanet>();
-		for (Planet p : planets) {
-			if (p.owner == 1 && p instanceof EconomicPlanet) {
-				r.add((EconomicPlanet) p);
 			}
 		}
 		return r;
@@ -274,7 +275,7 @@ public class Game {
 		}
 		return r;
 	}
-
+	
 	/**
 	 * Return a list of all the military planets owned by rival players.
 	 * 
@@ -289,6 +290,7 @@ public class Game {
 		}
 		return r;
 	}
+
 
 	/**
 	 * Return a list of all the military planets owned by the targeted rival
@@ -352,6 +354,22 @@ public class Game {
 		return r;
 	}
 
+	/**
+	 * Return a list of all the <b>economic</b> fleets owned by the current
+	 * player.
+	 * 
+	 * @return the fleet list
+	 */
+	public List<Fleet> getMyEconomicFleets() {
+		List<Fleet> r = new ArrayList<Fleet>();
+		for (Fleet f : fleets) {
+			if (f.owner == 1 && f instanceof EconomicFleet) {
+				r.add(f);
+			}
+		}
+		return r;
+	}
+	
 	/**
 	 * Return a list of all the <b>military</b> fleets owned by the current
 	 * player.
@@ -456,6 +474,23 @@ public class Game {
 		double dy = source.y - destination.y;
 		return (int) Math.ceil(Math.sqrt(dx * dx + dy * dy));
 	}
+	
+	public MilitaryPlanet findClosestMilitaryPlanet(Planet sourcePlanet) {
+		return findClosestMilitaryPlanet(sourcePlanet.id);
+	}
+	
+	public MilitaryPlanet findClosestMilitaryPlanet(int sourcePlanet) {
+		MilitaryPlanet destination = null;
+		int distance = Integer.MAX_VALUE;
+		for (MilitaryPlanet p : getMyMilitaryPlanets()) {
+			int score = distance(sourcePlanet, p.id);
+			if (score < distance) {
+				distance = score;
+				destination = p;
+			}
+		}
+		return destination;
+	}
 
 	/**
 	 * Sends an order to the game engine.<br/>
@@ -500,4 +535,5 @@ public class Game {
 	public void issueOrder(Planet source, Planet dest, int numShips) {
 		issueOrder(source.id, dest.id, numShips);
 	}
+
 }

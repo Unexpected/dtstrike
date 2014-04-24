@@ -40,6 +40,18 @@ public class RandomBot extends Bot {
 	public void doTurn() {
 		Game game = getGame();
 
+		// send bot to nearest military planetes
+		Planet dest = null;
+		for (Planet economic : game.getMyEconomicPlanets()) {
+			int score = economic.numShips;
+			if (score > 30) {
+				dest = game.findClosestMilitaryPlanet(economic);
+				if (dest != null) {
+					game.issueOrder(economic, dest, score - 10);
+				}
+			}
+		}
+
 		List<Planet> planets = game.getPlanets();
 
 		Random random = new Random(System.currentTimeMillis());

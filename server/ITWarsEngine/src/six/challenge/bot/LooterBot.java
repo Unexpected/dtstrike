@@ -38,6 +38,18 @@ public class LooterBot extends Bot {
 	public void doTurn() {
 		Game game = getGame();
 
+		// send bot to nearest military planetes
+		Planet dest = null;
+		for (Planet economic : game.getMyEconomicPlanets()) {
+			int score = economic.numShips;
+			if (score > 30) {
+				dest = game.findClosestMilitaryPlanet(economic);
+				if (dest != null) {
+					game.issueOrder(economic, dest, score - 20);
+				}
+			}
+		}
+
 		for (MilitaryPlanet military : game.getMyMilitaryPlanets()) {
 			boolean fleetSent = false;
 			// One fleet for each military planet
@@ -54,8 +66,7 @@ public class LooterBot extends Bot {
 				Planet target = null;
 				for (Planet p : game.getNotMyPlanets()) {
 					int pDistance = game.distance(military.id, p.id);
-					if (pDistance < targetDistance
-							&& p.numShips < military.numShips) {
+					if (pDistance < targetDistance && p.numShips < military.numShips) {
 						target = p;
 						targetDistance = pDistance;
 					}

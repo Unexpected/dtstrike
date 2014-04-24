@@ -38,8 +38,20 @@ public class RageBot extends Bot {
 	public void doTurn() {
 		Game game = getGame();
 
-		// Find the weakest enemy economic planet.
+		// send bot to nearest military planetes
 		Planet dest = null;
+		for (Planet economic : game.getMyEconomicPlanets()) {
+			int score = economic.numShips;
+			if (score > 30) {
+				dest = game.findClosestMilitaryPlanet(economic);
+				if (dest != null) {
+					game.issueOrder(economic, dest, score - 20);
+				}
+			}
+		}
+
+		// Find the weakest enemy economic planet.
+		dest = null;
 		int destScore = Integer.MAX_VALUE;
 		for (Planet p : game.getEnemyEconomicPlanets()) {
 			int score = p.numShips;
