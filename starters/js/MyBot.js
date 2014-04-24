@@ -13,14 +13,13 @@ var bot = {
 			if (ecoPlanet.numShips > 50) {
 				var target = game.findNearestMilitaryPlanet(ecoPlanet);
 				if (target != null) {
-					var numShips = parseInt(ecoPlanet.numShips / 2);
-					game.issueOrder(ecoPlanet.id, target.id, numShips);
+					game.issueOrder(ecoPlanet.id, target.id, 50);
 				}
 			}
 		}
 		
-		// (1) If we currently have a fleet in flight, just do nothing.
-		if (game.myMilitaryFleets().length >= 1) {
+		// (1) If we currently have 2 fleets in flight, just do nothing.
+		if (game.myMilitaryFleets().length >= 2) {
 			game.finishTurn();
 			return;
 		}
@@ -38,24 +37,22 @@ var bot = {
 			}
 		}
 
-		// (3) Find the weakest enemy or neutral planet.
+		// (3) Find the nearest enemy or neutral planet.
 		var dest = null;
 		var destScore = Number.MAX_VALUE;
 		var planets = game.notMyPlanets();
 		for ( var i = 0, len = planets.length; i < len; ++i) {
 			var p = planets[i];
-			var score = p.numShips;
+			var score = game.distance(source, p);
 			if (score < destScore) {
 				destScore = score;
 				dest = p;
 			}
 		}
 
-		// (4) Send half the ships from my strongest planet to the weakest
-		// planet that I do not own.
+		// (4) Send all the ships to the target planet.
 		if (source != null && dest != null) {
-			var numShips = source.numShips / 2;
-			game.issueOrder(source.id, dest.id, numShips);
+			game.issueOrder(source.id, dest.id, source.numShips);
 		}
 		game.finishTurn();
     },
