@@ -9,10 +9,11 @@ var bot = {
 		// (0) Send reinforcement from eco to military
 		var planets = game.myEconomicPlanets();
 		for ( var i = 0, len = planets.length; i < len; ++i) {
+			var ecoPlanet = planets[i];
 			if (ecoPlanet.numShips > 50) {
 				var target = game.findNearestMilitaryPlanet(ecoPlanet);
 				if (target != null) {
-					var numShips = (int) (ecoPlanet.numShips / 2);
+					var numShips = parseInt(ecoPlanet.numShips / 2);
 					game.issueOrder(ecoPlanet.id, target.id, numShips);
 				}
 			}
