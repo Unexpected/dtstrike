@@ -14,6 +14,9 @@ for /F "tokens=1,* delims==" %%A in (run.conf) do (
 )
 
 REM Check config
+if "x%map%" == "xrandom" (
+	call :random_map
+)
 if "x%map%" == "x" (
 	set error=Map file not specified
 	goto config_error
@@ -89,6 +92,18 @@ echo ====================================================================
 echo.
 pause
 goto end
+
+:random_map
+REM Random player number (beetween 2 and 5)
+set /a nb_players=%RANDOM% * (6 - 2 + 1) / 32768 + 2
+REM Random map number
+if %nb_players% == 2 set /a map_num=%RANDOM% * ( 33 -   1 + 1) / 32768 +   1
+if %nb_players% == 3 set /a map_num=%RANDOM% * ( 66 -  34 + 1) / 32768 +  34
+if %nb_players% == 4 set /a map_num=%RANDOM% * ( 99 -  67 + 1) / 32768 +  67
+if %nb_players% == 5 set /a map_num=%RANDOM% * (132 - 100 + 1) / 32768 + 100
+if %nb_players% == 6 set /a map_num=%RANDOM% * (165 - 133 + 1) / 32768 + 133
+set map=maps\%nb_players%\map%map_num%.txt
+goto:eof
 
 :error
 echo !!!!!!!!!!!!!!!!! Game crashed !!!!!!!!!!!!!!!!!
