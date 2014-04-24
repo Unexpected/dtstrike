@@ -1,6 +1,8 @@
 #!/usr/bin/python
 import os
 import os.path
+import shutil
+import subprocess
 
 CHROOT_PATH = "/srv/chroot"
 
@@ -9,6 +11,11 @@ def main():
     for jail in jails:
         jail_lock = os.path.join(CHROOT_PATH, jail, "locked")
         jail_pid_file = os.path.join(jail_lock, "lock.pid")
+        jail_scratch = os.path.join(CHROOT_PATH, jail, "scratch")
+        shutil.rmtree(jail_scratch)
+        os.mkdir(jail_scratch)
+        jail_root = os.path.join(CHROOT_PATH, jail, "root")
+        subprocess.call(["umount", jail_root])
         try:
             with open(jail_pid_file) as lock_file:
                 lock_pid = int(lock_file.readline())
