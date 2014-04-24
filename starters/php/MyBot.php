@@ -18,14 +18,13 @@ class MyBot
 			if ($ecoPlanet->numShips > 50) {
 				$target = $game->findNearestMilitaryPlanet($ecoPlanet);
 				if ($target != null) {
-					$numShips = (int) ($ecoPlanet->numShips / 2);
-					$game->issueOrder($ecoPlanet->id, $target->id, $numShips);
+					$game->issueOrder($ecoPlanet->id, $target->id, 50);
 				}
 			}
 		}
 		
-		// (1) If we currently have a fleet in flight, just do nothing.
-		if (count($game->myMilitaryFleets()) >= 1) {
+		// (1) If we currently have 2 fleets in flight, just do nothing.
+		if (count($game->myMilitaryFleets()) >= 2) {
 			return;
 		}
 		
@@ -41,23 +40,21 @@ class MyBot
 			}
 		}
 
-		// (3) Find the weakest enemy or neutral planet.
+		// (3) Find the nearest enemy or neutral planet.
 		$dest = null;
 		$destScore = PHP_INT_MAX;
 		$planets = $game->notMyPlanets();
 		foreach ($planets as $p) {
-			$score = $p->numShips;
+			$score = $game->distanceWithPlanets($source, $p);
 			if ($score < $destScore) {
 				$destScore = $score;
 				$dest = $p;
 			}
 		}
 
-		// (4) Send half the ships from my strongest planet to the weakest
-		// planet that I do not own.
+		// (4) Send all the ships to the target planet.
 		if ($source != null && $dest != null) {
-			$numShips = (int) ($source->numShips / 2);
-			$game->issueOrder($source->id, $dest->id, $numShips);
+			$game->issueOrder($source->id, $dest->id, $source->numShips);
 		}
 	}
 
