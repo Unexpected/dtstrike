@@ -180,10 +180,7 @@ class Game
     public function distance($row1, $col1, $row2, $col2) {
         $dRow = abs($row1 - $row2);
         $dCol = abs($col1 - $col2);
-
-        $dRow = min($dRow, $this->rows - $dRow);
-        $dCol = min($dCol, $this->cols - $dCol);
-
+        
         return ceil(sqrt($dRow * $dRow + $dCol * $dCol));
     }
     
