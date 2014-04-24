@@ -37,7 +37,7 @@
 		foreach ($errors as $error) {
 			$username = $error["username"];
 			$status = $error["status"];
-			echo "<ul>";
+			echo "<ul class=\"nav-hide-on-mobile\">";
 	        echo "<li><p>$username - $status</p><pre class=\"error\">";
 	        echo str_replace('\n', "\n", $error["errors"])."\n";
 	        echo "</pre></li>";

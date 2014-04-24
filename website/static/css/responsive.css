@@ -2,6 +2,10 @@
 /**                        Adaptation Mobile                     */
 /*****************************************************************/
 
+@media (max-width: 979px) and (min-width: 768px) {
+	.container { width: 100%; }
+}
+
 /* On masque le header sur les faibles résolutions < 767px de largeur */
 @media (max-width: 767px) {
 	header {display : none;}	
@@ -11,8 +15,8 @@
 	.nav-hide-on-mobile {display : block;}
 }
 
-/* on réduit la taille des titres de manière à ce que le logo CGI reste aligné*/
-.navbar-inner h1 {
+/* on réduit la taille des titres de manière à ce que le logo reste aligné*/
+.navbar-inner h1, h2 {
 	letter-spacing: 0.1em;
-    word-spacing: 0.2em;
+	word-spacing: 0.2em;
 }
