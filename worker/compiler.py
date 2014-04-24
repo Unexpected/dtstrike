@@ -433,7 +433,7 @@ languages = (
         [(["*.go"], ExternalCompiler(comp_args["Go"][0], out_files=['MyBot']))]
     ),
     Language("Groovy", BOT +".jar", "MyBot.groovy",
-        "java -Xmx" + str(MEMORY_LIMIT) + "m -cp MyBot.jar:/usr/share/groovy/embeddable/groovy-all-1.7.5.jar MyBot",
+        "java -Xmx" + str(MEMORY_LIMIT) + "m -cp MyBot.jar:/usr/share/groovy/embeddable/groovy-all-1.8.6.jar MyBot",
         ["*.class, *.jar"],
         [(["*.groovy"], ExternalCompiler(comp_args["Groovy"][0])),
         (["*.class"], ExternalCompiler(comp_args["Groovy"][1]))]
