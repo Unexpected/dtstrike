@@ -9,7 +9,7 @@
 $config['submissions_open'] = TRUE;
 
 /* Repo (GiT) dir */
-$config['repo_dir'] = '';
+$config['repo_dir'] = 'C:/dev/workspace/dtstrike/';
 
 /* Result upload dir */
 $config['upload_dir'] = $config['repo_dir'].'uploads/';
