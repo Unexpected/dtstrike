@@ -9,7 +9,6 @@
 
 #controls a {
     text-decoration: none;
-    font-size: 32px;
     padding: 0 10px;
 }
 
@@ -34,4 +33,65 @@
     background:white; 
     border-top: solid 1px #607890;
     border-bottom: solid 1px #607890;
+}
+
+/*!
+ *  Font Awesome 4.0.3 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../resources/fonts/fontawesome-webfont.eot?v=4.0.3');
+  src: url('../resources/fonts/fontawesome-webfont.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('../resources/fonts/fontawesome-webfont.woff?v=4.0.3') format('woff'), url('../resources/fonts/fontawesome-webfont.ttf?v=4.0.3') format('truetype'), url('../resources/fonts/fontawesome-webfont.svg?v=4.0.3#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.fa {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-play:before {
+  content: "\f04b";
+}
+.fa-step-backward:before {
+  content: "\f048";
+}
+.fa-fast-backward:before {
+  content: "\f049";
+}
+.fa-backward:before {
+  content: "\f04a";
+}
+.fa-play:before {
+  content: "\f04b";
+}
+.fa-pause:before {
+  content: "\f04c";
+}
+.fa-stop:before {
+  content: "\f04d";
+}
+.fa-forward:before {
+  content: "\f04e";
+}
+.fa-fast-forward:before {
+  content: "\f050";
+}
+.fa-step-forward:before {
+  content: "\f051";
+}
+.fa-plus:before {
+  content: "\f067";
+}
+.fa-minus:before {
+  content: "\f068";
+}
+.fa-question-circle:before {
+  content: "\f059";
 }
