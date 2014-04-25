@@ -333,8 +333,8 @@ comp_args = {
     "Lisp"      : [['sbcl', '--dynamic-space-size', str(MEMORY_LIMIT), '--script', BOT + '.lisp']],
     "OCaml"     : [["ocamlbuild -lib unix", BOT + ".native"]],
     "Pascal"    : [["fpc", "-Mdelphi", "-Si", "-O3", "-Xs", "-v0", "-o" + BOT]],
-    "Python"    : [["python", "-c", PYTHON_EXT_COMPILER]],
-    "Python3"   : [["python3", "-c", PYTHON_EXT_COMPILER]],
+    "Python"    : [["python3", "-c", PYTHON_EXT_COMPILER]],
+    #"Python3"   : [["python3", "-c", PYTHON_EXT_COMPILER]],
     "Scala"     : [["scalac"]],
     }
 
@@ -492,17 +492,17 @@ languages = (
         [(["*.php"], ChmodCompiler("PHP"))]
     ),
     Language("Python", BOT +".py", "MyBot.py",
-        "python MyBot.py",
+        "python3 MyBot.py",
         ["*.pyc"],
         [(["*.py"], ChmodCompiler("Python")),
         (["setup_exts"], ErrorFilterCompiler(comp_args["Python"][0], separate=True, filter_stderr='-Wstrict-prototypes'))]
     ),
-    Language("Python3", BOT +".py3", "MyBot.py3",
-        "python3 MyBot.py3",
-        ["*.pyc"],
-        [(["*.py3"], ChmodCompiler("Python3")),
-        (["setup_exts"], ErrorFilterCompiler(comp_args["Python3"][0], separate=True, filter_stderr='-Wstrict-prototypes'))]
-    ),
+    #Language("Python3", BOT +".py3", "MyBot.py3",
+    #    "python3 MyBot.py3",
+    #    ["*.pyc"],
+    #    [(["*.py3"], ChmodCompiler("Python3")),
+    #    (["setup_exts"], ErrorFilterCompiler(comp_args["Python3"][0], separate=True, filter_stderr='-Wstrict-prototypes'))]
+    #),
     Language("PyPy", BOT +".pypy", "MyBot.pypy",
         "pypy MyBot.pypy",
         ["*.pyc"],
