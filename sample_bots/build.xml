@@ -4,7 +4,7 @@
 	<property name="ant-contrib.jar" location="../ant_lib/ant-contrib-1.0b3.jar" />
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${ant-contrib.jar}" />
 	
-
+	
 	<target name="init">
 		<delete dir="dist"/>
 		
@@ -29,12 +29,16 @@
 		<foreach list="${sampleBotsList}" target="jarBot" param="var" />
 	</target>
 	
+	<target name="zipAllBots" depends="init" >
+		<foreach list="${sampleBotsList}" target="zipBot" param="var" />
+	</target>
+	
 	<target name="compileBot">
 		<mkdir dir="temp/${var}" />
 		<javac destdir="temp/${var}" debug="true" srcdir="${var}/src" includeantruntime="false" encoding="iso-8859-1" />
-        <copy todir="temp/${var}" overwrite="true">
-            <fileset file="${var}/src/*" />
-        </copy>
+		<copy todir="temp/${var}" overwrite="true">
+			<fileset file="${var}/src/*" />
+		</copy>
 	</target>
 	
 	<target name="jarBot">
@@ -44,9 +48,14 @@
 			</manifest>
 		</jar>
 	</target>
-
+	
+	<target name="zipBot">
+		<zip destfile="dist/${var}.zip" basedir="${var}/src">
+		</zip>
+	</target>
+	
 	<target name="clean" depends="jarAllBots" >
-        <delete dir="temp"/>
+		<delete dir="temp"/>
 	</target>
 	
 </project>
