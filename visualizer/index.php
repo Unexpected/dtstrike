@@ -9,25 +9,27 @@
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <link rel="stylesheet" href="inc/style.css?v=1">
-  
+
 </head>
 <body>
   <div id="container">
     <header>
 	  <div id="players">Loading</div>
     </header>
-    
+
     <div id="main">
         <canvas id="display" width="640" height="640"></canvas>
+	<canvas id="caption" width="640" height="120" style="display: none;"></canvas>
         <p id="controls">
-        	| 
-            <a href="#" id="slow-button">-</a> | 
-            <a href="#" id="start-button">&laquo;</a> | 
-            <a href="#" id="prev-frame-button">&laquo;</a> | 
-            <a href="#" id="play-button">&#9654;</a> | 
-            <a href="#" id="next-frame-button">&raquo;</a> | 
-            <a href="#" id="end-button">&raquo;</a> | 
-            <a href="#" id="fast-button">+</a> |
+        	|
+            <a href="#" id="slow-button" class="fa fa-minus" title="Slowdown playback"></a> |
+            <a href="#" id="start-button" class="fa fa-fast-backward" title="Go to start"></a> |
+            <a href="#" id="prev-frame-button" class="fa fa-step-backward" title="Go back one turn"></a> |
+            <a href="#" id="play-button" class="fa fa-play" title="Play / Pause"></a> |
+            <a href="#" id="next-frame-button" class="fa fa-step-forward" title="Advance one turn"></a> |
+            <a href="#" id="end-button" class="fa fa-fast-forward" title="Go to end"></a> |
+            <a href="#" id="fast-button" class="fa fa-plus" title="Speedup playback"></a> |
+            <a href="#" id="help-button" class="fa fa-question-circle" title="Toggle caption"></a> |
         </p>
         <p>
 		  <div style="height: 20px;">
