@@ -2,8 +2,8 @@ import scala.collection.mutable
 
 class GameStateBuilder {
 
-  private val economicPlanetRegex = ("""E\d* (\-?\d+\.?\d*) (\-?\d+\.?\d*) (\d+) (\d+) (\d+)""").r
-  private val militaryPlanetRegex = ("""M\d* (\-?\d+\.?\d*) (\-?\d+\.?\d*) (\d+) (\d+)""").r
+  private val economicPlanetRegex = ("""E\d* ([-]?\d+\.?\d*) ([-]?\d+\.?\d*) (\d+) (\d+) (\d+)""").r
+  private val militaryPlanetRegex = ("""M\d* ([-]?\d+\.?\d*) ([-]?\d+\.?\d*) (\d+) (\d+)""").r
   private val economicFleetRegex = """R (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)""".r
   private val militaryFleetRegex = """F (\d+) (\d+) (\d+) (\d+) (\d+) (\d+)""".r
 
