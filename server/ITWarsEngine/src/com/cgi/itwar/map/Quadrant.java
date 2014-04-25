@@ -1,6 +1,7 @@
 package com.cgi.itwar.map;
 
 import java.util.HashSet;
+import java.util.Random;
 
 /**
  * Un Quadrant repr�sente une "part" de la zone de jeu.
@@ -14,6 +15,7 @@ public class Quadrant {
 	private final int index;
 	private final MapGenerator map;
 	private final HashSet<Colony> colonies = new HashSet<Colony>();
+	private final static Random random = new Random();
 
 	public Quadrant(int index, MapGenerator map) {
 		this.index = index;
@@ -94,8 +96,21 @@ public class Quadrant {
 	}
 	
 	private double getRandom(double min, double max) {
-		return min + (Math.random() * (max - min));
+		//return min + (Math.random() * (max - min));
+		return min + ( limitedGaussian() * (max - min));
 	}
+
+	private double limitedGaussian() {
+		
+		// [-1 ; 1] mean 0.0 and standard deviation 1.0 => 70%
+		double nextGaussian;
+		do {
+			nextGaussian = (1 + random.nextGaussian()) / 2;
+		} while (nextGaussian < 0 || nextGaussian > 1);
+		return nextGaussian;
+	}
+	
+	
 
 	public int getNbOfColonies() {
 		return colonies.size();
