@@ -1,9 +1,9 @@
 import collection.mutable
 
 /**
- * Current state of the game.
- *  @param planets : Planets are numbered starting with 0.  <b>Planet ids ARE consistent from one turn to the next.</b>
- * @param fleets : Fleets are numbered starting with 0. <b>Fleet ids are not consistentfrom one turn to the next.</b>
+ * Current state of the game. Immutable.
+ * @param planets : Planets are numbered starting with 0. <b>Planet ids ARE consistent from one turn to the next.</b>
+ * @param fleets : Fleets are numbered starting with 0. <b>Fleet ids are not consistent from one turn to the next.</b>
  */
 case class GameState(val turn: Int, val planets: IndexedSeq[Planet], val fleets: IndexedSeq[Fleet], val turnStart: Long) {
 

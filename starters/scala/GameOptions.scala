@@ -1,7 +1,7 @@
 import collection.mutable
 
 /**
- * A small set of options for the game. See the specifications for more info.
+ * A small set of options for the game. See the specifications for more info. Immutable.
  *  @param loadTime : Timeout for initializing and setting up the bot on turn 0
  *  @param turnTime : Timeout for a single game turn, starting with turn 1
  *  @param turns : maximum number of turns the game will be played

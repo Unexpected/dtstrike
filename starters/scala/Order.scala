@@ -13,7 +13,7 @@
  * <li>you can't move more ships than are currently on the source planet.</li>
  * <li>the ships will take a few turns to reach their destination.<br/>
  * <b>Travel is not instant.</b><br/>
- * See the distance() function for more info.</li>
+ * See the GameState#distance() function for more info.</li>
  * </ul>
  */
 case class Order(
