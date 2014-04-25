@@ -18,28 +18,31 @@ func DoTurn(world *GameState) {
 
 	world.Log("My view of the world is : %s\n", world)
 
-
 	// (0) Send my reinforcements to a target planet
 	myEconomicPlanets := world.GetMyEconomics()
 	// i get my non military planets
-	for inc := range myEconomicPlanets {// for each
+	for inc := range myEconomicPlanets { // for each
 		if myEconomicPlanets[inc].NumShips > 50 { // if it's big enough
-				target:=world.GetMyNearestMilitary(myEconomicPlanets[inc]) 
-				if (target!=nil){
-					world.IssueOrder(myEconomicPlanets[inc].Id, target.Id, myEconomicPlanets[inc].NumShips-50)
-				}
-			}
+			target := world.GetMyNearestMilitary(myEconomicPlanets[inc])
+			if target != nil {
+				world.IssueOrder(myEconomicPlanets[inc].Id, target.Id, 50)
+			} // else i have nowhere to send it too.. i can break
+			break
 		}
+	}
 
-
-	// (1) If we currently have a fleet in flight, just do nothing.
+	// (1) If we currently have 2 military fleets in flight, just do nothing.
+	nbFleet := 0
 	for key := range world.listFleet {
 		if world.listFleet[key].Owner == 1 { // if it's mine
 			if world.GetAllPlanets()[world.listFleet[key].Source].Owner == 1 {
 				// and it's from my planet
 				if !world.GetAllPlanets()[world.listFleet[key].Source].Type {
 					// and is a military
-					return // do nothing
+					nbFleet++
+					if nbFleet >= 2 {
+						return // do nothing, i finish the turn
+					}
 				}
 			}
 		}
@@ -77,10 +80,10 @@ func DoTurn(world *GameState) {
 			}
 			world.Log("Target Planet will be : %s", target)
 		} else {
-			world.Log("no more military planet, i'm dead...")
+			world.Log("no more military planet, i'm soon dead")
 		}
 	} else {
-		world.Log("no more military planet, i'm dead...")
+		world.Log("no more military planet, i'm soon dead...")
 	}
 
 	// (3) Send half the ships from my strongest planet to the weakest

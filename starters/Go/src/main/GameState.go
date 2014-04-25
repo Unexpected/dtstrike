@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+
 /******************************************************************************
 World State, keep track of things and abstract access to input/output
 ******************************************************************************/
@@ -23,7 +24,6 @@ type GameState struct {
 	bout   *bufio.Writer
 	//initFlag     bool
 	nbPlanet int
-
 
 	// params
 	loadtime int
@@ -75,17 +75,16 @@ Get my nearest military one
 ******************************************************************************/
 func (l *GameState) GetMyNearestMilitary(source *Planet) (target *Planet) {
 
-	minDist := math.MaxUint32
+	minDist := 1000000 //arbitrary high number
 	MyMilitary := l.GetMyMilitary()
 	for key := range MyMilitary {
-		if l.Distance(MyMilitary[key].Id, source.Id) < minDist{
-				target = MyMilitary[key]
-				minDist = l.Distance(MyMilitary[key].Id, source.Id)
-			}
+		if l.Distance(MyMilitary[key].Id, source.Id) < minDist {
+			target = MyMilitary[key]
+			minDist = l.Distance(MyMilitary[key].Id, source.Id)
 		}
-		return
+	}
+	return
 }
-
 
 /******************************************************************************
 Get planets of others
