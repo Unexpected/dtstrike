@@ -60,7 +60,7 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 	</tr>
 	<tr>
 		<td>Python</td>
-		<td>Nos serveurs fonctionnent sous Python 2.7.5 ou 3.3.2</td>
+		<td>Nos serveurs fonctionnent sous Python 3.3.2</td>
 		<td><a href="<?php echo base_url('starters/py_starter_package.zip') ?>" target="_blank">Télécharger</a></td>
 	</tr>
 	<tr>
