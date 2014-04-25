@@ -32,7 +32,7 @@ def install_basic_languages():
         currently C, C++, Java, and Python """
     pkg_list = ["gcc", "g++", "openjdk-7-jdk", "python-dev", "python3-dev",
                 "python-numpy", "python-scipy", "php5-cli", "scala", "groovy", "golang-go", 
-                "nodejs", "mono-devel"]
+                "nodejs", "mono-devel", "mono-gmcs"]
     install_apt_packages(pkg_list)
 
 def install_extra_distribution_languages():
