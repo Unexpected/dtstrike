@@ -35,24 +35,22 @@ public class MyBot extends Bot {
 	@Override
 	public void doTurn() {
 		Game game = getGame();
-		
-		// (1) If an economic planet have more than 50 ships, send 50 ships to the closest military planet and go to the next step.
-		Planet source = null;
-		Planet dest = null;
+		Planet source = null; 
+		Planet dest = null; 
+		// (1) If an economic planet have more than 50 ships, send 50 ships to the closest military planet.
 		for (Planet p : game.getMyEconomicPlanets()) {
 			int score = p.numShips;
 			if (score > 50) {
 				source = p;
 				dest = game.findClosestMilitaryPlanet(source);
 				if (dest != null) {
-					game.issueOrder(source, dest, score - 50);
+					game.issueOrder(source, dest, 50);
 				}
-				break;
 			}
 		}
 
-		// (2) If we currently have a fleet in flight, just do nothing.
-		if (!game.getMyMilitaryFleets().isEmpty()) {
+		// (2) If we currently have more than 2 fleet in flight, just do nothing.
+		if (game.getMyMilitaryFleets().size() > 2) {
 			return;
 		}
 
@@ -66,22 +64,27 @@ public class MyBot extends Bot {
 				source = p;
 			}
 		}
+		
+		// No military planet found, just stop here.
+		if (source == null) {
+			return; 
+		}
 
-		// (4) Find the weakest enemy or neutral planet.
+		// (4) Find the closest enemy or neutral planet.
 		dest = null;
-		int destScore = Integer.MAX_VALUE;
+		int distMin = Integer.MAX_VALUE;
 		for (Planet p : game.getNotMyPlanets()) {
-			int score = p.numShips;
-			if (score < destScore) {
-				destScore = score;
+			int distance = game.distance(source.id, p.id);
+			if (distance < distMin) {
+				distMin = distance;
 				dest = p;
 			}
 		}
 
-		// (5) Send half the ships from my strongest planet to the weakest
+		// (5) Send all the ships from my strongest planet to the weakest
 		// planet that I do not own.
 		if (source != null && dest != null) {
-			int numShips = source.numShips / 2;
+			int numShips = source.numShips;
 			if (numShips > 0) {
 				game.issueOrder(source, dest, numShips);
 			}
