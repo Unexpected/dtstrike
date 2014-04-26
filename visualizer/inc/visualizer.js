@@ -395,9 +395,6 @@ var Visualizer = {
 		var user_ids = gameResult.user_ids;
 		
 		var playersNbr = gameResult.replaydata.players;
-		// Calculated configs
-		this.config.unit_to_pixel = (this.canvas.height - this.config.display_margin * 2) / (12 * playersNbr);
-		this.config.turnsPerSecond = 4 * playersNbr;
 		
 		this.players = new Array();
 		for (var i=0; i<playersNbr; i++) {
@@ -411,6 +408,14 @@ var Visualizer = {
 		
 		this.parsePlaybackData(gameResult.replaydata);
 		
+		// Calculated configs
+		var mapSize = this.planets.reduce(function(result, planet) {
+			return Math.max(result, Math.abs(planet.x), Math.abs(planet.y));
+		}, 0);
+
+		this.config.unit_to_pixel = (this.canvas.height - this.config.display_margin * 2) / mapSize;
+		this.config.turnsPerSecond = 4 * playersNbr;
+
 		this.init();
 	},
 	
