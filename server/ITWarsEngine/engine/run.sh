@@ -89,26 +89,26 @@ function start_game {
 
 	# runEngine
 	set err_file=replay_err.txt
-    bot_cmd="\"${bot_cmd}\""
+
 	if [ ${nb_players} == 2 ]
 	then
-		run_cmd="${bot_cmd} \"${bot1}\""
+		run_cmd=("${bot_cmd}" "${bot1}")
 	fi
 	if [ ${nb_players} == 3 ]
 	then
-		run_cmd="${bot_cmd} \"${bot1}\" \"${bot2}\""
+		run_cmd=("${bot_cmd}" "${bot1}" "${bot2}")
 	fi
 	if [ ${nb_players} == 4 ]
 	then
-		run_cmd="${bot_cmd} \"${bot1}\" \"${bot2}\" \"${bot3}\""
+		run_cmd=("${bot_cmd}" "${bot1}" "${bot2}" "${bot3}")
 	fi
 	if [ ${nb_players} == 5 ]
 	then
-		run_cmd="${bot_cmd} \"${bot1}\" \"${bot2}\" \"${bot3}\" \"${bot4}\""
+		run_cmd=("${bot_cmd}" "${bot1}" "${bot2}" "${bot3}" "${bot4}")
 	fi
 	if [ ${nb_players} == 6 ]
 	then
-		run_cmd="${bot_cmd} \"${bot1}\" \"${bot2}\" \"${bot3}\" \"${bot4}\" \"${bot5}\""
+		run_cmd=("${bot_cmd}" "${bot1}" "${bot2}" "${bot3}" "${bot4}" "${bot5}")
 	fi
 
 	# Cleaning previous game
@@ -118,17 +118,9 @@ function start_game {
 
 	echo -n "var replayJson=" > $replay_js
 
-    # TODO launch java app through script (not working...) + open index.html when done
-    #java -Duser.language=en -jar engine.jar ${map} 1000 1000 ${replay_log} ${run_cmd} 1>>${replay_js} 2>${err_file}
-    echo "Execute this command: "
-    echo "   java -Duser.language=en -jar engine.jar ${map} 1000 1000 ${replay_log} ${run_cmd} 1>>${replay_js} 2>${err_file}"
-    echo ""
-    echo "Open the result with this command: "
-    echo "   xdg-open visu/index.html"
-    exit 1;
+    java -Duser.language=en -jar engine.jar ${map} 1000 1000 ${replay_log} "${run_cmd[@]}" 1>>${replay_js} 2>${err_file}
 
     errorcode=$?
-    echo $errorcode
 	if [ ${errorcode} -le 0 ]
 	then
 		error
@@ -142,7 +134,6 @@ function replay {
 # TODO: Check if replay_err is empty
 #for %%A in (%err_file%) do if not %%~zA==0 goto error
 
-	xdg-open visu/index.html
 	echo "===================================================================="
 	echo "===================================================================="
 	echo "               Game over - Winner is player $winner"
