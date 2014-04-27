@@ -1,6 +1,6 @@
 <?php
 	$menu = array(
-		array('HAL Challenge', site_url("welcome"), 'globe', '')
+		array('HAL Challenge', '', 'globe', '')
 		// , array("Accueil", site_url("welcome"), '', '') 
 		, array("Classement actuel", site_url("game/rank"), '', '')
 		, array("Dernières parties", site_url("game"), '', '')
