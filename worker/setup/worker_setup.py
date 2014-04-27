@@ -207,11 +207,11 @@ def setup_base_chroot(options):
             run_cmd("cp -r chroot_configs/ai-jail /etc/schroot/ai-jail")
         deb_archives = "/var/cache/apt/archives/"
         run_cmd("cp {0}*.deb {1}{0}".format(deb_archives, base_chroot_dir))
-        run_cmd("schroot -p -c aic-base -- /bin/sh -c \"\
+        run_cmd("schroot -c aic-base -- /bin/sh -c \"\
                 DEBIANFRONTEND=noninteractive;\
                 apt-get update; apt-get upgrade -y\"")
-        run_cmd("schroot -p -c aic-base -- apt-get install -y python")
-    run_cmd("schroot -p -c aic-base -- %s/setup/worker_setup.py --chroot-base"
+        run_cmd("schroot -c aic-base -- apt-get install -y python")
+    run_cmd("schroot -c aic-base -- %s/setup/worker_setup.py --chroot-base"
             % (os.path.join(options.root_dir, options.local_repo, "worker"),))
 
 def create_jail_group(options):
