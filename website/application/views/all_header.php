@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/font-awesome.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-common.css") ?>" />
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/styles-dark.css") ?>" id="skin" />
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/responsive.css") ?>" />	
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url("static/css/responsive.css") ?>" />
 <!--[if lt IE 9]>
 	<script type="text/javascript">
 		alert("Attention, ce site ne fonctionne qu'avec IE 9 et supérieur ou un vrai navigateur.");
@@ -25,6 +25,7 @@
 		<div class="navbar-inner">
 			<h1 class="pull-left">
 				<a href="<?php echo base_url() ?>">HAL <img class="logo" src="<?php echo base_url("static/images/logo.png") ?>" /> Challenge</a>
+				<img src="<?php echo base_url("static/images/beta.png") ?>" style="position: absolute; right: 40px; top: 10px; height: 40px;"/>
 			</h1>
 		</div>
 	</header>
