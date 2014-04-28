@@ -6,7 +6,6 @@
     
     <div id="main">
         <canvas id="display" width="640" height="640"></canvas>
-		<canvas id="caption" width="640" height="120" style="display: none;"></canvas>
         <p id="controls">
         	|
             <a href="#" id="slow-button" class="fa fa-minus" title="Slowdown playback"></a> |
@@ -16,7 +15,6 @@
             <a href="#" id="next-frame-button" class="fa fa-step-forward" title="Advance one turn"></a> |
             <a href="#" id="end-button" class="fa fa-fast-forward" title="Go to end"></a> |
             <a href="#" id="fast-button" class="fa fa-plus" title="Speedup playback"></a> |
-            <a href="#" id="help-button" class="fa fa-question-circle" title="Toggle caption"></a> |
         </p>
 <?php if (!$is_included) { ?>
         <p>

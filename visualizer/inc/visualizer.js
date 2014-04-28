@@ -55,7 +55,6 @@ var Visualizer = {
 			// Start playing
 			this.start();
 			this.drawChart();
-			this.drawCaption();
 		}
 	},
 
@@ -300,60 +299,6 @@ var Visualizer = {
 		ctx.fillStyle = '#FFF';
 		ctx.font = "15px Arial";
 		ctx.fillText(text, x, y);
-	},
-
-	drawCaption: function() {
-		var canvas = document.getElementById('caption');
-		if (!canvas) return;
-
-		var ctx = canvas.getContext('2d');
-
-		// Draw background
-		ctx.fillStyle = '#000';
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-		var econPlanet = {
-			x: -5,
-			y: 0,
-			type: 'E',
-			owner: 0,
-			numShips: 100
-		};
-
-		var milPlanet = {
-			x: -5,
-			y: -5,
-			type: 'M',
-			owner: 0,
-			numShips: 500
-		};
-
-		var econFleet = {
-			x: 20,
-			y: 0,
-			owner: 0,
-			source: {type: 'E', x: 0, y: 55},
-			destination: {x: 0, y: 56},
-			numShips: 20
-		};
-
-		var milFleet = {
-			x: 20,
-			y: -5,
-			owner: 0,
-			source: {type: 'M', x: 0, y: 55},
-			destination: {x: 1, y: 55},
-			numShips: 50
-		};
-
-		this.drawPlanet(econPlanet, ctx);
-		this.drawLabel("Economic planet", 70, 45, ctx);
-		this.drawPlanet(milPlanet, ctx);
-		this.drawLabel("Military planet", 70, 85, ctx);
-		this.drawFleet(econFleet, ctx);
-		this.drawLabel("Economic fleet", 270, 45, ctx);
-		this.drawFleet(milFleet, ctx);
-		this.drawLabel("Military fleet", 270, 85, ctx);
 	},
 
 	start: function() {
@@ -635,11 +580,6 @@ function hookButtons() {
 
 	$('#slow-button').click(function() {
 		Visualizer.config.turnsPerSecond -= 2;
-		return false;
-	});
-
-	$('#help-button').click(function() {
-		$('#caption').toggle();
 		return false;
 	});
 }
