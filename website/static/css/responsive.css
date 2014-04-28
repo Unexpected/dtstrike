@@ -8,8 +8,10 @@
 
 /* On masque le header sur les faibles résolutions < 767px de largeur */
 @media (max-width: 767px) {
-	header {display : none;}	
+	header {display : none;}
 	.nav-hide-on-mobile {display : none;}
+	.td-hide-on-mobile {display : none;}
+	.nav-show-on-mobile {display : inherit;}
 	/* Visualizer */
 	#container { width: 500px !important; }
 	#display { width: 500px; height: 500px }
@@ -19,6 +21,8 @@
 }
 @media (min-width: 768px) {
 	.nav-hide-on-mobile {display : block;}
+	.td-hide-on-mobile {display : table-cell;}
+	.nav-show-on-mobile {display : none;}
 }
 
 /* on réduit la taille des titres de manière à ce que le logo reste aligné*/

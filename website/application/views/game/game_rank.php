@@ -10,13 +10,13 @@
 		echo '<thead><tr>';
 		echo '	<th>Rank</th>
 	<th>Username</th>
-	<th>Country</th>
+	<th class="td-hide-on-mobile">Country</th>
 	<th>Organization</th>
 	<th>Language</th>
-	<th>Version</th>
-	<th><span title="mu - 3 * sigma">Skill</span></th>
-	<th><span title="total games for current submission">Games</span></th>
-	<th><span title="number of games in past 24 hours">Recent</span></th>';
+	<th class="td-hide-on-mobile">Version</th>
+	<th class="td-hide-on-mobile"><span title="mu - 3 * sigma">Skill</span></th>
+	<th class="td-hide-on-mobile"><span title="total games for current submission">Games</span></th>
+	<th class="td-hide-on-mobile"><span title="number of games in past 24 hours">Recent</span></th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
 		echo '</tbody>';
@@ -34,7 +34,7 @@
 			}
 			
 			echo "<td class=\"username\">".nice_user($row["user_id"], $row["username"])."</td>";
-			echo "<td class=\"country\">".nice_country($row["country_code"], $row["country"], $row["flag_filename"])."</td>";
+			echo "<td class=\"country td-hide-on-mobile\">".nice_country($row["country_code"], $row["country"], $row["flag_filename"])."</td>";
 			echo "<td class=\"org\">".nice_organization($row["org_id"], $row["org_name"])."</td>";
 			
 			$programming_language = htmlentities($row["programming_language"], ENT_COMPAT, 'UTF-8');
@@ -43,14 +43,14 @@
 			
 			$version = $row["version"];
 			$age = nice_ago($row["timestamp"]);
-			echo "<td class=\"number\"><span title=\"$age\">$version</span></td>";
+			echo "<td class=\"number td-hide-on-mobile\"><span title=\"$age\">$version</span></td>";
 			
 			$skill = nice_skill($row['skill'],$row['mu'],$row['sigma'],
 			    $row['skill_change'],$row['mu_change'],$row['sigma_change']);
-			echo "<td class=\"number\">$skill</td>";
+			echo "<td class=\"number td-hide-on-mobile\">$skill</td>";
 			
-			echo "<td class=\"number\">".$row["game_count"]."</td>";
-			echo "<td class=\"number\">".$row["game_rate"]."</td>";
+			echo "<td class=\"number td-hide-on-mobile\">".$row["game_count"]."</td>";
+			echo "<td class=\"number td-hide-on-mobile\">".$row["game_rate"]."</td>";
 			echo '</tr>';
 		}
 		echo '</table>';

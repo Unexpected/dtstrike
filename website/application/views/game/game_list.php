@@ -10,7 +10,7 @@
 		echo '<thead><tr>';
 		echo '<th>Date</th>';
 		echo '<th>Joueurs</th>';
-		echo '<th>Map</th>';
+		echo '<th class="td-hide-on-mobile">Map</th>';
 		echo '<th>Visualiser</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
@@ -27,7 +27,7 @@
 				echo '<br/>';
 			}
 			echo '</td>';
-			echo '<td><a href="'.base_url("maps/map".$game['map_id']).'.txt">'.$game['map_name'].'</a></td>';
+			echo '<td class="td-hide-on-mobile"><a href="'.base_url("maps/map".$game['map_id']).'.txt">'.$game['map_name'].'</a></td>';
 			echo '<td>'.nice_viewer($game['game_id'], $game['game_length'], $game['cutoff'], $game['winning_turn']).'</td>';
 			echo '</tr>';
 		}
