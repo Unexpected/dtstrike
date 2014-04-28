@@ -72,7 +72,7 @@ del replay_log.txt 2>NUL
 del visu\replay.js 2>NUL
 
 echo var replayJson=>visu\replay.js
-java -Duser.language=en -jar engine.jar %map% 1000 1000 replay_log.txt %run_cmd% 1>>visu\replay.js 2>%err_file%
+java -server -Xms128m -Xmx512m -Duser.language=en -jar engine.jar %map% 1000 1000 replay_log.txt %run_cmd% 1>>visu\replay.js 2>%err_file%
 set errorcode=%errorlevel%
 if %errorcode% LEQ 0 goto error
 set winner=%errorcode%
@@ -85,8 +85,14 @@ start visu/index.html
 echo.
 echo ====================================================================
 echo ====================================================================
-echo                Game over - Winner is player %winner%
-echo You may watch the replay by opening visu/index.html in your browser
+if "x%winner%" == "x1" (
+	echo                Game over - you WIN
+) else (
+	echo                Game over - you LOSE
+)
+echo.
+echo         If it has not done so, you may watch the replay
+echo          by opening visu/index.html in your browser.
 echo ====================================================================
 echo ====================================================================
 echo.
@@ -112,12 +118,6 @@ type %err_file%
 echo.
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo.
-pause
-goto end
-
-:usage
-echo Wrong usage
-echo Usage : run.bat MapName "command for MyFirstBot" "command for MySecondBot"
 pause
 goto end
 

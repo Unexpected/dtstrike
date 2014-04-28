@@ -12,11 +12,11 @@ ant
 echo ".. OK"
 echo
 
-echo "Building LocalTester"
-cd ../LocalTester/ant
-ant
-echo ".. OK"
-echo
+# echo "Building LocalTester"
+# cd ../LocalTester/ant
+# ant
+# echo ".. OK"
+# echo
 
 echo "Building & Coping starter kits"
 cd ../../starters
