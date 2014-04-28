@@ -25,33 +25,33 @@
 </p>
 <h3>Ravitaillement et flottes économiques</h3>
 <p>
-	A chaque tour, les planètes économiques non neutres fournissent au joueur qui les contrôle autant de nouveaux vaisseaux que leur valeur de ravitaillement. 
-	<ul>
-		<li>
-			Le joueur jaune contrôle une planète économique disposant de 51 vaisseaux : 
-			<img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_1.png') ?>" class="pull-right" />
-		</li>
-		<li>
-			Il décide d'envoyer une flotte de ravitaillement de 50 vaisseaux depuis la planète vers une base militaire à proximité : 
-			<img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_2.png') ?>" class="pull-right" />
-		</li>
-		<li>
-			A chaque tour, la flotte s'éloigne. La planète ayant une valeur de ravitaillement de 2, elle continue de générer 2 vaisseaux à chaque tour : 
-			<img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_3.png') ?>" class="pull-right" />
-		</li>
-		<li>
-			Les flottes économiques ont été envoyées vers une base militaire qui ne possède actuellement aucun vaisseau : 
-			<img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_4.png') ?>" class="pull-right" />
-		</li>
-		<li>
-			On peut voir que la planète économique à proximité produit des vaisseaux, mais pas la base militaire : 
-			<img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_5.png') ?>" class="pull-right" />
-		</li>
-		<li>
-			Lorsque les vaisseaux arrivent sur la base militaire, la flotte disparait, le nombre de vaisseaux sur la base militaire augmente d'autant : 
-			<img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_6.png') ?>" class="pull-right" />
-		</li>
-	</ul>
+<div class="row">
+	<div class="span9">A chaque tour, les planètes économiques non neutres fournissent au joueur qui les contrôle autant de nouveaux vaisseaux que leur valeur de ravitaillement. </div>
+</div>
+<div class="row">
+	<div class="span3"><img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_1.png') ?>" class="pull-left" /></div>
+	<div class="span6">Le joueur jaune contrôle une planète économique disposant de 51 vaisseaux</div>
+</div>
+<div class="row">
+	<div class="span3"><img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_2.png') ?>" class="pull-left" /></div>
+	<div class="span6">Il décide d'envoyer une flotte de ravitaillement de 50 vaisseaux depuis la planète vers une base militaire à proximité</div>
+</div>
+<div class="row">
+	<div class="span3"><img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_3.png') ?>" class="pull-left" /></div>
+	<div class="span6">A chaque tour, la flotte s'éloigne. La planète ayant une valeur de ravitaillement de 2, elle continue de générer 2 vaisseaux à chaque tour</div>
+</div>
+<div class="row">
+	<div class="span3"><img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_4.png') ?>" class="pull-left" /></div>
+	<div class="span6">Les flottes économiques ont été envoyées vers une base militaire qui ne possède actuellement aucun vaisseau</div>
+</div>
+<div class="row">
+	<div class="span3"><img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_5.png') ?>" class="pull-left" /></div>
+	<div class="span6">On peut voir que la planète économique à proximité produit des vaisseaux, mais pas la base militaire</div>
+</div>
+<div class="row">
+	<div class="span3"><img src="<?php echo base_url('static/images/rules_yellow_eco_fleet_6.png') ?>" class="pull-left" /></div>
+	<div class="span6">Lorsque les vaisseaux arrivent sur la base militaire, la flotte disparait, le nombre de vaisseaux sur la base militaire augmente d'autant</div>
+</div>
 </p>
 <h3>Conquête et Flottes militaires</h3>
 <p>
