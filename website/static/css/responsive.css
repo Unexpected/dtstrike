@@ -13,6 +13,7 @@
 	/* Visualizer */
 	#container { width: 500px !important; }
 	#display { width: 500px; height: 500px }
+	#main > #display { background-image: none; }
 	#chart { width: 500px; }
 	#feedline { width: 500px; }
 }
