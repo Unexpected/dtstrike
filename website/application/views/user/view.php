@@ -34,10 +34,6 @@
 		<td class="table_value"><?php echo nl2br($user->bio, true); ?></td>
 	</tr>
 	<tr>
-		<td class="table_label">Meilleur classement :</td>
-		<td class="table_value"><?php echo 'TODO'; ?></td>
-	</tr>
-	<tr>
 		<td class="table_label"></td>
 		<td class="table_value"><hr/></td>
 	</tr>
