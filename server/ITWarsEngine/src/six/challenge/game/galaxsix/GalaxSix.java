@@ -162,8 +162,12 @@ public class GalaxSix extends Game {
 				if (battleships.get(f.owner) == null) {
 					battleships.put(f.owner, 0);
 				}
-				int currentShips = battleships.get(f.owner);
-				battleships.put(f.owner, f.numShips + currentShips);
+				// Les flottes économiques ne sont prises en compte que si
+				// le propriétaire de la planète est le même que celui de la flotte
+				if (f.military || f.owner == p.owner) {
+					int currentShips = battleships.get(f.owner);
+					battleships.put(f.owner, f.numShips + currentShips);
+				}
 			} else {
 				keptFleets.add(f);
 			}
