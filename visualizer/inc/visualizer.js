@@ -22,7 +22,7 @@ var Visualizer = {
 		showFleetText: true,
 		display_margin: 80,
 		turnsPerSecond: 8,
-		teamColor: ['#445555','#E31937','#FF6A00','#F76DCB','#1ABBDB','#05A826','#972BD6'],
+		teamColor: ['#445555','#E31937','#FFB000','#F76DCB','#1ABBDB','#05A826','#972BD6'],
 		E_planet_size: 13,
 		M_planet_size: 26
 	},
@@ -115,9 +115,9 @@ var Visualizer = {
 			// Draw circle
 			ctx.beginPath();
 			ctx.arc(disp_x, ctx.canvas.height - disp_y, planetSize, 0, Math.PI*2, true);
-			ctx.closePath();
-			ctx.fillStyle = this.config.teamColor[planet.owner];
-			// TODO: hightlight planet when a fleet has reached them
+			ctx.strokeStyle = this.config.teamColor[planet.owner];
+			ctx.lineWidth = 3;
+			ctx.stroke();
 			ctx.fill();
 		} else if (planet.type == 'M') {
 			var planetSize = this.config.M_planet_size;
@@ -135,7 +135,6 @@ var Visualizer = {
 			ctx.rect(disp_x - halfSize, ctx.canvas.height - disp_y - halfSize, planetSize, planetSize);
 			ctx.closePath();
 			ctx.fillStyle = this.config.teamColor[planet.owner];
-			// TODO: hightlight planet when a fleet has reached them
 			ctx.fill();
 		}
 
