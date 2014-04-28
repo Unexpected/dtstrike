@@ -65,29 +65,10 @@ var Visualizer = {
 
 	drawBackground: function(){
 		var ctx = this.ctx;
-
-		// Draw background
-		ctx.fillStyle = '#000';
-		if(this.haveDrawnBackground==false){
-			ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-			this.haveDrawnBackground = true;
-		}
-
-		// Draw stars on the background
-		for (var i = 0; i < this.backgroundStarsNumber; i++) {
-			ctx.beginPath();
-			ctx.rect(this.backgroundStarsPositions[2*i], this.backgroundStarsPositions[2*i+1], 1, 1);
-			ctx.closePath();
-			if (Math.floor(Math.random() * 10) != 0) {
-				ctx.fillStyle = '#FFF';
-			}
-			ctx.fill();
-			ctx.fillStyle = '#000';
-		}
-
+		// Clean up dirty regions (ie previous frame data)
 		for(var i = 0; i < this.dirtyRegions.length; i++) {
 			var region = this.dirtyRegions[i];
-			ctx.fillRect(
+			ctx.clearRect(
 				parseInt(region[0]),
 				parseInt(region[1]),
 				parseInt(region[2]),

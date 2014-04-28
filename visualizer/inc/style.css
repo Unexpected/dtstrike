@@ -3,6 +3,13 @@
     margin: 10px auto;
 }
 
+#main > #display {
+	/* Thanks to http://www.ForestWander.com for the background image */
+	background-image: url('../resources/background.jpg');
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
 #controls {
     text-align: center;
 }
