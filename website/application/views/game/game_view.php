@@ -7,14 +7,15 @@
     <div id="main">
         <canvas id="display" width="640" height="640"></canvas>
         <p id="controls">
-        	| 
-            <a href="#" id="slow-button">-</a> | 
-            <a href="#" id="start-button">&laquo;</a> | 
-            <a href="#" id="prev-frame-button">&laquo;</a> | 
-            <a href="#" id="play-button">&#9654;</a> | 
-            <a href="#" id="next-frame-button">&raquo;</a> | 
-            <a href="#" id="end-button">&raquo;</a> | 
-            <a href="#" id="fast-button">+</a> |
+        	|
+            <a href="#" id="slow-button" class="fa fa-minus" title="Slowdown playback"></a> |
+            <a href="#" id="start-button" class="fa fa-fast-backward" title="Go to start"></a> |
+            <a href="#" id="prev-frame-button" class="fa fa-step-backward" title="Go back one turn"></a> |
+            <a href="#" id="play-button" class="fa fa-play" title="Play / Pause"></a> |
+            <a href="#" id="next-frame-button" class="fa fa-step-forward" title="Advance one turn"></a> |
+            <a href="#" id="end-button" class="fa fa-fast-forward" title="Go to end"></a> |
+            <a href="#" id="fast-button" class="fa fa-plus" title="Speedup playback"></a> |
+            <a href="#" id="help-button" class="fa fa-question-circle" title="Toggle caption"></a> |
         </p>
 <?php if (!$is_included) { ?>
         <p>
