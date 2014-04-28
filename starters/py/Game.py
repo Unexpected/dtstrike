@@ -4,7 +4,7 @@ Created on 28 juil. 2013
 @author: Mike
 '''
 from math import ceil, sqrt
-from sys import stdout, stderr
+from sys import stdout, stderr, maxsize
 
 class Game(object):
     '''
@@ -148,11 +148,21 @@ class Game(object):
         '''
         return [f for f in self.fleets if f.owner > self.MY_ID]
 
+    def closest_planet(self, origin, planets): 
+        closest = None
+        closest_distance = maxsize
+        for p in planets: 
+            distance = self.distance(origin.id, p.id)
+            if distance < closest_distance: 
+                closest = p
+                closest_distance = distance
+        return closest
+
     def distance(self, source_planet_id, destination_planet_id):
         source = self.planets[source_planet_id]
         destination = self.planets[destination_planet_id]
-        dx = source.X() - destination.X()
-        dy = source.Y() - destination.Y()
+        dx = source.x - destination.x
+        dy = source.y - destination.y
         return ceil(sqrt(dx * dx + dy * dy))
     
     def issue_order(self, source_planet_id, destination_planet_id, num_ships):

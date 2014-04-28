@@ -15,35 +15,34 @@ from Game import Game
 
       
 def do_turn(game):
+    my_mp = game.my_military_planets()
+    
+    if len(my_mp) == 0: 
+        return
+        
+    for p in game.my_economic_planets(): 
+        if p.num_ships > 50: 
+            closest_mp = game.closest_planet(p, my_mp)
+            game.issue_order(p.id, closest_mp.id, 50)
+    
     # (1) If we currently have a fleet in flight, just do nothing.
-    if len(game.my_military_fleets()) >= 3:
+    if len(game.my_military_fleets()) > 2:
+        return
+
+    if len(game.not_my_planets()) == 0: 
         return
 
     # (2) Find my strongest planet.
-    source = -1
-    source_score = -1
-    source_num_ships = 0
-    my_planets = game.my_military_planets()
-    for p in my_planets:
-        score = p.num_ships
-        if score > source_score:
-            source_score = score
-            source = p.id
-            source_num_ships = p.num_ships
-    # (3) Find the weakest enemy or neutral planet.
-    dest = -1
-    dest_score = -1.0
-    not_my_planets = game.not_my_planets()
-    for p in not_my_planets:
-        score = 1.0 / (1 + p.num_ships)
-        if score > dest_score:
-            dest_score = score
-            dest = p.id
-    # (4) Send half the ships from my strongest planet to the weakest
-    # planet that I do not own.
-    if source >= 0 and dest >= 0:
-        num_ships = source_num_ships / 2
-        game.issue_order(source, dest, num_ships)
+    source = None
+    for p in my_mp:
+        if source is None or p.num_ships > source.num_ships:
+            source = p
+
+    # (3) Find the closest enemy or neutral planet.
+    closest_target = game.closest_planet(source, game.not_my_planets())
+
+    # Send all ships from my strongest military planet to closest enemy or neutral planet    
+    game.issue_order(source.id, closest_target.id, source.num_ships)
 
 def main():
     try:
