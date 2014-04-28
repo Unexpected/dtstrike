@@ -2,7 +2,6 @@
 	if (isset($error) && $error != "") echo '<p class="form_error">'.$error.'</p>';
 	if (isset($message) && $message != "") echo '<p class="form_message">'.$message.'</p>';
 ?>
-<?php define("NEWS_INCLUDED", TRUE); include 'news.php'; ?>
 <p>
 	Le HAL Challenge est un jeu dans lequel vous devez créer une Intelligence Artificielle (IA) qui va lutter contre celle des autres joueurs dans d'épiques batailles spatiales. <br/><br/>
 
