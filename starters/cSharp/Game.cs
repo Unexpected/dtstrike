@@ -94,6 +94,18 @@ namespace DTStrike.MyBot
 		    return r;
 	    }
 
+	    // Return a list of all the economic planets owned by the current player.
+	    // By convention, the current player is always player number 1.
+	    public List<Planet> getMyEconomicPlanets() {
+		    List<Planet> r = new List<Planet>();
+		    foreach (Planet p in planets) {
+			    if (p.owner == MY_ID && p is EconomicPlanet) {
+				    r.Add(p);
+			    }
+		    }
+		    return r;
+	    }
+
 	    // Return a list of all neutral planets.
 	    public List<Planet> getNeutralPlanets() {
 		    List<Planet> r = new List<Planet>();
@@ -184,6 +196,24 @@ namespace DTStrike.MyBot
 		    double dy = source.y - destination.y;
 		    return (int) Math.Ceiling(Math.Sqrt(dx * dx + dy * dy));
 	    }
+
+		public MilitaryPlanet findClosestMilitaryPlanet(Planet sourcePlanet) {
+			return findClosestMilitaryPlanet(sourcePlanet.id);
+		}
+
+		public MilitaryPlanet findClosestMilitaryPlanet(int sourcePlanet) {
+       		Planet destination = null;
+       		int distance = int.MaxValue;
+       		foreach (Planet p in getMyMilitaryPlanets()) {
+       			int score = this.distance(sourcePlanet, p.id);
+       			if (score < distance) {
+       				distance = score;
+       				destination = p;
+       			}
+       		}
+       		return (MilitaryPlanet)destination;
+       	}
+
 
 	    // Sends an order to the game engine. An order is composed of a source
 	    // planet number, a destination planet number, and a number of ships. A

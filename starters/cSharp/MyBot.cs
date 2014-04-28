@@ -19,13 +19,29 @@ namespace DTStrike.MyBot
 	    // your own.
 
 	    public static void doTurn(Game game) {
-		    // (1) If we currently have a fleet in flight, just do nothing.
-            if (game.getMyMilitaryFleets().Count() >= 1)
+
+		    Planet source = null;
+		    Planet dest = null;
+			// (1) If an economic planet have more than 50 ships, send 50 ships to the closest military planet.
+		    foreach (Planet p in game.getMyEconomicPlanets()) {
+			    int score = p.numShips;
+			    if (score > 50) {
+			    	source = p;
+			    	dest = game.findClosestMilitaryPlanet(source);
+			    	if (dest != null) {
+			    		game.issueOrder(source, dest, 50);
+			    	}
+			    }
+		    }
+
+    		// (2) If we currently have more than 2 fleet in flight, just do nothing.
+            if (game.getMyMilitaryFleets().Count() >= 2)
             {
 			    return;
 		    }
-		    // (2) Find my strongest military planet.
-		    Planet source = null;
+
+    		// (3) Find my strongest military planet.
+		    source = null;
 		    int sourceShips = int.MinValue;
 		    foreach (Planet p in game.getMyMilitaryPlanets()) {
 			    int score = p.numShips;
@@ -35,13 +51,14 @@ namespace DTStrike.MyBot
 			    }
 		    }
 
+    		// No military planet found, just stop here.
             if (source == null)
             {
                 return;
             }
 
-		    // (3) Find the weakest enemy or neutral planet.
-		    Planet dest = null;
+    		// (4) Find the closest enemy or neutral planet.
+		    dest = null;
 		    int destDist = int.MaxValue;
 		    foreach (Planet p in game.getNotMyPlanets()) {
 			    int dist = game.distance(source.id, p.id);
@@ -51,10 +68,10 @@ namespace DTStrike.MyBot
 			    }
 		    }
 
-		    // (4) Send half the ships from my strongest planet to the weakest
-		    // planet that I do not own.
+    		// (5) Send all the ships from my strongest planet to the closest
+    		// planet that I do not own.
 		    if (source != null && dest != null) {
-			    int numShips = source.numShips / 2;
+			    int numShips = source.numShips;
 			    game.issueOrder(source, dest, numShips);
 		    }
 	    }
