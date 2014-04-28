@@ -26,14 +26,14 @@ var Visualizer = {
 		E_planet_size: 13,
 		M_planet_size: 26
 	},
-	
+
 	setup: function() {
 		// Setup Context
 		this.canvas = document.getElementById('display');
 		this.ctx = this.canvas.getContext('2d');
 		this.ctx.textAlign = 'center';
 	},
-	
+
 	init: function() {
 		if (this.game_id > -1) {
 			// Init background stars
@@ -44,30 +44,31 @@ var Visualizer = {
 					this.backgroundStarsPositions[2*i+1] = Math.random() * this.canvas.height;
 				}
 			}
-			
+
 			// Draw first frame
 			this.drawFrame(0);
-			
+
 			hookButtons();
 			bindActionsAndEvents();
 			initStaticData();
-			
+
 			// Start playing
 			this.start();
 			this.drawChart();
+			this.drawCaption();
 		}
 	},
-	
+
 	unitToPixel: function(unit) {
 		return this.config.unit_to_pixel * unit;
 	},
-	
+
 	drawBackground: function(){
 		var ctx = this.ctx;
-		
+
 		// Draw background
 		ctx.fillStyle = '#000';
-		if(this.haveDrawnBackground==false){  
+		if(this.haveDrawnBackground==false){
 			ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 			this.haveDrawnBackground = true;
 		}
@@ -94,19 +95,126 @@ var Visualizer = {
 			);
 		}
 		this.dirtyRegions = [];
-		
+
 	},
-	
+
+	drawPlanet: function(planet, ctx) {
+		var disp_x = this.unitToPixel(planet.x) + this.config.display_margin;
+		var disp_y = this.unitToPixel(planet.y) + this.config.display_margin;
+
+		if (planet.type == 'E') {
+			var planetSize = this.config.E_planet_size;
+
+			// Add shadow
+			ctx.beginPath();
+			ctx.arc(disp_x + 0.5, ctx.canvas.height - disp_y + 0.5, planetSize + 1, 0, Math.PI*2, true);
+			ctx.closePath();
+			ctx.fillStyle = "#000";
+			ctx.fill();
+
+			// Draw circle
+			ctx.beginPath();
+			ctx.arc(disp_x, ctx.canvas.height - disp_y, planetSize, 0, Math.PI*2, true);
+			ctx.closePath();
+			ctx.fillStyle = this.config.teamColor[planet.owner];
+			// TODO: hightlight planet when a fleet has reached them
+			ctx.fill();
+		} else if (planet.type == 'M') {
+			var planetSize = this.config.M_planet_size;
+			var halfSize = parseInt(planetSize / 2);
+
+			// Add shadow
+			ctx.beginPath();
+			ctx.rect(disp_x - halfSize - 2, ctx.canvas.height - disp_y - halfSize - 2, planetSize + 4, planetSize + 4);
+			ctx.closePath();
+			ctx.fillStyle = "#000";
+			ctx.fill();
+
+			// Draw square
+			ctx.beginPath();
+			ctx.rect(disp_x - halfSize, ctx.canvas.height - disp_y - halfSize, planetSize, planetSize);
+			ctx.closePath();
+			ctx.fillStyle = this.config.teamColor[planet.owner];
+			// TODO: hightlight planet when a fleet has reached them
+			ctx.fill();
+		}
+
+		ctx.textAlign = 'center';
+		ctx.fillStyle = '#FFF';
+		ctx.fillText(planet.numShips, disp_x, ctx.canvas.height - disp_y + 5);
+	},
+
+	drawFleet: function(fleet, ctx) {
+		var disp_x = this.unitToPixel(fleet.x) + this.config.display_margin;
+		var disp_y = this.unitToPixel(fleet.y) + this.config.display_margin;
+
+		if (fleet.source.type == 'M') {
+			// Draw ship
+			ctx.fillStyle = this.config.teamColor[fleet.owner];
+			ctx.beginPath();
+			ctx.save();
+			ctx.translate(disp_x, ctx.canvas.height - disp_y);
+
+			var scale = Math.log(Math.max(fleet.numShips,4)) * 0.03;
+			ctx.scale(scale, scale);
+
+			var angle = Math.PI/2 - Math.atan(
+				(fleet.source.y - fleet.destination.y) /
+				(fleet.source.x - fleet.destination.x)
+			);
+			if(fleet.source.x - fleet.destination.x < 0) {
+				angle = angle - Math.PI;
+			}
+			ctx.rotate(angle);
+
+			ctx.moveTo(0, -10);
+			ctx.lineTo(40,-30);
+			ctx.lineTo(0, 100);
+			ctx.lineTo(-40, -30);
+			ctx.closePath();
+			ctx.fill();
+			ctx.strokeStyle = "#fff";
+			ctx.stroke();
+			ctx.restore();
+
+			// Draw text
+			if (this.config.showFleetText == true) {
+				angle = -1 * (angle + Math.PI/2); // switch the axis around a little
+				disp_x += -11 * Math.cos(angle);
+				disp_y += -11 * Math.sin(angle) - 5;
+				ctx.textAlign = 'center';
+				ctx.fillText(fleet.numShips, disp_x, ctx.canvas.height - disp_y);
+			}
+		} else if (fleet.source.type == 'E') {
+			// Draw dot
+			ctx.fillStyle = this.config.teamColor[fleet.owner];
+
+			var size = Math.min(Math.max(fleet.numShips/5, 2), 7);
+			ctx.beginPath();
+			ctx.arc(disp_x, ctx.canvas.height - disp_y, size, 0, Math.PI*2, true);
+			ctx.closePath();
+			ctx.fill();
+
+			// Draw text
+			if (this.config.showFleetText == true) {
+				ctx.textAlign = 'center';
+				ctx.font = "9px Georgia";
+				ctx.fillText(fleet.numShips, disp_x + (size+2), ctx.canvas.height - disp_y - (size+2));
+			}
+		}
+
+		this.dirtyRegions.push([disp_x - 25 , ctx.canvas.height - disp_y - 35, 50, 50]);
+	},
+
 	drawFrame: function(frame) {
-		var disp_x = 0, disp_y = 0;
 		var ctx = this.ctx;
 		var frameNumber = Math.floor(frame);
-		
+
 		var planetStats = this.moves[frameNumber].planets;
 		var fleets = this.moves[frameNumber].moving;
-		
+
 		this.drawBackground();
-		
+
 		// Draw Planets
 		ctx.font = this.config.planet_font;
 		ctx.textAlign = 'center';
@@ -115,153 +223,56 @@ var Visualizer = {
 			planet.owner = planetStats[i].owner;
 			planet.numShips = planetStats[i].numShips;
 
-			disp_x = this.unitToPixel(planet.x) + this.config.display_margin;
-			disp_y = this.unitToPixel(planet.y) + this.config.display_margin;
-			
-			if (planet.type == 'E') {
-				var planetSize = this.config.E_planet_size;
-				
-				// Add shadow
-				ctx.beginPath();
-				ctx.arc(disp_x + 0.5, this.canvas.height - disp_y + 0.5, planetSize + 1, 0, Math.PI*2, true);
-				ctx.closePath();
-				ctx.fillStyle = "#000";
-				ctx.fill();
-				
-				// Draw circle
-				ctx.beginPath();
-				ctx.arc(disp_x, this.canvas.height - disp_y, planetSize, 0, Math.PI*2, true);
-				ctx.closePath();
-				ctx.fillStyle = this.config.teamColor[planet.owner];
-				// TODO: hightlight planet when a fleet has reached them
-				ctx.fill();
-			} else if (planet.type == 'M') {
-				var planetSize = this.config.M_planet_size;
-				var halfSize = parseInt(planetSize / 2);
-				
-				// Add shadow
-				ctx.beginPath();
-				ctx.rect(disp_x - halfSize - 2, this.canvas.height - disp_y - halfSize - 2, planetSize + 4, planetSize + 4);
-				ctx.closePath();
-				ctx.fillStyle = "#000";
-				ctx.fill();
-				
-				// Draw square
-				ctx.beginPath();
-				ctx.rect(disp_x - halfSize, this.canvas.height - disp_y - halfSize, planetSize, planetSize);
-				ctx.closePath();
-				ctx.fillStyle = this.config.teamColor[planet.owner];
-				// TODO: hightlight planet when a fleet has reached them
-				ctx.fill();
-			}
-
-			ctx.fillStyle = '#FFF';
-			ctx.fillText(planet.numShips, disp_x, this.canvas.height - disp_y + 5);
+			this.drawPlanet(planet, ctx);
 		}
-		
+
 		// Draw Fleets
 		this.ctx.font = this.config.fleet_font;
 		for(var i = 0; i < fleets.length; i++) {
 			var fleet = fleets[i];
-			
+
 			var progress = (fleet.progress + 1 + (frame - frameNumber)) / (fleet.tripLength + 2);
 			fleet.x = fleet.source.x + (fleet.destination.x - fleet.source.x) * progress;
 			fleet.y = fleet.source.y + (fleet.destination.y - fleet.source.y) * progress;
-			disp_x = this.unitToPixel(fleet.x) + this.config.display_margin;
-			disp_y = this.unitToPixel(fleet.y) + this.config.display_margin;
-			
-			if (fleet.source.type == 'M') {
-				// Draw ship
-				ctx.fillStyle = this.config.teamColor[fleet.owner];
-				ctx.beginPath();
-				ctx.save();
-				ctx.translate(disp_x, this.canvas.height - disp_y);
-				
-				var scale = Math.log(Math.max(fleet.numShips,4)) * 0.03;
-				ctx.scale(scale, scale);
-				
-				var angle = Math.PI/2 - Math.atan(
-					(fleet.source.y - fleet.destination.y) /
-					(fleet.source.x - fleet.destination.x)
-				);
-				if(fleet.source.x - fleet.destination.x < 0) {
-					angle = angle - Math.PI;
-				}
-				ctx.rotate(angle);
-				
-				ctx.moveTo(0, -10);
-				ctx.lineTo(40,-30);
-				ctx.lineTo(0, 100);
-				ctx.lineTo(-40, -30);
-				ctx.closePath();
-				ctx.fill();
-				ctx.strokeStyle = "#fff";
-				ctx.stroke();
-				ctx.restore();
-	
-				// Draw text
-				if (this.config.showFleetText == true) {
-					angle = -1 * (angle + Math.PI/2); // switch the axis around a little
-					disp_x += -11 * Math.cos(angle);
-					disp_y += -11 * Math.sin(angle) - 5;
-					ctx.fillText(fleet.numShips, disp_x, this.canvas.height - disp_y);
-				}
-			} else if (fleet.source.type == 'E') {
-				// Draw dot
-				ctx.fillStyle = this.config.teamColor[fleet.owner];
 
-				var size = Math.min(Math.max(fleet.numShips/5, 2), 7);
-				ctx.beginPath();
-				ctx.arc(disp_x, this.canvas.height - disp_y, size, 0, Math.PI*2, true);
-				ctx.closePath();
-				ctx.fill();
-				
-				// Draw text
-				if (this.config.showFleetText == true) {
-					ctx.font = "9px Georgia";
-					ctx.fillText(fleet.numShips, disp_x + (size+2), this.canvas.height - disp_y - (size+2));
-				}
-			}
-			
-			this.dirtyRegions.push([disp_x - 25 , this.canvas.height - disp_y - 35, 50, 50]);
+			this.drawFleet(fleet, ctx);
 		}
-		
+
 		this.drawFeedline(frame);
-		
+
 		$(this.canvas).trigger('drawn');
 	},
-	
+
 	drawFeedline: function(frame){
 		var canvas = document.getElementById('feedline');
 		if (!canvas) return;
 		var ctx = canvas.getContext('2d');
-		
+
 		var widthFactor = canvas.width / Math.max(200, this.moves.length);
-		
+
 		// Clear
-		//canvas.width = canvas.width;
-		ctx.clearRect((this.feedline - 1)*widthFactor, 0, (this.feedline + 1)*widthFactor, canvas.height);
-		//ctx.clearRect(0, 0, canvas.width, canvas.height);
-		
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 		// Feed Line
 		ctx.strokeStyle = '#000';
 		ctx.fillStyle = '#000';
 		ctx.beginPath();
 		ctx.moveTo(frame*widthFactor, 0);
 		ctx.lineTo(frame*widthFactor, canvas.height);
+		ctx.lineWidth = 1;
 		ctx.stroke();
 		ctx.closePath();
-		
+
 		this.feedline = frame;
 	},
-	
+
 	drawChart: function(){
 		var canvas = document.getElementById('chart');
 		if (!canvas) return;
 		var ctx = canvas.getContext('2d');
 		ctx.scale(1,-1);
 		ctx.translate(0,-canvas.height);
-		
+
 		// Total the ship counts
 		var mostShips = 100;
 		for(var i=0; i < this.moves.length; i++ ){
@@ -278,7 +289,7 @@ var Visualizer = {
 				var planet = turn.planets[j];
 				turn.shipCount[planet.owner]+=planet.numShips;
 			}
-						
+
 			for(var j=0; j < turn.shipCount.length; j++ ){
 				mostShips = Math.max(mostShips, turn.shipCount[j] );
 			}
@@ -297,56 +308,124 @@ var Visualizer = {
 				ctx.lineTo(j*widthFactor, shipCount*heightFactor);
 			}
 			ctx.stroke();
-			
+
 			ctx.beginPath();
 			ctx.arc((j-1)*widthFactor, shipCount*heightFactor, 2, 0, Math.PI*2, true);
 			ctx.fill();
 		}
 	},
-	
+
+	drawLabel: function(text, x, y, ctx) {
+		ctx.textAlign = 'left';
+		ctx.fillStyle = '#FFF';
+		ctx.font = "15px Arial";
+		ctx.fillText(text, x, y);
+	},
+
+	drawCaption: function() {
+		var canvas = document.getElementById('caption');
+		if (!canvas) return;
+
+		var ctx = canvas.getContext('2d');
+
+		// Draw background
+		ctx.fillStyle = '#000';
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+		var econPlanet = {
+			x: -5,
+			y: 0,
+			type: 'E',
+			owner: 0,
+			numShips: 100
+		};
+
+		var milPlanet = {
+			x: -5,
+			y: -5,
+			type: 'M',
+			owner: 0,
+			numShips: 500
+		};
+
+		var econFleet = {
+			x: 20,
+			y: 0,
+			owner: 0,
+			source: {type: 'E', x: 0, y: 55},
+			destination: {x: 0, y: 56},
+			numShips: 20
+		};
+
+		var milFleet = {
+			x: 20,
+			y: -5,
+			owner: 0,
+			source: {type: 'M', x: 0, y: 55},
+			destination: {x: 1, y: 55},
+			numShips: 50
+		};
+
+		this.drawPlanet(econPlanet, ctx);
+		this.drawLabel("Economic planet", 70, 45, ctx);
+		this.drawPlanet(milPlanet, ctx);
+		this.drawLabel("Military planet", 70, 85, ctx);
+		this.drawFleet(econFleet, ctx);
+		this.drawLabel("Economic fleet", 270, 45, ctx);
+		this.drawFleet(milFleet, ctx);
+		this.drawLabel("Military fleet", 270, 85, ctx);
+	},
+
 	start: function() {
 		this.playing = true;
-		setTimeout(function() { Visualizer.run.apply(Visualizer); }, 1);
-		$("#play-button").html("&#9553;");
+		this.requestNextFrame();
+		$("#play-button").removeClass("fa-play");
+		$("#play-button").addClass("fa-pause");
 	},
-	
+
 	stop: function() {
 		this.playing = false;
-		$('#play-button').html("&#9654;");
+		$("#play-button").addClass("fa-play");
+		$("#play-button").removeClass("fa-pause");
 	},
-	
+
 	run: function() {
-		if(!this.playing) return;
+		if (!this.playing) { return; }
 		this.frameDrawStarted = new Date().getTime();
-		
-		if(this.frame >= Visualizer.moves.length ){
-		this.stop();
-		return;
+
+		if (this.frame >= Visualizer.moves.length ) {
+			this.stop();
+			return;
 		}
 		this.drawFrame(this.frame);
-		
+
+
 		var frameAdvance = (this.frameDrawStarted - this.frameDrawEnded) / (1000 / this.config.turnsPerSecond );
-		if(isNaN(frameAdvance)){
-		frameAdvance = 0.3;
+		if (isNaN(frameAdvance)) {
+			frameAdvance = 0.3;
 		}
-		
+
 		this.frame += Math.min(1,Math.max(0.0166, frameAdvance ));
 		this.frameDrawEnded = new Date().getTime();
-		
-		
-		// Todo: If frameAdvance is the miniumum size (on a super fast system), then 
-		// we need to delay drawing the next frame.
-		var timeToNextDraw = 1;
-		setTimeout(function() { Visualizer.run.apply(Visualizer); }, timeToNextDraw);
+
+		this.requestNextFrame();
 	},
-	
+
+	requestNextFrame: function() {
+		// Simple requestAnimationFrame filler
+		var requestAnimFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame
+			|| function( callback ) { window.setTimeout(callback, 1000 / 60); };
+
+		requestAnimFrame(function() { Visualizer.run.apply(Visualizer); });
+	},
+
 	setFrame: function(targetFrame, wholeNumber){
 		if(wholeNumber===true){
 		targetFrame = Math.floor(targetFrame);
 		}
 		this.frame = Math.max(0,Math.min(this.moves.length-1, targetFrame));
 	},
-	
+
 	parseDataFromFile: function(input) {
 		var gameResult = $.parseJSON(input);
 		if (gameResult == null && input != '') {
@@ -356,7 +435,7 @@ var Visualizer = {
 
 		this.parseData(gameResult);
 	},
-	
+
 	parseDataFromUrl: function(url) {
 		var that = this;
 		$.ajax({
@@ -383,7 +462,7 @@ var Visualizer = {
 			}
 		});
 	},
-	
+
 	parseData: function(gameResult) {
 		this.game_id = gameResult.game_id;
 		//this.map_id = gameResult.;
@@ -393,9 +472,9 @@ var Visualizer = {
 		var playernames = gameResult.playernames;
 		var submission_ids = gameResult.submission_ids;
 		var user_ids = gameResult.user_ids;
-		
+
 		var playersNbr = gameResult.replaydata.players;
-		
+
 		this.players = new Array();
 		for (var i=0; i<playersNbr; i++) {
 			this.players[i] = {
@@ -405,9 +484,9 @@ var Visualizer = {
 				status: status[i]
 			};
 		}
-		
+
 		this.parsePlaybackData(gameResult.replaydata);
-		
+
 		// Calculated configs
 		var mapSize = this.planets.reduce(function(result, planet) {
 			return Math.max(result, Math.abs(planet.x), Math.abs(planet.y));
@@ -418,11 +497,11 @@ var Visualizer = {
 
 		this.init();
 	},
-	
+
 	parsePlaybackData: function(replaydata) {
 		// planets: [(x,y,owner,numShips,growthRate)]
 		this.planets = replaydata.map.data.map(ParserUtils.parsePlanet);
-		
+
 		// insert planets as first move
 		this.moves.push({
 			 'planets': this.planets.map(function(a) { return {
@@ -432,26 +511,26 @@ var Visualizer = {
 			 'moving': []
 		});
 
-		// turns: [(owner,numShips)] 
+		// turns: [(owner,numShips)]
 		// ++ [(owner,numShips,sourcePlanet,destinationPlanet,totalTripLength,turnsRemaining)]
-		if (replaydata.turns < 2) { 
+		if (replaydata.turns < 2) {
 			return; // No turns.
 		}
 		for(var i=0; i<replaydata.map.history.length; i++) {
 			var turn = replaydata.map.history[i].split(',');
 			var move = {};
-			
+
 			move.planets = turn.slice(0, this.planets.length).map(ParserUtils.parsePlanetState);
 			var fleet_strings = turn.slice(this.planets.length);
 			if( fleet_strings.length == 1 && fleet_strings[0] == '' ){
 				fleet_strings = [];
 			}
 			move.moving = fleet_strings.map(ParserUtils.parseFleet);
-			
+
 			this.moves.push(move);
 		}
 	},
-	
+
 	_eof: true
 };
 
@@ -469,11 +548,11 @@ var ParserUtils = {
 			progress: parseInt(data[5] - data[6])
 		};
 	},
-	
+
 	parsePlanet: function(data) {
 		data = data.split(' ');
 		type = data[0];
-		
+
 		if (type == "M") {
 			return {
 				type: type,
@@ -493,7 +572,7 @@ var ParserUtils = {
 			};
 		}
 	},
-	
+
 	parsePlanetState: function(data) {
 		data = data.split(' ');
 		// (owner,numShips)
@@ -502,7 +581,7 @@ var ParserUtils = {
 			numShips: parseInt(data[1])
 		};
 	},
-	
+
 	_eof: true
 };
 
@@ -540,14 +619,14 @@ function hookButtons() {
 			}
 			return false;
 		});
-	
+
 	$('#start-button').click(function() {
 		Visualizer.setFrame(0);
 		Visualizer.drawFrame(Visualizer.frame);
 		Visualizer.stop();
 		return false;
 	});
-	
+
 	$('#end-button').click(function() {
 		Visualizer.setFrame(Visualizer.moves.length - 1, true);
 		Visualizer.drawFrame(Visualizer.frame);
@@ -561,21 +640,26 @@ function hookButtons() {
 		Visualizer.stop();
 		return false;
 	});
-	
+
 	$('#next-frame-button').click(function() {
 		Visualizer.setFrame(Visualizer.frame + 1);
 		Visualizer.drawFrame(Visualizer.frame);
 		Visualizer.stop();
 		return false;
 	});
-	
+
 	$('#fast-button').click(function() {
 		Visualizer.config.turnsPerSecond += 2;
 		return false;
 	});
-	
+
 	$('#slow-button').click(function() {
 		Visualizer.config.turnsPerSecond -= 2;
+		return false;
+	});
+
+	$('#help-button').click(function() {
+		$('#caption').toggle();
 		return false;
 	});
 }
@@ -593,23 +677,23 @@ function bindActionsAndEvents() {
 			return false;
 		}
 	});
-	
+
 	// Update turn counter after redraw
 	$('#display').bind('drawn', function(){
 		$('#turnCounter').text(Math.floor(Visualizer.frame+1)+' of '+Visualizer.moves.length);
 	});
-		
+
 	// Add onclick event on timeline
 	$('#feedline').click(function(event) {
 		var canvas = $('#feedline');
 		var widthFactor = canvas.width() / Math.max(200, Visualizer.moves.length);
-		
+
 		var x = event.pageX - canvas.offset().left;
-		
+
 		Visualizer.stop();
 		Visualizer.setFrame(parseInt((x / widthFactor) + 1));
 		Visualizer.drawFrame(Visualizer.frame);
-		
+
 		return false;
 	});
 }
