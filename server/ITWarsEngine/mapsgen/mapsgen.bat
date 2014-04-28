@@ -13,12 +13,12 @@ for /l %%x in (1, 1, 33) do (
 )
 
 REM Cartes à 3 joueurs
-for /l %%x in (33, 1, 66) do (
+for /l %%x in (34, 1, 66) do (
 	java -jar mapgen.jar -nbPlayers 3 -gamerMilitary 1 -gamerEconomic 2 -neutralMilitary 2 -neutralEconomic 5 > maps\3\map%%x.txt
 )
 
 REM Cartes à 4 joueurs
-for /l %%x in (66, 1, 99) do (
+for /l %%x in (67, 1, 99) do (
 	java -jar mapgen.jar -nbPlayers 4 -gamerMilitary 1 -gamerEconomic 2 -neutralMilitary 2 -neutralEconomic 5 > maps\4\map%%x.txt
 )
 
