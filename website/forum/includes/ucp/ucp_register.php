@@ -38,7 +38,7 @@ class ucp_register
 		include($phpbb_root_path . 'includes/functions_profile_fields.' . $phpEx);
 
 		$coppa			= (isset($_REQUEST['coppa'])) ? ((!empty($_REQUEST['coppa'])) ? 1 : 0) : false;
-		$agreed			= (!empty($_POST['agreed'])) ? 1 : 0;
+		$agreed			= 1;//(!empty($_POST['agreed'])) ? 1 : 0;
 		$submit			= (isset($_POST['submit'])) ? true : false;
 		$change_lang	= request_var('change_lang', '');
 		$user_lang		= request_var('lang', $user->lang_name);

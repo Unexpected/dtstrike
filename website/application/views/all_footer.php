@@ -9,7 +9,7 @@
 	<footer class="navbar navbar-fixed-bottom nav-hide-on-mobile">
 		<div class="navbar-inner">
 			<div class="pull-left" style="padding-top: 8px;">
-				En cas de problème, n'hésitez pas à <a href="<?php echo base_url("forum") ?>">nous contacter</a> !
+				En cas de problème, n'hésitez pas à <a href="<?php echo base_url("forum") ?>" target="_blank">nous contacter</a> !
 			</div>
 		
 			<form class="navbar-search pull-right" action="">
