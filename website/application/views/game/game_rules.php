@@ -70,7 +70,7 @@
 </div>
 <div class="row rule-row">
 	<div class="span2"><img src="<?php echo base_url('static/images/rules_yellow_military_fleet_3.png') ?>" class="pull-right rule-row-img" /></div>
-	<div class="span7"></div>Les vaisseaux militaires attaquent la planète et sont en surnombre (50 contre 8), le joueur jaune capture la planète.</div>
+	<div class="span7">Les vaisseaux militaires attaquent la planète et sont en surnombre (50 contre 8), le joueur jaune capture la planète.</div>
 </div>
 <div class="row rule-row">
 	<div class="span2"><img src="<?php echo base_url('static/images/rules_yellow_military_fleet_4.png') ?>" class="pull-right rule-row-img" /></div>
