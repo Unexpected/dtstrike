@@ -27,10 +27,10 @@
 		}
 		echo '</table>';
 	} else {
-		echo '<span class="comment">Aucun</span>';
+		echo '<span class="comment">Aucune</span>';
 	}
 ?>
 </p>
 <p>
-Vous pouvez également en <input type="button" value="uploader un nouveau" onclick="window.location='<?php echo site_url('user/bot_upload'); ?>'">.
+Vous pouvez également en <input type="button" value="uploader une nouvelle" onclick="window.location='<?php echo site_url('user/bot_upload'); ?>'">.
 </p>
