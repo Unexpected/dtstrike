@@ -55,9 +55,9 @@ from string import split
 
 try:
     from server_info import server_info
-    MEMORY_LIMIT = server_info.get('memory_limit', 1500)
+    MEMORY_LIMIT = server_info.get('memory_limit', 256)
 except ImportError:
-    MEMORY_LIMIT = 1500
+    MEMORY_LIMIT = 256
 
 BOT = "MyBot"
 SAFEPATH = re.compile('[a-zA-Z0-9_.$-]+$')
