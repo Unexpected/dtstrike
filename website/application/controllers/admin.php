@@ -34,7 +34,7 @@ class Admin extends CI_Controller {
 		$this->Usermodel->db->from('user');
 		$this->Usermodel->db->join('organization', 'organization.org_id = user.org_id');
 		$this->Usermodel->db->join('country', 'country.country_code = user.country_code');
-		$this->Usermodel->db->order_by("username", "asc"); 
+		$this->Usermodel->db->order_by("user_id", "desc");
 
 		$query = $this->Usermodel->db->get();
 		if ($query->num_rows())  {
@@ -43,6 +43,7 @@ class Admin extends CI_Controller {
 			$users = array();
 		}
 		$heading = array(
+			'#',
 			'Login',
 			'Email',
 			'Organisation',
