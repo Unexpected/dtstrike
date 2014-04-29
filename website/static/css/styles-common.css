@@ -81,3 +81,11 @@ h2 {
 	margin-top: 10px;
 	padding: 5px 5px 15px 5px;
 }
+
+.row-container {
+	margin-left: 30px;
+}
+.rule-row-img {
+	margin-bottom: 5px;
+	border: 1px solid white;
+}
