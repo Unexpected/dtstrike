@@ -1,6 +1,6 @@
 server_info = {{
-    "mail_username": "donotreply@ai-contest.com",
-    "mail_name": "AI Contest",
+    "mail_username": "donotreply@hal-challenge.org",
+    "mail_name": "HAL Challenge",
     "mail_password": "",
     "repo_path": "{repo_dir}",
     "maps_path": "{map_dir}",
@@ -9,7 +9,7 @@ server_info = {{
     "api_base_url": "{api_url}",
     "api_key": "{api_key}",
     "secure_jail": True,
-    "memory_limit": 1500,
+    "memory_limit": 256,
     "game_options": {{
         "turns": 1000,
         "loadtime": 3000,
