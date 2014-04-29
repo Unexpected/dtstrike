@@ -36,12 +36,17 @@
 		</copy>
 		
 		<!-- Copy visualizer files -->
-	    <mkdir dir="dist/visu/inc" />
+	    <mkdir dir="dist/visu" />
 		<copy todir="dist/visu" overwrite="true">
 			<fileset dir="../../visualizer" includes="index.html" />
 		</copy>
+	    <mkdir dir="dist/visu/inc" />
 		<copy todir="dist/visu/inc">
 			<fileset dir="../../visualizer/inc" />
+		</copy>
+	    <mkdir dir="dist/visu/resources" />
+		<copy todir="dist/visu/resources">
+			<fileset dir="../../visualizer/resources" />
 		</copy>
 		
 		<!-- Clean build folder -->
