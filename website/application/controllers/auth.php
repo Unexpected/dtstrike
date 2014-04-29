@@ -29,7 +29,7 @@ class Auth extends CI_Controller {
 		// Set up rules for form validation
 		$rules = $this->form_validation;
 		$rules->set_rules('email', 'E-mail', 'required|valid_email');
-		$rules->set_rules('username', 'Username', 'required|alpha_numeric|min_length[6]');
+		$rules->set_rules('username', 'Username', 'required|alpha_numeric|min_length[3]');
 		$rules->set_rules('password', 'Password', 'required|min_length[6]');
 		$rules->set_rules('password2', 'Confirmation', 'required');
 		$rules->set_rules('country_code', 'Confirmation', 'required');
