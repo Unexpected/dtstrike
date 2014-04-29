@@ -390,7 +390,7 @@ public class GalaxSix extends Game {
 		}
 		
 		for (Planet p : planets) {
-			if (p.owner != 0 && p instanceof EconomicPlanet) {
+			if (p.owner != 0 && p instanceof EconomicPlanet && isAlive(p.owner)) {
 				p.numShips = p.numShips + ((EconomicPlanet)p).revenue;
 			}
 		}
