@@ -1,2 +1,2 @@
-deb http://wwwftp.ciril.fr/pub/linux/ubuntu/archives/ saucy main restricted universe multiverse
-deb http://wwwftp.ciril.fr/pub/linux/ubuntu/archives/ saucy-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ saucy main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ saucy-updates main restricted universe multiverse
