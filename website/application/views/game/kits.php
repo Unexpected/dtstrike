@@ -73,5 +73,5 @@ apprendre comment obtenir votre nom sur le leaderboard mondial en moins de cinq 
 
 <p>
 Si vous le souhaitez, vous pouvez bien sûr réaliser votre propre Starter Kit et 
-<a id="contact" href="#" onclick="contactUs();">nous contacter</a> pour le mettre à disposition des autres.
+<a id="contact" href="<?php echo base_url("forum") ?>">nous contacter</a> pour le mettre à disposition des autres.
 </p>
