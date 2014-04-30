@@ -63,7 +63,7 @@ Les règles suivantes s'appliquent aux <b>joueurs</b> : <br/>
 	<li>Le joueur courant à l'ID 1</li>
 	<li>Le joueur neutre a l'ID 0</li>
 	<li>Les ID des autres joueurs vont de 2 à N</li>
-	<li>Quand un bot perd, ses flottes sont retirées du jeu et ses planètes passent sous contrôle du joueur neutre</li>
+	<li>Quand un bot perd, ses flottes sont retirées du jeu et ses planètes économiques cessent de produire des renforts</li>
 </ul>
 Les règles suivantes s'appliquent aux <b>planètes</b> : <br/>
 <ul>
@@ -72,7 +72,7 @@ Les règles suivantes s'appliquent aux <b>planètes</b> : <br/>
 	<li>y : coordonnée Y de la planète, nombre flottant. ex : 4.083429</li>
 	<li>owner : propriétaire de la planète, entier. ex : 3</li>
 	<li>num_ships : nombre de vaisseaux sur la planète, entier. ex : 25 </li>
-	<li>growth_rate : nombre de renforcements envoyés par cette planète à chaque tour, entier. ex : 2</li>
+	<li>growth_rate : nombre de renforcements générés par cette planète à chaque tour, entier. ex : 2</li>
 	<li>L'ordre des planètes est immuable durant une partie. L'ID d'une planète est définie par son numéro d'ordre dans la liste des planètes envoyées.</li>
 	<li>L'ID de la première planète est 0.</li>
 </ul>
@@ -98,12 +98,12 @@ go<br/></div>
 <br/>
 Les règles suivantes s'appliquent aux <b>ordres des joueurs</b> : <br/>
 <ul>
-	<li>Les joueurs envoient autant d'ordre qu'ils le désirent à chaque tour</li>
+	<li>Les joueurs envoient jusqu'à 100 ordres à chaque tour</li>
 	<li>Une fois tous les ordres envoyés, le message "go" doit être envoyé au serveur</li>
 	<li>source_planet : identifiant de la planète source, entier. exemple : 3</li>
 	<li>destination_planet : identifiant de la planète de destination, entier. exemple : 8</li>
 	<li>num_ships : nombre de vaisseaux à envoyer de la planète source vers la planète de destination, entier strictement positif. exemple : 50</li>
-	<li>L'ID de planète source doit correspondre à une planète militaire du joueur courant</li>
+	<li>L'ID de planète source doit correspondre à une planète du joueur courant</li>
 	<li>Le nombre de vaisseaux de la planète doit être supérieur ou égal à la somme des vaisseaux qui vont être envoyés depuis cette planète sur l'ensemble des ordres du tour</li>
 </ul>
 </p>
