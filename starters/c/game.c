@@ -1,222 +1,200 @@
-/*
- * game.c
- *
- *  Created on: 8 juil. 2013
- *      Author: louis
- */
-#include "game.h"
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
-#include <ctype.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <memory.h>
+#include <assert.h>
+#include <math.h>
+#include <limits.h>
 
-#ifndef DEFAULT_ARRAY_SIZE
-#define DEFAULT_ARRAY_SIZE 10
-#endif
+#include "game.h"
 
-static struct military_planets _my_military_planets;
-static struct military_planets _enemy_military_planets;
-static struct military_planets _neutral_military_planets;
-
-static struct economic_planets _my_economic_planets;
-static struct economic_planets _enemy_economic_planets;
-static struct economic_planets _neutral_economic_planets;
-
-static struct fleets _my_fleets;
-static struct fleets _enemy_fleets;
-static struct fleets _neutral_fleets;
-
-static int _counter_planets;
-static int _counter_fleets;
-
-static struct military_planet convertStrToMilitary(const char * x, const char * y, const char * owner, const char * shipsNumber);
-
-struct military_planets my_military_planets() {
-	return _my_military_planets;
+struct game *init_game()
+{
+	struct game *game = calloc(1, sizeof(struct game));
+	if (!game) {
+		fprintf(stderr, "Cannot allocate enough memory for a game\n");
+		exit(1);
+	}
+	return game;
 }
 
-struct military_planets enemy_military_planets() {
-	return _enemy_military_planets;
+void prepare_turn(struct game *game)
+{
+	if (game->planets)
+		memset(game->planets, 0,
+			sizeof(struct planet) * game->allocated_planets);
+	if (game->fleets)
+		memset(game->fleets, 0, sizeof(struct planet) * game->allocated_fleets);
+
+	game->num_planets = 0;
+	game->num_fleets = 0;
 }
 
-struct military_planets neutral_military_planets() {
-	return _neutral_military_planets;
+void free_game(struct game *game)
+{
+	free(game->planets);
+	free(game->fleets);
+	free(game);
 }
 
-struct economic_planets my_economic_planets() {
-	return _my_economic_planets;
-}
-struct economic_planets enemy_economic_planets() {
-	return _enemy_economic_planets;
-}
-struct economic_planets neutral_economic_planets() {
-	return _neutral_economic_planets;
-}
+void add_planet(struct game *game, double x, double y, int owner,
+	int num_ships, int economic_value)
+{
+	struct planet *p;
+	int id;
 
-struct fleets my_fleets() {
-	return _my_fleets;
-}
-
-struct fleets enemy_fleets() {
-	return _enemy_fleets;
-}
-
-struct fleets neutral_fleets() {
-	return _neutral_fleets;
-}
-
-int distance(struct coordinates src, struct coordinates dest) {
-	double dx = src.x - dest.x;
-	double dy = src.y - dest.y;
-
-	return (int) ceil(sqrt((dx * dx) + (dy * dy)));
-}
-
-void issueOrder(int src, int dest, int numShips) {
-	printf("%d %d %d\n", src, dest, numShips);
-}
-
-void finishTurn() {
-	printf("go\n");
-}
-
-void initTurn() {
-	_counter_fleets = 0;
-	_counter_planets = 0;
-
-	_my_military_planets.size = 0;
-	_enemy_military_planets.size = 0;
-	_neutral_military_planets.size = 0;
-
-	_my_economic_planets.size = 0;
-	_enemy_economic_planets.size = 0;
-	_neutral_economic_planets.size = 0;
-}
-
-void freeData() {
-	if (_my_military_planets.size > 0 && _my_military_planets.list != NULL)
-		free(_my_military_planets.list);
-	if (_enemy_military_planets.size > 0 && _enemy_military_planets.list != NULL)
-		free(_enemy_military_planets.list);
-	if (_neutral_military_planets.size > 0 && _neutral_military_planets.list != NULL)
-		free(_neutral_military_planets.list);
-
-	if (_my_economic_planets.size > 0 && _my_economic_planets.list != NULL)
-		free(_my_economic_planets.list);
-	if (_enemy_economic_planets.size > 0 && _enemy_economic_planets.list != NULL)
-		free(_enemy_economic_planets.list);
-	if (_neutral_economic_planets.size > 0 && _neutral_economic_planets.list != NULL)
-		free(_neutral_economic_planets.list);
-
-	initTurn();
-
-}
-
-void parseLine(char *p) {
-	// TODO
-
-//	Un exemple de communication du moteur vers le bot :
-//	E 11.014548 9.362856 1 363 2
-//	M 5.518446 18.725713 1 505
-//	M 16.510650 0.000000 2 158
-//	E 18.571299 14.374196 1 190 2
-//	E 3.457797 4.351517 1 248 2
-//	E 10.563623 5.157520 2 39 2
-//	F 1 2 11 20 15 1
-//	F 2 2 16 19 3 2
-//	F 1 2 17 1 6 5
-//	go 2
-//
-//	Ligne de planète économique :
-//	E pour le Type de planète économique, 2 coordonnées X et Y sous forme de float, ID du propriétaire, Nb de vaisseaux actuellement sur la planète, Income de la planète.
-//
-//
-//	Ligne de flotte en cours de voyage :
-//	F pour flotte, propriétaire, nombre de vaisseaux, ID planète source, ID planète destination, longueur totale du voyage (en nb de tours), nb de tours restants avant arrivée
-//
-//	A chaque tour, on reçoit l’intégralité de la description du monde. La dernière ligne reçue est « go ID_DE_JOUEUR »
-//	Les séparateurs de ligne sont des \n
-
-	if (NULL != p && strlen(p) > 0) {
-		char ** split = str_split(p, " ");
-		char type = split[0][0];
-
-		switch (type) {
-		case 'M':
-			//	Ligne de planète militaire :
-			//	M pour le type, coordonnées X et Y, ID du propriétaire, Nb de vaisseaux actuellement sur la planète
-
-			// verif taille du tableau
-			if (0 == _my_military_planets._array_size) {
-				_my_military_planets.list = malloc(sizeof(struct military_planet) * DEFAULT_ARRAY_SIZE);
-				_my_military_planets._array_size = DEFAULT_ARRAY_SIZE;
-			} else if (_my_military_planets._array_size == _my_military_planets.size) {
-				_my_military_planets._array_size += DEFAULT_ARRAY_SIZE;
-				_my_military_planets.list = realloc(_my_military_planets.list, sizeof(struct military_planet) * _my_military_planets._array_size);
-			}
-
-			_my_military_planets.list[_my_military_planets.size++] = convertStrToMilitary(split[1], split[2], split[3], split[4]);
-
-			break;
-		case 'E':
-
-			break;
-		case 'F':
-
-			break;
-		default:
-			break;
+	if (game->num_planets >= game->allocated_planets) {
+		game->allocated_planets = game->allocated_planets * 2 + 10;
+		game->planets = realloc(game->planets,
+			game->allocated_planets * sizeof(struct planet));
+		if (!game->planets) {
+			fprintf(stderr, "Cannot allocate enough planets\n");
+			exit(1);
 		}
 	}
+
+	id = game->num_planets;
+	++game->num_planets;
+
+	p = get_planet(game, id);
+
+	p->id = id;
+	p->x = x;
+	p->y = y;
+	p->owner = owner;
+	p->num_ships = num_ships;
+	p->economic_value = economic_value;
 }
-char **str_split(char *src, const char *separator) {
-	char **tab = NULL;
 
-	if (src != NULL && separator != NULL) {
-		int i;
-		char *cs = NULL;
-		size_t size = 1;
-		// protection de la donnee initial
-		char *s = strdup(src);
 
-		for (i = 0; (cs = strtok(s, separator)); i++) {
-			if (size <= i + 1) {
-				void *tmp = NULL;
+void add_fleet(struct game *game, int owner, int num_ships,
+	int source_planet, int dest_planet,
+	int trip_length, int turns_remaining,
+	int military)
+{
+	struct fleet *p;
+	int id;
 
-				size <<= 1;
-				tmp = realloc(tab, sizeof(*tab) * size);
-				if (tmp != NULL) {
-					tab = tmp;
-				} else {
-					fprintf(stderr, "Memoire insuffisante\n");
-					free(tab);
-					tab = NULL;
-					exit(EXIT_FAILURE);
-				}
-			}
-			tab[i] = cs;
-			s = NULL;
+	if (game->num_fleets >= game->allocated_fleets) {
+		game->allocated_fleets = game->allocated_fleets * 2 + 10;
+		game->fleets = realloc(game->fleets,
+			game->allocated_fleets * sizeof(struct fleet));
+		if (!game->fleets) {
+			fprintf(stderr, "Cannot allocate enough fleets\n");
+			exit(1);
 		}
-		tab[i] = NULL;
 	}
-	return tab;
+	id = game->num_fleets;
+	++game->num_fleets;
+
+	p = get_fleet(game, id);
+
+	p->id = id;
+	p->owner = owner;
+	p->num_ships = num_ships;
+	p->source_planet = source_planet;
+	p->dest_planet = dest_planet;
+	p->trip_length = trip_length;
+	p->turns_remaining = turns_remaining;
+	p->military = military;
 }
 
-/** Ligne de planète militaire :
- * coordonnées X et Y, ID du propriétaire, Nb de vaisseaux actuellement sur la planète
- **/
-static struct military_planet convertStrToMilitary(const char * x, const char * y, const char * owner, const char * shipsNumber) {
-	struct military_planet mp;
-	struct coordinates xy;
-	mp.id = ++_counter_fleets;
-	xy.x = atof(x);
-	xy.y = atof(y);
-	mp.coordinates = xy;
-	mp.owner = atoi(owner);
-	mp.shipsNumber = atoi(shipsNumber);
+struct planet *get_planet(struct game *game, int id)
+{
+	assert(id >= 0);
+	assert(id < game->num_planets);
 
-	return mp;
-
+	return &game->planets[id];
 }
 
+struct fleet *get_fleet(struct game *game, int id)
+{
+	assert(id >= 0);
+	assert(id < game->num_fleets);
+
+	return &game->fleets[id];
+}
+
+int distance(struct game *game, int source_id, int destination_id)
+{
+	struct planet *source, *destination;
+	double dx, dy;
+
+	source = get_planet(game, source_id);
+	destination = get_planet(game, destination_id);
+
+	dx = source->x - destination->x;
+	dy = source->y - destination->y;
+
+	return (int)(dx*dx + dy*dy);
+}
+
+
+
+int is_my_fleet(struct game *game, int id)
+{
+	return get_fleet(game, id)->owner == 1;
+}
+
+int is_my_planet(struct game *game, int id)
+{
+	return get_planet(game, id)->owner == 1;
+}
+
+int is_military_planet(struct game *game, int id)
+{
+	return get_planet(game, id)->economic_value == 0;
+}
+
+int is_military_fleet(struct game *game, int id)
+{
+	return get_fleet(game, id)->military;
+}
+
+int is_neutral_planet(struct game *game, int id)
+{
+	return get_planet(game, id)->owner == 0;
+}
+
+int is_enemy_planet(struct game *game, int id)
+{
+	return get_planet(game, id)->owner > 1;
+}
+
+int find_my_closest_military_planet(struct game *game, int source)
+{
+	int i, d;
+	int min_distance = INT_MAX, nearest_planet = -1;
+
+	FOR_MY_MILITARY_PLANETS(game, i) {
+		d = distance(game, i, source);
+		if (min_distance > d) {
+			min_distance = d;
+			nearest_planet = i;
+		}
+	}
+	return nearest_planet;
+}
+
+int find_closest_enemy_military_planet(struct game *game, int source)
+{
+	int i, d;
+	int min_distance = INT_MAX, nearest_planet = -1;
+
+	FOR_ENEMY_MILITARY_PLANETS(game, i) {
+		d = distance(game, i, source);
+		if (min_distance > d) {
+			min_distance = d;
+			nearest_planet = i;
+		}
+	}
+	return nearest_planet;
+}
+
+
+void issue_order(struct game *game, int from, int to, int num)
+{
+	assert(is_my_planet(game, from));
+	assert(get_planet(game, from)->num_ships >= num);
+
+	printf("%d %d %d\n", from, to, num);
+}
