@@ -1,87 +1,198 @@
-/*
- * game.h
+#ifndef GAME_H
+#define GAME_H
+
+
+/**
+ * A planet.
  *
- *  Created on: 8 juil. 2013
- *      Author: louis
+ * If economic_value is 0, this is a military planet,
+ * otherwise an ecomonic planet.
  */
-
-#ifndef GAME_H_
-#define GAME_H_
-
-
-
-struct coordinates {
+struct planet
+{
+	int id;
 	double x;
 	double y;
+	int owner;
+	int num_ships;
+	int economic_value;
 };
 
-struct economic_planet {
+/**
+ * A fleet currently in a trip.
+ */
+struct fleet
+{
 	int id;
 	int owner;
-	int shipsNumber;
-	struct coordinates coordinates;
-	int revenue;
+	int num_ships;
+	int source_planet;
+	int dest_planet;
+	int trip_length;
+	int turns_remaining;
+	int military;
 };
 
-struct military_planet {
-	int id;
-	int owner;
-	int shipsNumber;
-	struct coordinates coordinates;
+/**
+ * Contains the various structures of the game.
+ */
+struct game
+{
+	/*
+	 * Various options
+	 */
+	int loadtime;
+	int turntime;
+	int turns;
+
+	struct planet *planets;
+	struct fleet *fleets;
+
+	int allocated_planets;
+	int allocated_fleets;
+
+	int num_planets;
+	int num_fleets;
 };
 
-struct fleet {
-	int owner;
-	int shipsNumber;
-	int sourcePlanetId;
-	int destinationPlanetId;
-	int totalTripLength;
-	int turnsRemaining;
-};
+
+/**
+ * Initializes the game structure.
+ */
+struct game *init_game();
+
+/**
+ * Releases all memory associated to the game.
+ */
+void free_game(struct game *game);
+
+/**
+ * Prepares the game for a new turn.
+ */
+void prepare_turn(struct game *game);
+
+/**
+ * Adds a planet to the game.
+ */
+void add_planet(struct game *game, double x, double y, int owner,
+	int num_ships, int economic_value);
+
+/**
+ * Adds a fleet to the game.
+ */
+void add_fleet(struct game *game, int owner, int num_ships,
+	int source_planet, int dest_planet,
+	int trip_length, int turns_remaining,
+	int military);
+
+struct planet *get_planet(struct game *game, int planet_id);
+struct fleet *get_fleet(struct game *game, int fleet_id);
+
+/**
+ * Returns non null if the specified planet is an economic planet.
+ */
+int is_economic_planet(int planet_id);
+
+/**
+ * Find the distance between two planets.
+ */
+int distance(struct game *game, int source, int destination);
+
+/**
+ * Returns nonzero if the fleet is owned by me.
+ */
+int is_my_fleet(struct game *game, int id);
+
+/**
+ * Returns nonzero if the planet is owned by me.
+ */
+int is_my_planet(struct game *game, int id);
+
+/**
+ * Returns nonzero if this is a military planet.
+ */
+int is_military_planet(struct game *game, int id);
+
+/**
+ * Returns nonzero if this is a military fleet.
+ */
+int is_military_fleet(struct game *game, int id);
+
+/**
+ * Returns nonzero if this is a neutral planet.
+ */
+int is_neutral_planet(struct game *game, int id);
+
+/**
+ * Returns nonzero if this is an enemy planet.
+ */
+int is_enemy_planet(struct game *game, int id);
+
+/**
+ * Return my closest military planet to another planet.
+ * -1 if none match.
+ */
+int find_my_closest_military_planet(struct game *game, int source);
+
+/**
+ * Return the closest enemy planet to another planet.
+ * -1 if none match.
+ */
+int find_closest_enemy_military_planet(struct game *game, int source);
 
 
-struct military_planets {
-	int size;
-	int _array_size;
-	struct military_planet * list;
-};
+#define FOR_ALL_PLANETS(game, i)			     \
+	for(i = 0; i < game->num_planets; ++i)
 
-struct economic_planets {
-	int size;
-	int _array_size;
-	struct economic_planet * list;
-};
+#define FOR_MY_PLANETS(game, i)			\
+	FOR_ALL_PLANETS(game, i)		\
+		if (is_my_planet(game, i))
 
-struct fleets {
-	int size;
-	int _array_size;
-	struct fleet * list;
-};
+#define FOR_NOT_MY_PLANETS(game, i)		\
+	FOR_ALL_PLANETS(game, i)		\
+		if (!is_my_planet(game, i))
 
-struct military_planets my_military_planets();
-struct military_planets enemy_military_planets();
-struct military_planets neutral_military_planets();
+#define FOR_ENEMY_PLANETS(game, i)		\
+	FOR_ALL_PLANETS(game, i)		\
+		if (is_enemy_planet(game, i))
 
-struct economic_planets my_economic_planets();
-struct economic_planets enemy_economic_planets();
-struct economic_planets neutral_economic_planets();
+#define FOR_MY_MILITARY_PLANETS(game, i)		\
+	FOR_MY_PLANETS(game, i)				\
+		if (is_military_planet(game, i))
 
-struct fleets my_fleets();
-struct fleets enemy_fleets();
-struct fleets neutral_fleets();
+#define FOR_MY_ECONOMIC_PLANETS(game, i)		\
+	FOR_MY_PLANETS(game, i)				\
+		if (!is_military_planet(game, i))
 
-int distance (struct coordinates src, struct coordinates dest);
 
-void issueOrder(int src, int dest, int numShips);
+#define FOR_ENEMY_MILITARY_PLANETS(game, i)		\
+	FOR_ENEMY_PLANETS(game, i)			\
+		if (is_military_planet(game, i))
 
-void finishTurn();
+#define FOR_ENEMY_ECONOMIC_PLANETS(game, i)		\
+	FOR_ENEMY_PLANETS(game, i)			\
+		if (!is_military_planet(game, i))
 
-void initTurn();
 
-void freeData();
+#define FOR_ALL_FLEETS(game, i)			\
+	for (i = 0; i < game->num_fleets; ++i)
 
-void parseLine(char *p);
+#define FOR_MY_FLEETS(game, i)			\
+	FOR_ALL_FLEETS(game, i)			\
+		if (is_my_fleet(game, i))
 
-char **str_split (char * src, const char *separator);
+#define FOR_MY_MILITARY_FLEETS(game, i)			\
+	FOR_MY_FLEETS(game, i)				\
+		if (is_military_fleet(game, i))
 
-#endif /* GAME_H_ */
+#define FOR_MY_ECONOMIC_FLEETS(game, i)			\
+	FOR_MY_FLEETS(game, i)					\
+		if (!is_military_fleet(game, i))
+
+/**
+ * Send some ships from one planet to another.
+ */
+void issue_order(struct game *game, int from, int to, int ships);
+
+
+#endif
