@@ -12,7 +12,7 @@
 		<mkdir dir="dist/temp/test" />
 		<mkdir dir="dist/temp/test/bots" />
 		
-		<property name="starterList" value="cSharp,Go,groovy,java,js,php,py,scala" />
+		<property name="starterList" value="c,cpp,cSharp,Go,groovy,java,js,php,py,scala" />
 	</target>
 	
 	<!--
@@ -55,8 +55,6 @@
 	
 
 	<target name="copy_to_site" depends="pkg_all">
-		<!-- Build all starters -->
-		<foreach list="${starterList}" target="zipStarter" param="var" />
 		<delete dir="dist/temp" />
 		<copy todir="../website/starters" overwrite="true">
 			<fileset dir="dist" />
