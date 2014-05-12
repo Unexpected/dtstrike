@@ -21,3 +21,4 @@ dist
 /website/forum/cache/*.php
 .idea
 *.iml
+/LocalTester/props.xml
